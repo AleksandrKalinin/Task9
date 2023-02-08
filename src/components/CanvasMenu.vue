@@ -46,10 +46,10 @@
             v-bind:src="require('@/assets/rectangle.svg')"
           />
         </div>
-        <div class="canvas-menu__item" @click="setShape('square')">
+        <div class="canvas-menu__item" @click="setShape('diamond')">
           <img
             class="canvas-menu__icon"
-            v-bind:src="require('@/assets/square-regular.svg')"
+            v-bind:src="require('@/assets/diamond.svg')"
           />
         </div>
         <div class="canvas-menu__item" @click="setShape('star')">

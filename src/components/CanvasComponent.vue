@@ -114,13 +114,23 @@ export default defineComponent({
       }
     },
 
-    drawEllipse(e: any) {
+    setupCTX() {
       const canvas = this.canvas;
       const ctx = canvas.getContext("2d");
-      ctx.beginPath();
       ctx.fillStyle = this.selectedColor;
       ctx.strokeStyle = this.selectedColor;
       ctx.lineWidth = this.lineWidth;
+      return { canvas, ctx };
+    },
+
+    drawEllipse(e: any) {
+      const { canvas, ctx } = this.setupCTX();
+      //const canvas = this.canvas;
+      //const ctx = canvas.getContext("2d");
+      //ctx.beginPath();
+      //ctx.fillStyle = this.selectedColor;
+      //ctx.strokeStyle = this.selectedColor;
+      //ctx.lineWidth = this.lineWidth;
       let mainAxis = Math.sqrt(
         Math.abs(
           Math.pow(Math.abs(this.endX - this.startX), 2) -
@@ -138,6 +148,7 @@ export default defineComponent({
         this.endY > this.startY
           ? this.startY + (this.endY - this.startY) / 2
           : this.endY + (this.startY - this.endY) / 2;
+      ctx.beginPath();
       ctx.ellipse(
         coordX,
         coordY,
@@ -153,11 +164,7 @@ export default defineComponent({
     },
 
     drawStar(e: any) {
-      const canvas = this.canvas;
-      const ctx = canvas.getContext("2d");
-      ctx.fillStyle = this.selectedColor;
-      ctx.strokeStyle = this.selectedColor;
-      ctx.lineWidth = this.lineWidth;
+      const { canvas, ctx } = this.setupCTX();
       var rot = (Math.PI / 2) * 3;
       var x = this.startX;
       var y = this.startY;
@@ -192,30 +199,73 @@ export default defineComponent({
     },
 
     drawRectangle(e: any) {
-      const canvas = this.canvas;
-      const ctx = canvas.getContext("2d");
+      const { canvas, ctx } = this.setupCTX();
       ctx.beginPath();
-      ctx.fillStyle = this.selectedColor;
-      ctx.strokeStyle = this.selectedColor;
-      ctx.lineWidth = this.lineWidth;
       ctx.moveTo(this.startX, this.startY);
       ctx.lineTo(this.startX, this.endY);
       ctx.lineTo(this.endX, this.endY);
       ctx.lineTo(this.endX, this.startY);
       ctx.lineTo(this.startX, this.startY);
+      ctx.closePath();
       ctx.stroke();
+      this.canvas = canvas;
+    },
+
+    drawDiamond(e: any) {
+      const { canvas, ctx } = this.setupCTX();
+      ctx.beginPath();
+      ctx.moveTo(this.startX + (this.endX - this.startX) / 2, this.startY);
+      ctx.lineTo(this.endX, this.startY + (this.endY - this.startY) / 2);
+      ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.endY);
+      ctx.lineTo(this.startX, this.startY + (this.endY - this.startY) / 2);
+      ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.startY);
+      ctx.stroke();
+      this.canvas = canvas;
+    },
+
+    drawHexagon(e: any) {
+      const { canvas, ctx } = this.setupCTX();
+      ctx.beginPath();
+      ctx.moveTo(this.startX + (this.endX - this.startX) / 2, this.startY);
+      ctx.lineTo(this.endX, this.startY + (this.endY - this.startY) / 3);
+      ctx.lineTo(this.endX, this.startY + ((this.endY - this.startY) / 3) * 2);
+      ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.endY);
+      ctx.lineTo(
+        this.startX,
+        this.startY + ((this.endY - this.startY) / 3) * 2
+      );
+      ctx.lineTo(this.startX, this.startY + (this.endY - this.startY) / 3);
+      ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.startY);
+      ctx.stroke();
+      this.canvas = canvas;
+    },
+
+    drawOctagon(e: any) {
+      const { canvas, ctx } = this.setupCTX();
+      ctx.beginPath();
+      ctx.moveTo(this.startX + (this.endX - this.startX) / 3, this.startY);
+      ctx.moveTo(
+        this.startX + ((this.endX - this.startX) / 3) * 2,
+        this.startY
+      );
+      ctx.lineTo(this.endX, this.startY + (this.endY - this.startY) / 3);
+      ctx.lineTo(this.endX, this.startY + ((this.endY - this.startY) / 3) * 2);
+      ctx.lineTo(this.startX + ((this.endX - this.startX) / 3) * 2, this.endY);
+      ctx.lineTo(this.startX + (this.endX - this.startX) / 3, this.endY);
+      ctx.lineTo(
+        this.startX,
+        this.startY + ((this.endY - this.startY) / 3) * 2
+      );
+      ctx.lineTo(this.startX, this.startY + (this.endY - this.startY) / 3);
+      ctx.lineTo(this.startX + (this.endX - this.startX) / 3, this.startY);
       ctx.closePath();
-      ctx.closePath();
+      ctx.stroke();
       this.canvas = canvas;
     },
 
     drawCircle(e: any) {
-      const canvas = this.canvas;
-      const ctx = canvas.getContext("2d");
+      const { canvas, ctx } = this.setupCTX();
       ctx.beginPath();
-      ctx.fillStyle = this.selectedColor;
-      ctx.strokeStyle = this.selectedColor;
-      ctx.lineWidth = this.lineWidth;
       let diameter = Math.sqrt(
         Math.abs(
           Math.pow(Math.abs(this.endX - this.startX), 2) -
@@ -235,12 +285,8 @@ export default defineComponent({
     },
 
     drawTriangle(e: any) {
-      const canvas = this.canvas;
-      const ctx = canvas.getContext("2d");
+      const { canvas, ctx } = this.setupCTX();
       ctx.beginPath();
-      ctx.fillStyle = this.selectedColor;
-      ctx.strokeStyle = this.selectedColor;
-      ctx.lineWidth = this.lineWidth;
       ctx.moveTo(this.startX + (this.endX - this.startX) / 2, this.startY);
       ctx.lineTo(this.startX, this.endY);
       ctx.lineTo(this.endX, this.endY);
@@ -276,13 +322,13 @@ export default defineComponent({
       } else if (this.selectedShape === "ellipse") {
         this.drawEllipse(e);
       } else if (this.selectedShape === "octagon") {
-        //this.drawOctagon(e);
+        this.drawOctagon(e);
       } else if (this.selectedShape === "hexagon") {
-        //this.drawHexagon(e);
+        this.drawHexagon(e);
       } else if (this.selectedShape === "star") {
         this.drawStar(e);
-      } else if (this.selectedShape === "square") {
-        //this.drawSquare(e);
+      } else if (this.selectedShape === "diamond") {
+        this.drawDiamond(e);
       }
     },
   },
