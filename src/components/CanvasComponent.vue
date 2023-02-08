@@ -125,12 +125,6 @@ export default defineComponent({
 
     drawEllipse(e: any) {
       const { canvas, ctx } = this.setupCTX();
-      //const canvas = this.canvas;
-      //const ctx = canvas.getContext("2d");
-      //ctx.beginPath();
-      //ctx.fillStyle = this.selectedColor;
-      //ctx.strokeStyle = this.selectedColor;
-      //ctx.lineWidth = this.lineWidth;
       let mainAxis = Math.sqrt(
         Math.abs(
           Math.pow(Math.abs(this.endX - this.startX), 2) -
@@ -165,36 +159,28 @@ export default defineComponent({
 
     drawStar(e: any) {
       const { canvas, ctx } = this.setupCTX();
-      var rot = (Math.PI / 2) * 3;
-      var x = this.startX;
-      var y = this.startY;
-      var step = Math.PI / 5;
-      let outerRadius = Math.sqrt(
-        Math.pow(this.endX - this.startX, 2) -
-          Math.pow(this.endY - this.startY, 2)
+      let diameter = Math.sqrt(
+        Math.abs(
+          Math.pow(Math.abs(this.endX - this.startX), 2) -
+            Math.pow(Math.abs(this.endY - this.startY), 2)
+        )
       );
-      let innerRadius = outerRadius / 2;
+      ctx.save();
       ctx.beginPath();
-      ctx.moveTo(this.startX, this.startY - outerRadius);
-      for (var i = 0; i < 5; i++) {
-        x = this.startX + Math.cos(rot) * outerRadius;
-        y = this.startY + Math.sin(rot) * outerRadius;
-        ctx.lineTo(x, y);
-        rot += step;
-        x = this.startX + Math.cos(rot) * innerRadius;
-        y = this.startY + Math.sin(rot) * innerRadius;
-        ctx.lineTo(x, y);
-        rot += step;
+      ctx.translate(
+        this.startX + (this.endX - this.startX) / 2,
+        this.startY + (this.endY - this.startY) / 2
+      );
+      ctx.moveTo(0, 0 - diameter / 2);
+      for (let i = 0; i < 5; i++) {
+        ctx.rotate(Math.PI / 5);
+        ctx.lineTo(0, 0 - diameter / 4);
+        ctx.rotate(Math.PI / 5);
+        ctx.lineTo(0, 0 - diameter / 2);
       }
-      ctx.lineTo(this.startX, this.startY - outerRadius);
       ctx.closePath();
-      ctx.lineWidth = 5;
-      ctx.strokeStyle = "blue";
       ctx.stroke();
-      ctx.fillStyle = "skyblue";
-      ctx.fill();
-      ctx.stroke();
-      ctx.closePath();
+      ctx.restore();
       this.canvas = canvas;
     },
 
