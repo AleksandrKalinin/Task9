@@ -15,55 +15,56 @@
         <div
           class="canvas-menu__item"
           v-bind:key="index"
+          @click="setColor(item)"
           v-for="(item, index) in colors"
           :style="{ 'background-color': item }"
         ></div>
       </div>
       <h6 class="canvas-menu__category">Shapes</h6>
       <div class="canvas-menu__wrapper">
-        <div class="canvas-menu__item" @click="selectShape('triangle')">
+        <div class="canvas-menu__item" @click="setShape('triangle')">
           <img
             class="canvas-menu__icon"
             v-bind:src="require('@/assets/triangle-solid.svg')"
           />
         </div>
-        <div class="canvas-menu__item" @click="selectShape('circle')">
+        <div class="canvas-menu__item" @click="setShape('circle')">
           <img
             class="canvas-menu__icon"
             v-bind:src="require('@/assets/circle-regular.svg')"
           />
         </div>
-        <div class="canvas-menu__item" @click="selectShape('ellipse')">
+        <div class="canvas-menu__item" @click="setShape('ellipse')">
           <img
             class="canvas-menu__icon"
             v-bind:src="require('@/assets/ellipse.svg')"
           />
         </div>
-        <div class="canvas-menu__item" @click="selectShape('rectangle')">
+        <div class="canvas-menu__item" @click="setShape('rectangle')">
           <img
             class="canvas-menu__icon"
             v-bind:src="require('@/assets/rectangle.svg')"
           />
         </div>
-        <div class="canvas-menu__item" @click="selectShape('square')">
+        <div class="canvas-menu__item" @click="setShape('square')">
           <img
             class="canvas-menu__icon"
             v-bind:src="require('@/assets/square-regular.svg')"
           />
         </div>
-        <div class="canvas-menu__item" @click="selectShape('star')">
+        <div class="canvas-menu__item" @click="setShape('star')">
           <img
             class="canvas-menu__icon"
             v-bind:src="require('@/assets/star.svg')"
           />
         </div>
-        <div class="canvas-menu__item" @click="selectShape('octagon')">
+        <div class="canvas-menu__item" @click="setShape('octagon')">
           <img
             class="canvas-menu__icon"
             v-bind:src="require('@/assets/octagon.svg')"
           />
         </div>
-        <div class="canvas-menu__item" @click="selectShape('hexagon')">
+        <div class="canvas-menu__item" @click="setShape('hexagon')">
           <img
             class="canvas-menu__icon"
             v-bind:src="require('@/assets/hexagon.svg')"
@@ -76,6 +77,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { mapActions } from "vuex";
 
 export default defineComponent({
   name: "CanvasMenu",
@@ -104,9 +106,7 @@ export default defineComponent({
   },
 
   methods: {
-    selectShape(value) {
-      this.selectedShape = value;
-    },
+    ...mapActions("canvas", ["setColor", "setShape", "setLineWidth"]),
   },
 });
 </script>

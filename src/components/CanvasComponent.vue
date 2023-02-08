@@ -13,6 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { mapGetters } from "vuex";
 
 export default defineComponent({
   name: "CanvasComponent",
@@ -22,9 +23,6 @@ export default defineComponent({
       x: 0 as number,
       y: 0 as number,
       isDrawing: false as boolean,
-      lineWidth: 1 as number,
-      color: "000000" as string,
-      selectedShape: null as string | null,
       startX: 0 as number,
       startY: 0 as number,
       endX: 0 as number,
@@ -32,6 +30,10 @@ export default defineComponent({
       saved: [] as string[],
       itemRefs: [] as string[],
     };
+  },
+
+  computed: {
+    ...mapGetters("canvas", ["selectedColor", "selectedShape", "lineWidth"]),
   },
 
   methods: {
@@ -79,7 +81,7 @@ export default defineComponent({
     drawOnCanvas(x1: any, y1: any, x2: any, y2: any) {
       const ctx = this.canvas.getContext("2d");
       ctx.beginPath();
-      ctx.strokeStyle = this.color;
+      ctx.strokeStyle = this.selectedColor;
       ctx.lineWidth = this.lineWidth;
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
@@ -116,19 +118,29 @@ export default defineComponent({
       const canvas = this.canvas;
       const ctx = canvas.getContext("2d");
       ctx.beginPath();
-      ctx.fillStyle = this.color;
-      ctx.strokeStyle = this.color;
+      ctx.fillStyle = this.selectedColor;
+      ctx.strokeStyle = this.selectedColor;
       ctx.lineWidth = this.lineWidth;
       let mainAxis = Math.sqrt(
-        Math.pow(this.endX - this.startX, 2) -
-          Math.pow(this.endY - this.startY, 2)
+        Math.abs(
+          Math.pow(Math.abs(this.endX - this.startX), 2) -
+            Math.pow(Math.abs(this.endY - this.startY), 2)
+        )
       );
       let angle = Math.atan(
         (this.endY - this.startY) / (this.endX - this.startX)
       );
+      let coordX =
+        this.endX > this.startX
+          ? this.startX + (this.endX - this.startX) / 2
+          : this.endX + (this.startX - this.endX) / 2;
+      let coordY =
+        this.endY > this.startY
+          ? this.startY + (this.endY - this.startY) / 2
+          : this.endY + (this.startY - this.endY) / 2;
       ctx.ellipse(
-        this.startX,
-        this.startY,
+        coordX,
+        coordY,
         mainAxis / 2,
         mainAxis / 4,
         angle,
@@ -143,8 +155,8 @@ export default defineComponent({
     drawStar(e: any) {
       const canvas = this.canvas;
       const ctx = canvas.getContext("2d");
-      ctx.fillStyle = this.color;
-      ctx.strokeStyle = this.color;
+      ctx.fillStyle = this.selectedColor;
+      ctx.strokeStyle = this.selectedColor;
       ctx.lineWidth = this.lineWidth;
       var rot = (Math.PI / 2) * 3;
       var x = this.startX;
@@ -183,8 +195,8 @@ export default defineComponent({
       const canvas = this.canvas;
       const ctx = canvas.getContext("2d");
       ctx.beginPath();
-      ctx.fillStyle = this.color;
-      ctx.strokeStyle = this.color;
+      ctx.fillStyle = this.selectedColor;
+      ctx.strokeStyle = this.selectedColor;
       ctx.lineWidth = this.lineWidth;
       ctx.moveTo(this.startX, this.startY);
       ctx.lineTo(this.startX, this.endY);
@@ -201,14 +213,22 @@ export default defineComponent({
       const canvas = this.canvas;
       const ctx = canvas.getContext("2d");
       ctx.beginPath();
-      ctx.fillStyle = this.color;
-      ctx.strokeStyle = this.color;
+      ctx.fillStyle = this.selectedColor;
+      ctx.strokeStyle = this.selectedColor;
       ctx.lineWidth = this.lineWidth;
       let diameter = Math.sqrt(
-        Math.pow(this.endX - this.startX, 2) -
-          Math.pow(this.endY - this.startY, 2)
+        Math.abs(
+          Math.pow(Math.abs(this.endX - this.startX), 2) -
+            Math.pow(Math.abs(this.endY - this.startY), 2)
+        )
       );
-      ctx.arc(this.startX, this.startY, diameter, 0, 2 * Math.PI);
+      ctx.arc(
+        this.startX + (this.endX - this.startX) / 2,
+        this.startY + (this.endY - this.startY) / 2,
+        diameter / 2,
+        0,
+        2 * Math.PI
+      );
       ctx.stroke();
       ctx.closePath();
       this.canvas = canvas;
@@ -218,8 +238,8 @@ export default defineComponent({
       const canvas = this.canvas;
       const ctx = canvas.getContext("2d");
       ctx.beginPath();
-      ctx.fillStyle = this.color;
-      ctx.strokeStyle = this.color;
+      ctx.fillStyle = this.selectedColor;
+      ctx.strokeStyle = this.selectedColor;
       ctx.lineWidth = this.lineWidth;
       ctx.moveTo(this.startX + (this.endX - this.startX) / 2, this.startY);
       ctx.lineTo(this.startX, this.endY);
@@ -231,8 +251,7 @@ export default defineComponent({
     },
 
     checkIfShapeSelected(e: MouseEvent) {
-      console.log(this.selectedShape);
-      if (this.selectedShape === null) {
+      if (this.selectedShape === "") {
         this.startDrawing(e);
       } else {
         this.getStartCoords(e);
@@ -240,7 +259,7 @@ export default defineComponent({
     },
 
     checkIfShapeActive(e: MouseEvent) {
-      if (this.selectedShape === null) {
+      if (this.selectedShape === "") {
         this.stopDrawing(e);
       } else {
         this.getEndCoords(e);
