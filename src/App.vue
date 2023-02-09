@@ -4,7 +4,6 @@
 
 <style lang="sass">
 @import "@/assets/styles/colorScheme.sass"
-@import "@/assets/styles/icon.sass"
 @import "@/assets/styles/button.sass"
 
 *

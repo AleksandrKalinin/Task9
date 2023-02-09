@@ -19,7 +19,7 @@ export default defineComponent({
   name: "CanvasComponent",
   data() {
     return {
-      canvas: null as any,
+      canvas: document.createElement("canvas") as HTMLCanvasElement,
       x: 0 as number,
       y: 0 as number,
       isDrawing: false as boolean,
@@ -38,20 +38,23 @@ export default defineComponent({
 
   methods: {
     initializeCanvas() {
-      const myCanvas: any = this.$refs.myCanvas;
+      const myCanvas: HTMLCanvasElement = this.$refs
+        .myCanvas as HTMLCanvasElement;
       this.canvas = myCanvas;
     },
 
     clearCanvas() {
-      const canvas: HTMLCanvasElement | any = this.canvas;
-      const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
-      ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.canvas = canvas;
+      const canvas: HTMLCanvasElement = this.canvas;
+      const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
+      if (ctx) {
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.canvas = canvas;
+      }
     },
 
     saveCanvas() {
       const canvas: HTMLCanvasElement = this.canvas;
-      const imgPath: any = canvas.toDataURL("image/png");
+      const imgPath: string = canvas.toDataURL("image/png");
       this.saved.push(imgPath);
     },
 
@@ -79,32 +82,34 @@ export default defineComponent({
     },
 
     drawOnCanvas(x1: any, y1: any, x2: any, y2: any) {
-      const ctx = this.canvas.getContext("2d");
-      ctx.beginPath();
-      ctx.strokeStyle = this.selectedColor;
-      ctx.lineWidth = this.lineWidth;
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
-      ctx.closePath();
+      const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
+      if (ctx) {
+        ctx.beginPath();
+        ctx.strokeStyle = this.selectedColor;
+        ctx.lineWidth = this.lineWidth;
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+        ctx.closePath();
+      }
     },
 
     getStartCoords(e: any) {
-      const cX = e.target.getBoundingClientRect().left + window.scrollX;
-      const cY = e.target.getBoundingClientRect().top + window.scrollY;
+      const cX: number = e.target.getBoundingClientRect().left + window.scrollX;
+      const cY: number = e.target.getBoundingClientRect().top + window.scrollY;
       this.startX = e.pageX - cX;
       this.startY = e.pageY - cY;
     },
 
     getEndCoords(e: any) {
-      const cX = e.target.getBoundingClientRect().left + window.scrollX;
-      const cY = e.target.getBoundingClientRect().top + window.scrollY;
+      const cX: number = e.target.getBoundingClientRect().left + window.scrollX;
+      const cY: number = e.target.getBoundingClientRect().top + window.scrollY;
       this.endX = e.pageX - cX;
       this.endY = e.pageY - cY;
       if (this.startX !== this.endX) {
         if (this.startY > this.endY) {
-          let tempX = this.startX;
-          let tempY = this.startY;
+          let tempX: number = this.startX;
+          let tempY: number = this.startY;
           this.startX = this.endX;
           this.startY = this.endY;
           this.endX = tempX;
@@ -115,16 +120,17 @@ export default defineComponent({
     },
 
     setupCTX() {
-      const canvas = this.canvas;
-      const ctx = canvas.getContext("2d");
-      ctx.fillStyle = this.selectedColor;
-      ctx.strokeStyle = this.selectedColor;
-      ctx.lineWidth = this.lineWidth;
+      const canvas: HTMLCanvasElement = this.canvas;
+      const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
+      if (ctx) {
+        ctx.fillStyle = this.selectedColor;
+        ctx.strokeStyle = this.selectedColor;
+        ctx.lineWidth = this.lineWidth;
+      }
       return { canvas, ctx };
     },
 
     drawEllipse(e: any) {
-      console.log(this.lineWidth);
       const { canvas, ctx } = this.setupCTX();
       let mainAxis = Math.sqrt(
         Math.abs(
@@ -143,39 +149,43 @@ export default defineComponent({
         this.endY > this.startY
           ? this.startY + (this.endY - this.startY) / 2
           : this.endY + (this.startY - this.endY) / 2;
-      ctx.beginPath();
-      ctx.ellipse(
-        coordX,
-        coordY,
-        mainAxis / 2,
-        mainAxis / 4,
-        angle,
-        0,
-        2 * Math.PI
-      );
-      ctx.stroke();
-      ctx.closePath();
+      if (ctx) {
+        ctx.beginPath();
+        ctx.ellipse(
+          coordX,
+          coordY,
+          mainAxis / 2,
+          mainAxis / 4,
+          angle,
+          0,
+          2 * Math.PI
+        );
+        ctx.stroke();
+        ctx.closePath();
+      }
       this.canvas = canvas;
     },
 
     drawCircle(e: any) {
       const { canvas, ctx } = this.setupCTX();
-      ctx.beginPath();
       const diameter = Math.sqrt(
         Math.abs(
           Math.pow(Math.abs(this.endX - this.startX), 2) -
             Math.pow(Math.abs(this.endY - this.startY), 2)
         )
       );
-      ctx.arc(
-        this.startX + (this.endX - this.startX) / 2,
-        this.startY + (this.endY - this.startY) / 2,
-        diameter / 2,
-        0,
-        2 * Math.PI
-      );
-      ctx.stroke();
-      ctx.closePath();
+      if (ctx) {
+        ctx.beginPath();
+        ctx.arc(
+          this.startX + (this.endX - this.startX) / 2,
+          this.startY + (this.endY - this.startY) / 2,
+          diameter / 2,
+          0,
+          2 * Math.PI
+        );
+        ctx.stroke();
+        ctx.closePath();
+      }
       this.canvas = canvas;
     },
 
@@ -187,99 +197,120 @@ export default defineComponent({
             Math.pow(Math.abs(this.endY - this.startY), 2)
         )
       );
-      ctx.save();
-      ctx.beginPath();
-      ctx.translate(
-        this.startX + (this.endX - this.startX) / 2,
-        this.startY + (this.endY - this.startY) / 2
-      );
-      ctx.moveTo(0, 0 - diameter / 2);
-      for (let i = 0; i < 5; i++) {
-        ctx.rotate(Math.PI / 5);
-        ctx.lineTo(0, 0 - diameter / 4);
-        ctx.rotate(Math.PI / 5);
-        ctx.lineTo(0, 0 - diameter / 2);
+      if (ctx) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(
+          this.startX + (this.endX - this.startX) / 2,
+          this.startY + (this.endY - this.startY) / 2
+        );
+        ctx.moveTo(0, 0 - diameter / 2);
+        for (let i = 0; i < 5; i++) {
+          ctx.rotate(Math.PI / 5);
+          ctx.lineTo(0, 0 - diameter / 4);
+          ctx.rotate(Math.PI / 5);
+          ctx.lineTo(0, 0 - diameter / 2);
+        }
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
       }
-      ctx.closePath();
-      ctx.stroke();
-      ctx.restore();
       this.canvas = canvas;
     },
 
     drawRectangle(e: any) {
       const { canvas, ctx } = this.setupCTX();
-      ctx.beginPath();
-      ctx.moveTo(this.startX, this.startY);
-      ctx.lineTo(this.startX, this.endY);
-      ctx.lineTo(this.endX, this.endY);
-      ctx.lineTo(this.endX, this.startY);
-      ctx.lineTo(this.startX, this.startY);
-      ctx.closePath();
-      ctx.stroke();
+      if (ctx) {
+        ctx.beginPath();
+        ctx.moveTo(this.startX, this.startY);
+        ctx.lineTo(this.startX, this.endY);
+        ctx.lineTo(this.endX, this.endY);
+        ctx.lineTo(this.endX, this.startY);
+        ctx.lineTo(this.startX, this.startY);
+        ctx.closePath();
+        ctx.stroke();
+      }
       this.canvas = canvas;
     },
 
     drawDiamond(e: any) {
       const { canvas, ctx } = this.setupCTX();
-      ctx.beginPath();
-      ctx.moveTo(this.startX + (this.endX - this.startX) / 2, this.startY);
-      ctx.lineTo(this.endX, this.startY + (this.endY - this.startY) / 2);
-      ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.endY);
-      ctx.lineTo(this.startX, this.startY + (this.endY - this.startY) / 2);
-      ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.startY);
-      ctx.stroke();
+      if (ctx) {
+        ctx.beginPath();
+        ctx.moveTo(this.startX + (this.endX - this.startX) / 2, this.startY);
+        ctx.lineTo(this.endX, this.startY + (this.endY - this.startY) / 2);
+        ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.endY);
+        ctx.lineTo(this.startX, this.startY + (this.endY - this.startY) / 2);
+        ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.startY);
+        ctx.stroke();
+      }
       this.canvas = canvas;
     },
 
     drawHexagon(e: any) {
       const { canvas, ctx } = this.setupCTX();
-      ctx.beginPath();
-      ctx.moveTo(this.startX + (this.endX - this.startX) / 2, this.startY);
-      ctx.lineTo(this.endX, this.startY + (this.endY - this.startY) / 3);
-      ctx.lineTo(this.endX, this.startY + ((this.endY - this.startY) / 3) * 2);
-      ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.endY);
-      ctx.lineTo(
-        this.startX,
-        this.startY + ((this.endY - this.startY) / 3) * 2
-      );
-      ctx.lineTo(this.startX, this.startY + (this.endY - this.startY) / 3);
-      ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.startY);
-      ctx.stroke();
+      if (ctx) {
+        ctx.beginPath();
+        ctx.moveTo(this.startX + (this.endX - this.startX) / 2, this.startY);
+        ctx.lineTo(this.endX, this.startY + (this.endY - this.startY) / 3);
+        ctx.lineTo(
+          this.endX,
+          this.startY + ((this.endY - this.startY) / 3) * 2
+        );
+        ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.endY);
+        ctx.lineTo(
+          this.startX,
+          this.startY + ((this.endY - this.startY) / 3) * 2
+        );
+        ctx.lineTo(this.startX, this.startY + (this.endY - this.startY) / 3);
+        ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.startY);
+        ctx.stroke();
+      }
       this.canvas = canvas;
     },
 
     drawOctagon(e: any) {
       const { canvas, ctx } = this.setupCTX();
-      ctx.beginPath();
-      ctx.moveTo(this.startX + (this.endX - this.startX) / 3, this.startY);
-      ctx.moveTo(
-        this.startX + ((this.endX - this.startX) / 3) * 2,
-        this.startY
-      );
-      ctx.lineTo(this.endX, this.startY + (this.endY - this.startY) / 3);
-      ctx.lineTo(this.endX, this.startY + ((this.endY - this.startY) / 3) * 2);
-      ctx.lineTo(this.startX + ((this.endX - this.startX) / 3) * 2, this.endY);
-      ctx.lineTo(this.startX + (this.endX - this.startX) / 3, this.endY);
-      ctx.lineTo(
-        this.startX,
-        this.startY + ((this.endY - this.startY) / 3) * 2
-      );
-      ctx.lineTo(this.startX, this.startY + (this.endY - this.startY) / 3);
-      ctx.lineTo(this.startX + (this.endX - this.startX) / 3, this.startY);
-      ctx.closePath();
-      ctx.stroke();
+      if (ctx) {
+        ctx.beginPath();
+        ctx.moveTo(this.startX + (this.endX - this.startX) / 3, this.startY);
+        ctx.moveTo(
+          this.startX + ((this.endX - this.startX) / 3) * 2,
+          this.startY
+        );
+        ctx.lineTo(this.endX, this.startY + (this.endY - this.startY) / 3);
+        ctx.lineTo(
+          this.endX,
+          this.startY + ((this.endY - this.startY) / 3) * 2
+        );
+        ctx.lineTo(
+          this.startX + ((this.endX - this.startX) / 3) * 2,
+          this.endY
+        );
+        ctx.lineTo(this.startX + (this.endX - this.startX) / 3, this.endY);
+        ctx.lineTo(
+          this.startX,
+          this.startY + ((this.endY - this.startY) / 3) * 2
+        );
+        ctx.lineTo(this.startX, this.startY + (this.endY - this.startY) / 3);
+        ctx.lineTo(this.startX + (this.endX - this.startX) / 3, this.startY);
+        ctx.closePath();
+        ctx.stroke();
+      }
       this.canvas = canvas;
     },
 
     drawTriangle(e: any) {
       const { canvas, ctx } = this.setupCTX();
-      ctx.beginPath();
-      ctx.moveTo(this.startX + (this.endX - this.startX) / 2, this.startY);
-      ctx.lineTo(this.startX, this.endY);
-      ctx.lineTo(this.endX, this.endY);
-      ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.startY);
-      ctx.stroke();
-      ctx.closePath();
+      if (ctx) {
+        ctx.beginPath();
+        ctx.moveTo(this.startX + (this.endX - this.startX) / 2, this.startY);
+        ctx.lineTo(this.startX, this.endY);
+        ctx.lineTo(this.endX, this.endY);
+        ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.startY);
+        ctx.stroke();
+        ctx.closePath();
+      }
       this.canvas = canvas;
     },
 

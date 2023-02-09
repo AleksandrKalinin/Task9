@@ -29,86 +29,20 @@
       <div class="canvas-menu__block">
         <h6 class="canvas-menu__category">Shapes</h6>
         <div class="canvas-menu__wrapper canvas-wrapper_spaced">
-          <div
-            class="canvas-menu__item canvas-option canvas-option_active"
-            @click="setShape('triangle')"
-            title="Triangle"
-          >
-            <img
-              class="canvas-menu__icon"
-              v-bind:src="require('@/assets/triangle-solid.svg')"
-            />
-          </div>
-          <div
-            class="canvas-menu__item canvas-option"
-            @click="setShape('circle')"
-            title="Circle"
-          >
-            <img
-              class="canvas-menu__icon"
-              v-bind:src="require('@/assets/circle-regular.svg')"
-            />
-          </div>
-          <div
-            class="canvas-menu__item canvas-option"
-            @click="setShape('ellipse')"
-            title="Ellipse"
-          >
-            <img
-              class="canvas-menu__icon"
-              v-bind:src="require('@/assets/ellipse.svg')"
-            />
-          </div>
-          <div
-            class="canvas-menu__item canvas-option"
-            @click="setShape('rectangle')"
-            title="Rectangle"
-          >
-            <img
-              class="canvas-menu__icon"
-              v-bind:src="require('@/assets/rectangle.svg')"
-            />
-          </div>
-          <div
-            class="canvas-menu__item canvas-option"
-            @click="setShape('diamond')"
-            title="Diamond"
-          >
-            <img
-              class="canvas-menu__icon"
-              v-bind:src="require('@/assets/diamond.svg')"
-            />
-          </div>
-          <div
-            class="canvas-menu__item canvas-option"
-            @click="setShape('star')"
-            title="Star"
-          >
-            <img
-              class="canvas-menu__icon"
-              v-bind:src="require('@/assets/star.svg')"
-            />
-          </div>
-          <div
-            class="canvas-menu__item canvas-option"
-            @click="setShape('hexagon')"
-            title="Hexagon"
-          >
-            <img
-              class="canvas-menu__icon"
-              v-bind:src="require('@/assets/hexagon.svg')"
-            />
-          </div>
-          <div
-            class="canvas-menu__item canvas-option"
-            @click="setShape('octagon')"
-            title="Octagon"
-          >
-            <img
-              class="canvas-menu__icon"
-              v-bind:src="require('@/assets/octagon.svg')"
-            />
-          </div>
+          <template v-if="shapes.length">
+            <div
+              v-for="(shape, index) in shapes"
+              :key="index"
+              class="canvas-menu__item canvas-option"
+              @click="setShape(shape.link)"
+              :title="shape.name"
+            >
+              <img
+                class="canvas-menu__icon"
+                :src="require(`@/assets/${shape.path}`)"
+              />
+            </div>
+          </template>
         </div>
       </div>
       <div class="canvas-menu__block">
@@ -143,11 +77,17 @@
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
 
+interface Shape {
+  name: string;
+  link: string;
+  path: string;
+}
+
 export default defineComponent({
   name: "CanvasMenu",
-
   data() {
     return {
+      shapes: [] as Array<Shape>,
       colors: [
         "#000000",
         "#FFFFFF",
@@ -165,7 +105,7 @@ export default defineComponent({
         "#D73B3E",
         "#CC397B",
         "#665D1E",
-      ],
+      ] as Array<string>,
     };
   },
 
@@ -183,6 +123,14 @@ export default defineComponent({
 
   methods: {
     ...mapActions("canvas", ["setColor", "setShape", "setLineWidth"]),
+  },
+
+  mounted() {
+    fetch("./shapes.json")
+      .then((response) => response.json())
+      .then((data) => {
+        this.shapes = data;
+      });
   },
 });
 </script>
