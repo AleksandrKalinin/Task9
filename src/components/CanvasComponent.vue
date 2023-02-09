@@ -66,13 +66,13 @@ export default defineComponent({
       }
     },
 
-    startDrawing(e: any) {
+    startDrawing(e: MouseEvent) {
       this.x = e.offsetX;
       this.y = e.offsetY;
       this.isDrawing = true;
     },
 
-    stopDrawing(e: any) {
+    stopDrawing(e: MouseEvent) {
       if (this.isDrawing) {
         this.drawOnCanvas(this.x, this.y, e.offsetX, e.offsetY);
         this.x = 0;
@@ -81,7 +81,8 @@ export default defineComponent({
       }
     },
 
-    drawOnCanvas(x1: any, y1: any, x2: any, y2: any) {
+    drawOnCanvas(x1: number, y1: number, x2: number, y2: number) {
+      console.log(x1);
       const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
       if (ctx) {
         ctx.beginPath();
@@ -94,16 +95,18 @@ export default defineComponent({
       }
     },
 
-    getStartCoords(e: any) {
-      const cX: number = e.target.getBoundingClientRect().left + window.scrollX;
-      const cY: number = e.target.getBoundingClientRect().top + window.scrollY;
+    getStartCoords(e: MouseEvent) {
+      const target = e.target as HTMLElement;
+      const cX: number = target.getBoundingClientRect().left + window.scrollX;
+      const cY: number = target.getBoundingClientRect().top + window.scrollY;
       this.startX = e.pageX - cX;
       this.startY = e.pageY - cY;
     },
 
-    getEndCoords(e: any) {
-      const cX: number = e.target.getBoundingClientRect().left + window.scrollX;
-      const cY: number = e.target.getBoundingClientRect().top + window.scrollY;
+    getEndCoords(e: MouseEvent) {
+      const target = e.target as HTMLElement;
+      const cX: number = target.getBoundingClientRect().left + window.scrollX;
+      const cY: number = target.getBoundingClientRect().top + window.scrollY;
       this.endX = e.pageX - cX;
       this.endY = e.pageY - cY;
       if (this.startX !== this.endX) {
@@ -115,7 +118,7 @@ export default defineComponent({
           this.endX = tempX;
           this.endY = tempY;
         }
-        this.drawShape(e);
+        this.drawShape();
       }
     },
 
@@ -130,22 +133,22 @@ export default defineComponent({
       return { canvas, ctx };
     },
 
-    drawEllipse(e: any) {
+    drawEllipse() {
       const { canvas, ctx } = this.setupCTX();
-      let mainAxis = Math.sqrt(
+      let mainAxis: number = Math.sqrt(
         Math.abs(
           Math.pow(Math.abs(this.endX - this.startX), 2) -
             Math.pow(Math.abs(this.endY - this.startY), 2)
         )
       );
-      let angle = Math.atan(
+      let angle: number = Math.atan(
         (this.endY - this.startY) / (this.endX - this.startX)
       );
-      let coordX =
+      let coordX: number =
         this.endX > this.startX
           ? this.startX + (this.endX - this.startX) / 2
           : this.endX + (this.startX - this.endX) / 2;
-      let coordY =
+      let coordY: number =
         this.endY > this.startY
           ? this.startY + (this.endY - this.startY) / 2
           : this.endY + (this.startY - this.endY) / 2;
@@ -166,9 +169,9 @@ export default defineComponent({
       this.canvas = canvas;
     },
 
-    drawCircle(e: any) {
+    drawCircle() {
       const { canvas, ctx } = this.setupCTX();
-      const diameter = Math.sqrt(
+      const diameter: number = Math.sqrt(
         Math.abs(
           Math.pow(Math.abs(this.endX - this.startX), 2) -
             Math.pow(Math.abs(this.endY - this.startY), 2)
@@ -189,9 +192,9 @@ export default defineComponent({
       this.canvas = canvas;
     },
 
-    drawStar(e: any) {
+    drawStar() {
       const { canvas, ctx } = this.setupCTX();
-      let diameter = Math.sqrt(
+      let diameter: number = Math.sqrt(
         Math.abs(
           Math.pow(Math.abs(this.endX - this.startX), 2) -
             Math.pow(Math.abs(this.endY - this.startY), 2)
@@ -218,7 +221,7 @@ export default defineComponent({
       this.canvas = canvas;
     },
 
-    drawRectangle(e: any) {
+    drawRectangle() {
       const { canvas, ctx } = this.setupCTX();
       if (ctx) {
         ctx.beginPath();
@@ -233,7 +236,7 @@ export default defineComponent({
       this.canvas = canvas;
     },
 
-    drawDiamond(e: any) {
+    drawDiamond() {
       const { canvas, ctx } = this.setupCTX();
       if (ctx) {
         ctx.beginPath();
@@ -247,7 +250,7 @@ export default defineComponent({
       this.canvas = canvas;
     },
 
-    drawHexagon(e: any) {
+    drawHexagon() {
       const { canvas, ctx } = this.setupCTX();
       if (ctx) {
         ctx.beginPath();
@@ -269,7 +272,7 @@ export default defineComponent({
       this.canvas = canvas;
     },
 
-    drawOctagon(e: any) {
+    drawOctagon() {
       const { canvas, ctx } = this.setupCTX();
       if (ctx) {
         ctx.beginPath();
@@ -300,7 +303,7 @@ export default defineComponent({
       this.canvas = canvas;
     },
 
-    drawTriangle(e: any) {
+    drawTriangle() {
       const { canvas, ctx } = this.setupCTX();
       if (ctx) {
         ctx.beginPath();
@@ -330,23 +333,23 @@ export default defineComponent({
       }
     },
 
-    drawShape(e: any) {
+    drawShape() {
       if (this.selectedShape === "triangle") {
-        this.drawTriangle(e);
+        this.drawTriangle();
       } else if (this.selectedShape === "circle") {
-        this.drawCircle(e);
+        this.drawCircle();
       } else if (this.selectedShape === "rectangle") {
-        this.drawRectangle(e);
+        this.drawRectangle();
       } else if (this.selectedShape === "ellipse") {
-        this.drawEllipse(e);
+        this.drawEllipse();
       } else if (this.selectedShape === "octagon") {
-        this.drawOctagon(e);
+        this.drawOctagon();
       } else if (this.selectedShape === "hexagon") {
-        this.drawHexagon(e);
+        this.drawHexagon();
       } else if (this.selectedShape === "star") {
-        this.drawStar(e);
+        this.drawStar();
       } else if (this.selectedShape === "diamond") {
-        this.drawDiamond(e);
+        this.drawDiamond();
       }
     },
   },

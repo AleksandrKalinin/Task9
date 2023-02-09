@@ -1,4 +1,6 @@
-interface StateData {
+import { ActionContext } from "vuex";
+
+interface ModuleData {
   selectedColor: string;
   selectedShape: string;
   lineWidth: number;
@@ -12,43 +14,46 @@ export const canvasModule = {
   }),
 
   getters: {
-    selectedColor: (state: StateData) => {
+    selectedColor: (state: ModuleData) => {
       return state.selectedColor;
     },
 
-    selectedShape: (state: StateData) => {
+    selectedShape: (state: ModuleData) => {
       return state.selectedShape;
     },
 
-    lineWidth: (state: StateData) => {
+    lineWidth: (state: ModuleData) => {
       return state.lineWidth;
     },
   },
 
   mutations: {
-    setColor(state: StateData, value: string) {
+    setColor(state: ModuleData, value: string): void {
       state.selectedColor = value;
     },
 
-    setShape(state: StateData, value: string) {
+    setShape(state: ModuleData, value: string): void {
       state.selectedShape = value;
     },
 
-    setLineWidth(state: StateData, value: number) {
+    setLineWidth(state: ModuleData, value: number): void {
       state.lineWidth = value;
     },
   },
 
   actions: {
-    setColor({ commit }: any, value: string) {
+    setColor({ commit }: ActionContext<ModuleData, unknown>, value: string) {
       commit("setColor", value);
     },
 
-    setShape({ commit }: any, value: string) {
+    setShape({ commit }: ActionContext<ModuleData, unknown>, value: string) {
       commit("setShape", value);
     },
 
-    setLineWidth({ commit }: any, value: number) {
+    setLineWidth(
+      { commit }: ActionContext<ModuleData, unknown>,
+      value: number
+    ) {
       commit("setLineWidth", value);
     },
   },
