@@ -6,6 +6,8 @@ export const canvasModule: Module<CanvasState, RootState> = {
     selectedColor: "#000000" as string,
     selectedShape: "" as string,
     lineWidth: 1 as number,
+    savedItems: [] as Array<any>,
+    canvas: document.createElement("canvas") as HTMLCanvasElement,
   }),
 
   getters: <GetterTree<CanvasState, RootState>>{
@@ -20,6 +22,14 @@ export const canvasModule: Module<CanvasState, RootState> = {
     lineWidth: (state: CanvasState) => {
       return state.lineWidth;
     },
+
+    savedItems: (state: CanvasState) => {
+      return state.savedItems;
+    },
+
+    canvas: (state: CanvasState) => {
+      return state.canvas;
+    },
   },
 
   mutations: <MutationTree<CanvasState>>{
@@ -33,6 +43,14 @@ export const canvasModule: Module<CanvasState, RootState> = {
 
     setLineWidth(state: CanvasState, value: number): void {
       state.lineWidth = value;
+    },
+
+    saveItem(state: CanvasState, value: any): void {
+      state.savedItems.push(value);
+    },
+
+    saveCanvas(state: CanvasState, value: any): void {
+      state.canvas = value;
     },
   },
 
@@ -50,6 +68,17 @@ export const canvasModule: Module<CanvasState, RootState> = {
       value: number
     ) {
       commit("setLineWidth", value);
+    },
+
+    saveItem({ commit }: ActionContext<CanvasState, unknown>, value: any) {
+      commit("saveItem", value);
+    },
+
+    saveCanvas(
+      { commit }: ActionContext<CanvasState, unknown>,
+      value: HTMLCanvasElement
+    ) {
+      commit("saveCanvas", value);
     },
   },
 

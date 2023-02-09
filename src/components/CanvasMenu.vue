@@ -61,7 +61,10 @@
         <div
           class="canvas-menu__wrapper canvas-wrapper_large canvas-wrapper_spaced"
         >
-          <button class="button button_regular button_normal">
+          <button
+            class="button button_regular button_normal"
+            @click="addItemToGallery"
+          >
             Save picture
           </button>
           <button class="button button_regular button_normal">
@@ -110,10 +113,11 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapGetters("canvas", ["lineWidth"]),
+    ...mapGetters("canvas", ["lineWidth", "canvas"]),
+
     width: {
       get() {
-        return this.lineWidth;
+        return 1;
       },
       set(value: number) {
         this.setLineWidth(value);
@@ -122,7 +126,21 @@ export default defineComponent({
   },
 
   methods: {
-    ...mapActions("canvas", ["setColor", "setShape", "setLineWidth"]),
+    ...mapActions("canvas", [
+      "setColor",
+      "setShape",
+      "setLineWidth",
+      "saveItem",
+    ]),
+
+    addItemToGallery() {
+      const canvas: HTMLCanvasElement = this.canvas;
+      const value: any = {};
+      value.author = "John Doe";
+      value.date = new Date();
+      value.link = canvas.toDataURL("image/png");
+      this.saveItem(value);
+    },
   },
 
   mounted() {

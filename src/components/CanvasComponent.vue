@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default defineComponent({
   name: "CanvasComponent",
@@ -37,6 +37,8 @@ export default defineComponent({
   },
 
   methods: {
+    ...mapActions("canvas", ["saveCanvas"]),
+
     initializeCanvas() {
       const myCanvas: HTMLCanvasElement = this.$refs
         .myCanvas as HTMLCanvasElement;
@@ -50,12 +52,6 @@ export default defineComponent({
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.canvas = canvas;
       }
-    },
-
-    saveCanvas() {
-      const canvas: HTMLCanvasElement = this.canvas;
-      const imgPath: string = canvas.toDataURL("image/png");
-      this.saved.push(imgPath);
     },
 
     draw(e: MouseEvent) {
@@ -166,6 +162,7 @@ export default defineComponent({
         ctx.closePath();
       }
       this.canvas = canvas;
+      this.saveCanvas(canvas);
     },
 
     drawCircle() {
