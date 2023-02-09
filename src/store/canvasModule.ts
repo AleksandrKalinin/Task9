@@ -1,5 +1,5 @@
 import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
-import { RootState, CanvasState } from "../components/types/types";
+import { RootState, CanvasState } from "../types/types";
 
 export const canvasModule: Module<CanvasState, RootState> = {
   state: () => ({
