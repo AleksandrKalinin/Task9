@@ -1,57 +1,52 @@
-import { ActionContext } from "vuex";
+import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
+import { RootState, CanvasState } from "../components/types/types";
 
-interface ModuleData {
-  selectedColor: string;
-  selectedShape: string;
-  lineWidth: number;
-}
-
-export const canvasModule = {
+export const canvasModule: Module<CanvasState, RootState> = {
   state: () => ({
     selectedColor: "#000000" as string,
     selectedShape: "" as string,
     lineWidth: 1 as number,
   }),
 
-  getters: {
-    selectedColor: (state: ModuleData) => {
+  getters: <GetterTree<CanvasState, RootState>>{
+    selectedColor: (state: CanvasState) => {
       return state.selectedColor;
     },
 
-    selectedShape: (state: ModuleData) => {
+    selectedShape: (state: CanvasState) => {
       return state.selectedShape;
     },
 
-    lineWidth: (state: ModuleData) => {
+    lineWidth: (state: CanvasState) => {
       return state.lineWidth;
     },
   },
 
-  mutations: {
-    setColor(state: ModuleData, value: string): void {
+  mutations: <MutationTree<CanvasState>>{
+    setColor(state: CanvasState, value: string): void {
       state.selectedColor = value;
     },
 
-    setShape(state: ModuleData, value: string): void {
+    setShape(state: CanvasState, value: string): void {
       state.selectedShape = value;
     },
 
-    setLineWidth(state: ModuleData, value: number): void {
+    setLineWidth(state: CanvasState, value: number): void {
       state.lineWidth = value;
     },
   },
 
   actions: {
-    setColor({ commit }: ActionContext<ModuleData, unknown>, value: string) {
+    setColor({ commit }: ActionContext<CanvasState, unknown>, value: string) {
       commit("setColor", value);
     },
 
-    setShape({ commit }: ActionContext<ModuleData, unknown>, value: string) {
+    setShape({ commit }: ActionContext<CanvasState, unknown>, value: string) {
       commit("setShape", value);
     },
 
     setLineWidth(
-      { commit }: ActionContext<ModuleData, unknown>,
+      { commit }: ActionContext<CanvasState, unknown>,
       value: number
     ) {
       commit("setLineWidth", value);

@@ -82,7 +82,6 @@ export default defineComponent({
     },
 
     drawOnCanvas(x1: number, y1: number, x2: number, y2: number) {
-      console.log(x1);
       const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
       if (ctx) {
         ctx.beginPath();
