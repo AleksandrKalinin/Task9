@@ -7,7 +7,7 @@
     class="canvas"
     id="myCanvas"
     width="1000"
-    height="500"
+    height="600"
   ></canvas>
 </template>
 
@@ -124,6 +124,7 @@ export default defineComponent({
     },
 
     drawEllipse(e: any) {
+      console.log(this.lineWidth);
       const { canvas, ctx } = this.setupCTX();
       let mainAxis = Math.sqrt(
         Math.abs(
@@ -149,6 +150,27 @@ export default defineComponent({
         mainAxis / 2,
         mainAxis / 4,
         angle,
+        0,
+        2 * Math.PI
+      );
+      ctx.stroke();
+      ctx.closePath();
+      this.canvas = canvas;
+    },
+
+    drawCircle(e: any) {
+      const { canvas, ctx } = this.setupCTX();
+      ctx.beginPath();
+      const diameter = Math.sqrt(
+        Math.abs(
+          Math.pow(Math.abs(this.endX - this.startX), 2) -
+            Math.pow(Math.abs(this.endY - this.startY), 2)
+        )
+      );
+      ctx.arc(
+        this.startX + (this.endX - this.startX) / 2,
+        this.startY + (this.endY - this.startY) / 2,
+        diameter / 2,
         0,
         2 * Math.PI
       );
@@ -246,27 +268,6 @@ export default defineComponent({
       ctx.lineTo(this.startX + (this.endX - this.startX) / 3, this.startY);
       ctx.closePath();
       ctx.stroke();
-      this.canvas = canvas;
-    },
-
-    drawCircle(e: any) {
-      const { canvas, ctx } = this.setupCTX();
-      ctx.beginPath();
-      let diameter = Math.sqrt(
-        Math.abs(
-          Math.pow(Math.abs(this.endX - this.startX), 2) -
-            Math.pow(Math.abs(this.endY - this.startY), 2)
-        )
-      );
-      ctx.arc(
-        this.startX + (this.endX - this.startX) / 2,
-        this.startY + (this.endY - this.startY) / 2,
-        diameter / 2,
-        0,
-        2 * Math.PI
-      );
-      ctx.stroke();
-      ctx.closePath();
       this.canvas = canvas;
     },
 

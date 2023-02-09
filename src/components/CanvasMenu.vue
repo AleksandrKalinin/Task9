@@ -1,74 +1,138 @@
 <template>
   <div class="canvas-menu">
     <div class="canvas-menu__section">
-      <h6 class="canvas-menu__category">Instruments</h6>
-      <div class="canvas-menu__wrapper">
-        <div class="canvas-menu__item">
-          <img
-            class="canvas-menu__icon"
-            v-bind:src="require('@/assets/paintbrush-solid.svg')"
+      <div class="canvas-menu__block">
+        <h6 class="canvas-menu__category">Instruments</h6>
+        <div class="canvas-menu__wrapper canvas-wrapper_regular">
+          <div class="canvas-menu__item" title="Pen">
+            <img
+              class="canvas-menu__icon"
+              v-bind:src="require('@/assets/paintbrush-solid.svg')"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="canvas-menu__block">
+        <h6 class="canvas-menu__category">Line width</h6>
+        <div class="canvas-menu__wrapper canvas-wrapper_spaced">
+          <input
+            v-model="width"
+            min="1"
+            max="10"
+            type="range"
+            id="lineWidth"
+            name="lineWidth"
+            class="canvas-menu__input"
           />
         </div>
       </div>
-      <h6 class="canvas-menu__category">Colors</h6>
-      <div class="canvas-menu__wrapper">
+      <div class="canvas-menu__block">
+        <h6 class="canvas-menu__category">Shapes</h6>
+        <div class="canvas-menu__wrapper canvas-wrapper_spaced">
+          <div
+            class="canvas-menu__item canvas-option canvas-option_active"
+            @click="setShape('triangle')"
+            title="Triangle"
+          >
+            <img
+              class="canvas-menu__icon"
+              v-bind:src="require('@/assets/triangle-solid.svg')"
+            />
+          </div>
+          <div
+            class="canvas-menu__item canvas-option"
+            @click="setShape('circle')"
+            title="Circle"
+          >
+            <img
+              class="canvas-menu__icon"
+              v-bind:src="require('@/assets/circle-regular.svg')"
+            />
+          </div>
+          <div
+            class="canvas-menu__item canvas-option"
+            @click="setShape('ellipse')"
+            title="Ellipse"
+          >
+            <img
+              class="canvas-menu__icon"
+              v-bind:src="require('@/assets/ellipse.svg')"
+            />
+          </div>
+          <div
+            class="canvas-menu__item canvas-option"
+            @click="setShape('rectangle')"
+            title="Rectangle"
+          >
+            <img
+              class="canvas-menu__icon"
+              v-bind:src="require('@/assets/rectangle.svg')"
+            />
+          </div>
+          <div
+            class="canvas-menu__item canvas-option"
+            @click="setShape('diamond')"
+            title="Diamond"
+          >
+            <img
+              class="canvas-menu__icon"
+              v-bind:src="require('@/assets/diamond.svg')"
+            />
+          </div>
+          <div
+            class="canvas-menu__item canvas-option"
+            @click="setShape('star')"
+            title="Star"
+          >
+            <img
+              class="canvas-menu__icon"
+              v-bind:src="require('@/assets/star.svg')"
+            />
+          </div>
+          <div
+            class="canvas-menu__item canvas-option"
+            @click="setShape('hexagon')"
+            title="Hexagon"
+          >
+            <img
+              class="canvas-menu__icon"
+              v-bind:src="require('@/assets/hexagon.svg')"
+            />
+          </div>
+          <div
+            class="canvas-menu__item canvas-option"
+            @click="setShape('octagon')"
+            title="Octagon"
+          >
+            <img
+              class="canvas-menu__icon"
+              v-bind:src="require('@/assets/octagon.svg')"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="canvas-menu__block">
+        <h6 class="canvas-menu__category">Colors</h6>
+        <div class="canvas-menu__wrapper canvas-wrapper_spaced">
+          <div
+            class="canvas-menu__item"
+            v-bind:key="index"
+            @click="setColor(item)"
+            v-for="(item, index) in colors"
+            :style="{ 'background-color': item }"
+          ></div>
+        </div>
+      </div>
+      <div class="canvas-menu__block">
         <div
-          class="canvas-menu__item"
-          v-bind:key="index"
-          @click="setColor(item)"
-          v-for="(item, index) in colors"
-          :style="{ 'background-color': item }"
-        ></div>
-      </div>
-      <h6 class="canvas-menu__category">Shapes</h6>
-      <div class="canvas-menu__wrapper">
-        <div class="canvas-menu__item" @click="setShape('triangle')">
-          <img
-            class="canvas-menu__icon"
-            v-bind:src="require('@/assets/triangle-solid.svg')"
-          />
-        </div>
-        <div class="canvas-menu__item" @click="setShape('circle')">
-          <img
-            class="canvas-menu__icon"
-            v-bind:src="require('@/assets/circle-regular.svg')"
-          />
-        </div>
-        <div class="canvas-menu__item" @click="setShape('ellipse')">
-          <img
-            class="canvas-menu__icon"
-            v-bind:src="require('@/assets/ellipse.svg')"
-          />
-        </div>
-        <div class="canvas-menu__item" @click="setShape('rectangle')">
-          <img
-            class="canvas-menu__icon"
-            v-bind:src="require('@/assets/rectangle.svg')"
-          />
-        </div>
-        <div class="canvas-menu__item" @click="setShape('diamond')">
-          <img
-            class="canvas-menu__icon"
-            v-bind:src="require('@/assets/diamond.svg')"
-          />
-        </div>
-        <div class="canvas-menu__item" @click="setShape('star')">
-          <img
-            class="canvas-menu__icon"
-            v-bind:src="require('@/assets/star.svg')"
-          />
-        </div>
-        <div class="canvas-menu__item" @click="setShape('octagon')">
-          <img
-            class="canvas-menu__icon"
-            v-bind:src="require('@/assets/octagon.svg')"
-          />
-        </div>
-        <div class="canvas-menu__item" @click="setShape('hexagon')">
-          <img
-            class="canvas-menu__icon"
-            v-bind:src="require('@/assets/hexagon.svg')"
-          />
+          class="canvas-menu__wrapper canvas-wrapper_large canvas-wrapper_spaced"
+        >
+          <button class="button button_regular button_normal">
+            Save picture
+          </button>
+          <button class="button button_regular button_normal">
+            Clear canvas
+          </button>
         </div>
       </div>
     </div>
@@ -77,7 +141,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default defineComponent({
   name: "CanvasMenu",
@@ -93,16 +157,28 @@ export default defineComponent({
         "#CC338B",
         "#BFFF00",
         "#D40000",
-        "#000000",
-        "#FFFFFF",
-        "#037949",
-        "#318CE7",
-        "#993300",
-        "#CC338B",
-        "#BFFF00",
-        "#D40000",
+        "#F07427",
+        "#D470A2",
+        "#0F4D92",
+        "#18880D",
+        "#727472",
+        "#D73B3E",
+        "#CC397B",
+        "#665D1E",
       ],
     };
+  },
+
+  computed: {
+    ...mapGetters("canvas", ["lineWidth"]),
+    width: {
+      get() {
+        return this.lineWidth;
+      },
+      set(value: number) {
+        this.setLineWidth(value);
+      },
+    },
   },
 
   methods: {
@@ -114,10 +190,12 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="sass">
 .canvas-menu
-  width: 445px
-  height: 500px
+  width: 465px
+  height: 600px
   border: 1px solid #CCCCCC
   margin-right: 30px
+  .canvas-menu__block
+    margin: 0 10px 20px 10px
 
   .canvas-menu__category
     font-size: 18px
@@ -126,8 +204,17 @@ export default defineComponent({
     padding: 10px 5px
   .canvas-menu__wrapper
     display: flex
-    justify-content: space-around
     flex-wrap: wrap
+  .canvas-wrapper_regular
+    justify-content: flex-start
+  .canvas-wrapper_spaced
+    justify-content: space-around
+  .canvas-wrapper_centered
+    justify-content: center
+  .canvas-wrapper_large
+    padding: 20px 0
+    align-items: center
+
   .canvas-menu__item
     width: 50px
     height: 50px
@@ -139,10 +226,17 @@ export default defineComponent({
     overflow: hidden
     border: 1px solid #333333
 
+  .canvas-menu__item.canvas-option_active
+    box-shadow: inset 0 0 3px #4169E1
+    border: 1px solid #4169E1
+
   .canvas-menu__icon
     width: 30px
     height: 30px
     object-fit: cover
     -webkit-filter: invert(100%)
     filter: invert(100%)
+
+  .canvas-menu__input
+    width: 100%
 </style>

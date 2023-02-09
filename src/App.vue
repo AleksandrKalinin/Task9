@@ -3,6 +3,10 @@
 </template>
 
 <style lang="sass">
+@import "@/assets/styles/colorScheme.sass"
+@import "@/assets/styles/icon.sass"
+@import "@/assets/styles/button.sass"
+
 *
   padding: 0
   margin: 0
