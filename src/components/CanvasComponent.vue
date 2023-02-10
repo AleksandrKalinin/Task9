@@ -6,7 +6,7 @@
     ref="myCanvas"
     class="canvas"
     id="myCanvas"
-    width="1000"
+    width="900"
     height="600"
   ></canvas>
 </template>

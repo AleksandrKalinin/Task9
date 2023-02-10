@@ -10,8 +10,8 @@
           <img class="gallery-preview__image" :src="item.link" />
         </div>
         <div class="gallery-item__description">
-          <p class="gallery-item__author">Made by: {{ item.author }}</p>
-          <p class="gallery-item__date">{{ item.date }}</p>
+          <p class="gallery-item__author">by: {{ item.author }}</p>
+          <p class="gallery-item__date">Published: {{ item.date }}</p>
         </div>
       </div>
     </template>
@@ -51,11 +51,9 @@ export default defineComponent({
       const day = el.date.getDate();
       const month = el.date.getMonth() + 1;
       const year = el.date.getFullYear();
-      const hours = el.date.getHours();
-      const minutes = el.date.getMinutes();
       dataItem.author = el.author;
       dataItem.link = el.link;
-      dataItem.date = `${hours}:${minutes} at ${day}/${month}/${year}`;
+      dataItem.date = `${day}/${month}/${year}`;
       data.push(dataItem);
     }
     this.formattedData = data;
@@ -66,17 +64,17 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="sass">
 @import "@/assets/styles/colorScheme.sass"
-
 .gallery
   display: flex
   flex-wrap: wrap
-  padding: 20px 0
+  padding: 0 30px
   .gallery-item
-    width: 500px
-    margin: 0 20px
+    width: 450px
+    max-height: 362px
+    margin: 0 10px 20px
     border: 1px solid #CCCCCC
     .gallery-item__preview
-      width: 500px
+      width: 450px
       height: 300px
       overflow: hidden
       .gallery-preview__image

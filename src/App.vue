@@ -13,7 +13,7 @@
   font-family: 'Open Sans', sans-serif
 
 .main-container
-  display: block
+  display: flex
   padding: 30px
   min-height: calc(100vh - 80px)
 
