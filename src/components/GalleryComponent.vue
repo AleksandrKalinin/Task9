@@ -38,22 +38,21 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapGetters("canvas", ["savedItems"]),
-    ...mapGetters("database", ["items", "areItemsLoaded"]),
+    ...mapGetters("database", ["items", "areItemsLoaded", "filteredItems"]),
+
+    computedItems(): Array<any> {
+      return this.filteredItems as any;
+    },
   },
 
   methods: {
     ...mapActions("database", ["pushIntoDatabase", "fetchItems"]),
 
-    saveItems() {
-      this.pushIntoDatabase([...this.savedItems]);
-    },
-
-    formatData() {
+    formatData(values: Array<any>) {
       const data: Array<GalleryItem> | any = [];
-      for (let i = 0; i < this.items.length; i++) {
+      for (let i = 0; i < values.length; i++) {
         const dataItem: any = {};
-        const el = this.items[i];
+        const el = values[i];
         const date = new Date(el.date.seconds * 1000);
         const day = date.getDate();
         const month = date.getMonth() + 1;
@@ -69,7 +68,11 @@ export default defineComponent({
 
   watch: {
     areItemsLoaded: function () {
-      this.formatData();
+      this.formatData(this.filteredItems);
+    },
+
+    computedItems(newVal) {
+      this.formatData(newVal);
     },
   },
 

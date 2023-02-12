@@ -131,6 +131,7 @@ export default defineComponent({
         return 1;
       },
       set(value: number) {
+        console.log(value);
         this.setLineWidth(value);
       },
     },

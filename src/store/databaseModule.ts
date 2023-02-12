@@ -13,7 +13,9 @@ import {
 export const databaseModule: Module<DatabaseState, RootState> = {
   state: () => ({
     items: [] as any,
+    filteredItems: [] as any,
     areItemsLoaded: false as boolean,
+    searchQuery: "" as string,
   }),
 
   getters: <GetterTree<DatabaseState, RootState>>{
@@ -23,6 +25,22 @@ export const databaseModule: Module<DatabaseState, RootState> = {
 
     areItemsLoaded: (state: DatabaseState) => {
       return state.areItemsLoaded;
+    },
+
+    searchQuery: (state: DatabaseState) => {
+      return state.searchQuery;
+    },
+
+    filteredItems: (state: DatabaseState, getters) => {
+      if (state.searchQuery === "") {
+        return getters.items;
+      } else {
+        return [
+          ...getters.items.filter((item: any) =>
+            item.author.toLowerCase().includes(state.searchQuery.toLowerCase())
+          ),
+        ];
+      }
     },
   },
 
@@ -37,6 +55,10 @@ export const databaseModule: Module<DatabaseState, RootState> = {
 
     changeStatus(state: DatabaseState, value: any): void {
       state.areItemsLoaded = true;
+    },
+
+    updateSearchQuery(state: DatabaseState, value: any): void {
+      state.searchQuery = value;
     },
   },
 
@@ -80,6 +102,13 @@ export const databaseModule: Module<DatabaseState, RootState> = {
           console.log(e);
         }
       }
+    },
+
+    updateSearchQuery(
+      { commit }: ActionContext<DatabaseState, unknown>,
+      value: any
+    ) {
+      commit("updateSearchQuery", value);
     },
   },
 

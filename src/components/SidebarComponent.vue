@@ -11,15 +11,30 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default defineComponent({
   name: "SidebarComponent",
 
   data() {
-    return {
-      currentInput: "" as string,
-    };
+    return {};
+  },
+
+  computed: {
+    ...mapGetters("database", ["items", "areItemsLoaded", "searchQuery"]),
+
+    currentInput: {
+      get() {
+        return this.searchQuery;
+      },
+      set(value: string) {
+        this.updateSearchQuery(value);
+      },
+    },
+  },
+
+  methods: {
+    ...mapActions("database", ["updateSearchQuery"]),
   },
 });
 </script>
