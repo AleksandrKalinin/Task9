@@ -67,7 +67,10 @@
           >
             Save picture
           </button>
-          <button class="button button_regular button_normal">
+          <button
+            class="button button_regular button_normal"
+            @click="clearCanvas"
+          >
             Clear canvas
           </button>
         </div>
@@ -79,11 +82,19 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
+import { v4 as uuidv4 } from "uuid";
 
 interface Shape {
   name: string;
   link: string;
   path: string;
+}
+
+interface GalleryItem {
+  id: string;
+  author: string;
+  date: Date;
+  link: string;
 }
 
 export default defineComponent({
@@ -113,7 +124,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapGetters("canvas", ["lineWidth", "canvas"]),
+    ...mapGetters("canvas", ["lineWidth", "canvas", "savedItems"]),
 
     width: {
       get() {
@@ -123,6 +134,10 @@ export default defineComponent({
         this.setLineWidth(value);
       },
     },
+
+    canvasState(): any {
+      return this.canvas;
+    },
   },
 
   methods: {
@@ -131,12 +146,14 @@ export default defineComponent({
       "setShape",
       "setLineWidth",
       "saveItem",
+      "clearCanvas",
     ]),
 
     addItemToGallery() {
       const canvas: HTMLCanvasElement = this.canvas;
       const value: any = {};
-      value.author = "John Doe";
+      value.id = uuidv4();
+      value.author = "Mark Easton";
       value.date = new Date();
       value.link = canvas.toDataURL("image/png");
       this.saveItem(value);

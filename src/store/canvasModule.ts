@@ -52,6 +52,15 @@ export const canvasModule: Module<CanvasState, RootState> = {
     saveCanvas(state: CanvasState, value: any): void {
       state.canvas = value;
     },
+
+    clearCanvas(state: CanvasState, value: any): void {
+      const canvas: HTMLCanvasElement = state.canvas;
+      const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        state.canvas = canvas;
+      }
+    },
   },
 
   actions: {
@@ -79,6 +88,13 @@ export const canvasModule: Module<CanvasState, RootState> = {
       value: HTMLCanvasElement
     ) {
       commit("saveCanvas", value);
+    },
+
+    clearCanvas(
+      { commit }: ActionContext<CanvasState, unknown>,
+      value: HTMLCanvasElement
+    ) {
+      commit("clearCanvas", value);
     },
   },
 

@@ -51,6 +51,7 @@ export default defineComponent({
       if (ctx) {
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.canvas = canvas;
+        this.saveCanvas(canvas);
       }
     },
 
@@ -78,7 +79,7 @@ export default defineComponent({
     },
 
     drawOnCanvas(x1: number, y1: number, x2: number, y2: number) {
-      const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
+      const { canvas, ctx } = this.setupCTX();
       if (ctx) {
         ctx.beginPath();
         ctx.strokeStyle = this.selectedColor;
@@ -87,6 +88,7 @@ export default defineComponent({
         ctx.lineTo(x2, y2);
         ctx.stroke();
         ctx.closePath();
+        this.saveCanvas(canvas);
       }
     },
 
@@ -186,6 +188,7 @@ export default defineComponent({
         ctx.closePath();
       }
       this.canvas = canvas;
+      this.saveCanvas(canvas);
     },
 
     drawStar() {
@@ -215,6 +218,7 @@ export default defineComponent({
         ctx.restore();
       }
       this.canvas = canvas;
+      this.saveCanvas(canvas);
     },
 
     drawRectangle() {
@@ -230,6 +234,7 @@ export default defineComponent({
         ctx.stroke();
       }
       this.canvas = canvas;
+      this.saveCanvas(canvas);
     },
 
     drawDiamond() {
@@ -244,6 +249,7 @@ export default defineComponent({
         ctx.stroke();
       }
       this.canvas = canvas;
+      this.saveCanvas(canvas);
     },
 
     drawHexagon() {
@@ -266,6 +272,7 @@ export default defineComponent({
         ctx.stroke();
       }
       this.canvas = canvas;
+      this.saveCanvas(canvas);
     },
 
     drawOctagon() {
@@ -297,6 +304,7 @@ export default defineComponent({
         ctx.stroke();
       }
       this.canvas = canvas;
+      this.saveCanvas(canvas);
     },
 
     drawTriangle() {
@@ -311,6 +319,7 @@ export default defineComponent({
         ctx.closePath();
       }
       this.canvas = canvas;
+      this.saveCanvas(canvas);
     },
 
     checkIfShapeSelected(e: MouseEvent) {

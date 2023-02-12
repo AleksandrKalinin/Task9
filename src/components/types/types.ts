@@ -9,3 +9,8 @@ export interface CanvasState {
   savedItems: Array<any>;
   canvas: HTMLCanvasElement;
 }
+
+export interface DatabaseState {
+  items: Array<any>;
+  areItemsLoaded: boolean;
+}

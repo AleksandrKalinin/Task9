@@ -1,6 +1,6 @@
 <template>
   <div class="gallery">
-    <template v-if="formattedData.length !== 0">
+    <template v-if="formattedData.length > 0">
       <div
         class="gallery__item gallery-item"
         v-for="(item, index) in formattedData"
@@ -39,24 +39,42 @@ export default defineComponent({
 
   computed: {
     ...mapGetters("canvas", ["savedItems"]),
+    ...mapGetters("database", ["items", "areItemsLoaded"]),
   },
 
-  methods: {},
+  methods: {
+    ...mapActions("database", ["pushIntoDatabase", "fetchItems"]),
+
+    saveItems() {
+      this.pushIntoDatabase([...this.savedItems]);
+    },
+
+    formatData() {
+      const data: Array<GalleryItem> | any = [];
+      for (let i = 0; i < this.items.length; i++) {
+        const dataItem: any = {};
+        const el = this.items[i];
+        const date = new Date(el.date.seconds * 1000);
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+        dataItem.author = el.author;
+        dataItem.link = el.link;
+        dataItem.date = `${day}/${month}/${year}`;
+        data.push(dataItem);
+      }
+      this.formattedData = data;
+    },
+  },
+
+  watch: {
+    areItemsLoaded: function () {
+      this.formatData();
+    },
+  },
 
   mounted() {
-    const data: Array<GalleryItem> | any = [];
-    for (let i = 0; i < this.savedItems.length; i++) {
-      const dataItem: any = {};
-      const el = this.savedItems[i];
-      const day = el.date.getDate();
-      const month = el.date.getMonth() + 1;
-      const year = el.date.getFullYear();
-      dataItem.author = el.author;
-      dataItem.link = el.link;
-      dataItem.date = `${day}/${month}/${year}`;
-      data.push(dataItem);
-    }
-    this.formattedData = data;
+    this.fetchItems();
   },
 });
 </script>
@@ -77,10 +95,15 @@ export default defineComponent({
       width: 450px
       height: 300px
       overflow: hidden
+      cursor: pointer
       .gallery-preview__image
         width: 100%
         height: 100%
         object-fit: cover
+        transition: .2s all
+    .gallery-item__preview:hover
+      .gallery-preview__image
+        transform: scale(1.05)
     .gallery-item__description
       display: flex
       justify-content: space-between
