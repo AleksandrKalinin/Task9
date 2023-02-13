@@ -22,4 +22,10 @@
   justify-content: center
   align-items: center
   height: 100%
+  width: 100%
+
+.canvas-inner
+  width: calc( 100% -  465px - 90px)
+  display: flex
+  justify-content: center
 </style>

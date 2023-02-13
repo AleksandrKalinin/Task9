@@ -1,5 +1,10 @@
 import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
-import { RootState, DatabaseState } from "../components/types/types";
+import {
+  RootState,
+  DatabaseState,
+  DatabaseItem,
+  GalleryItem,
+} from "../components/types/types";
 import { db } from "@/database/index";
 import {
   doc,
@@ -12,8 +17,8 @@ import {
 
 export const databaseModule: Module<DatabaseState, RootState> = {
   state: () => ({
-    items: [] as any,
-    filteredItems: [] as any,
+    items: [] as Array<DatabaseItem>,
+    filteredItems: [] as Array<DatabaseItem>,
     areItemsLoaded: false as boolean,
     searchQuery: "" as string,
   }),
@@ -36,7 +41,7 @@ export const databaseModule: Module<DatabaseState, RootState> = {
         return getters.items;
       } else {
         return [
-          ...getters.items.filter((item: any) =>
+          ...getters.items.filter((item: DatabaseItem) =>
             item.author.toLowerCase().includes(state.searchQuery.toLowerCase())
           ),
         ];
@@ -45,35 +50,29 @@ export const databaseModule: Module<DatabaseState, RootState> = {
   },
 
   mutations: <MutationTree<DatabaseState>>{
-    updateItems(state: DatabaseState, value: Array<any>): void {
+    updateItems(state: DatabaseState, value: Array<DatabaseItem>): void {
       state.items = value;
     },
 
-    addItem(state: DatabaseState, value: any): void {
-      state.items.push(value);
-    },
-
-    changeStatus(state: DatabaseState, value: any): void {
+    changeStatus(state: DatabaseState): void {
       state.areItemsLoaded = true;
     },
 
-    updateSearchQuery(state: DatabaseState, value: any): void {
+    updateSearchQuery(state: DatabaseState, value: string): void {
       state.searchQuery = value;
     },
   },
 
   actions: {
-    async fetchItems(
-      { commit }: ActionContext<DatabaseState, unknown>,
-      itemsDB: any
-    ) {
-      const array: any = [];
+    async fetchItems({ commit }: ActionContext<DatabaseState, unknown>) {
+      const array: Array<DatabaseItem> = [];
       try {
         const itemsRef = collection(db, "items");
         const queryToDB = query(itemsRef);
         const querySnapshot: any = await getDocs(queryToDB);
         if (querySnapshot) {
-          querySnapshot.forEach((doc: any) => {
+          querySnapshot.forEach((doc: { [key: string]: any }) => {
+            console.log(doc);
             array.push(doc.data());
           });
           commit("updateItems", array);
@@ -86,15 +85,17 @@ export const databaseModule: Module<DatabaseState, RootState> = {
       }
     },
 
-    addItem({ commit }: ActionContext<DatabaseState, unknown>, value: any) {
-      commit("addItem", value);
+    async addItemToDatabase(_, newItem: DatabaseItem) {
+      try {
+        await setDoc(doc(db, "items", newItem.id), newItem);
+      } catch (e) {
+        console.log(e);
+      }
     },
 
-    async pushIntoDatabase(_, values: any) {
-      console.log(values);
+    async pushIntoDatabase(_, values: Array<GalleryItem>) {
       for (let i = 0; i < values.length; i++) {
-        const newDate = Timestamp.fromDate(new Date(values[i].date));
-        console.log(newDate);
+        const newDate: any = Timestamp.fromDate(new Date(values[i].date));
         values[i].date = newDate;
         try {
           await setDoc(doc(db, "items", values[i].id.toString()), values[i]);
@@ -106,7 +107,7 @@ export const databaseModule: Module<DatabaseState, RootState> = {
 
     updateSearchQuery(
       { commit }: ActionContext<DatabaseState, unknown>,
-      value: any
+      value: string
     ) {
       commit("updateSearchQuery", value);
     },

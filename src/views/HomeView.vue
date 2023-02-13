@@ -3,7 +3,9 @@
   <div class="main-container">
     <div class="canvas-wrapper">
       <CanvasMenu />
-      <CanvasComponent />
+      <div class="canvas-inner">
+        <CanvasComponent />
+      </div>
     </div>
   </div>
 </template>

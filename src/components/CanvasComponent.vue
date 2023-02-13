@@ -33,15 +33,40 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapGetters("canvas", ["selectedColor", "selectedShape", "lineWidth"]),
+    ...mapGetters("canvas", [
+      "selectedColor",
+      "selectedShape",
+      "lineWidth",
+      "selectedItem",
+    ]),
+
+    canvasState(): "string" {
+      return this.selectedItem;
+    },
+  },
+
+  watch: {
+    canvasState(newVal) {
+      this.initializeCanvas(newVal);
+    },
   },
 
   methods: {
     ...mapActions("canvas", ["saveCanvas"]),
 
-    initializeCanvas() {
+    initializeCanvas(canvasLink: string) {
       const myCanvas: HTMLCanvasElement = this.$refs
         .myCanvas as HTMLCanvasElement;
+      const ctx: CanvasRenderingContext2D | null = myCanvas.getContext("2d");
+      if (canvasLink !== "" && ctx) {
+        const image: HTMLImageElement = new Image();
+        image.onload = function () {
+          ctx.drawImage(image, 0, 0);
+        };
+        image.src = canvasLink;
+      } else if (canvasLink === "" && ctx) {
+        ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+      }
       this.canvas = myCanvas;
     },
 
@@ -186,6 +211,7 @@ export default defineComponent({
         );
         ctx.stroke();
         ctx.closePath();
+        ctx.save();
       }
       this.canvas = canvas;
       this.saveCanvas(canvas);
@@ -360,7 +386,11 @@ export default defineComponent({
   },
 
   mounted() {
-    this.initializeCanvas();
+    this.initializeCanvas(this.selectedItem);
+  },
+
+  updated() {
+    console.log("updating");
   },
 });
 </script>

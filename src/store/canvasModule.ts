@@ -1,13 +1,14 @@
 import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
 import { RootState, CanvasState } from "../components/types/types";
+import router from "@/router";
 
 export const canvasModule: Module<CanvasState, RootState> = {
   state: () => ({
     selectedColor: "#000000" as string,
     selectedShape: "" as string,
     lineWidth: 1 as number,
-    savedItems: [] as Array<any>,
     canvas: document.createElement("canvas") as HTMLCanvasElement,
+    selectedItem: "" as string,
   }),
 
   getters: <GetterTree<CanvasState, RootState>>{
@@ -23,12 +24,12 @@ export const canvasModule: Module<CanvasState, RootState> = {
       return state.lineWidth;
     },
 
-    savedItems: (state: CanvasState) => {
-      return state.savedItems;
-    },
-
     canvas: (state: CanvasState) => {
       return state.canvas;
+    },
+
+    selectedItem: (state: CanvasState) => {
+      return state.selectedItem;
     },
   },
 
@@ -45,21 +46,12 @@ export const canvasModule: Module<CanvasState, RootState> = {
       state.lineWidth = value;
     },
 
-    saveItem(state: CanvasState, value: any): void {
-      state.savedItems.push(value);
-    },
-
-    saveCanvas(state: CanvasState, value: any): void {
+    saveCanvas(state: CanvasState, value: HTMLCanvasElement): void {
       state.canvas = value;
     },
 
-    clearCanvas(state: CanvasState, value: any): void {
-      const canvas: HTMLCanvasElement = state.canvas;
-      const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
-      if (ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        state.canvas = canvas;
-      }
+    saveSelectedItem(state: CanvasState, value: string): void {
+      state.selectedItem = value;
     },
   },
 
@@ -79,10 +71,6 @@ export const canvasModule: Module<CanvasState, RootState> = {
       commit("setLineWidth", value);
     },
 
-    saveItem({ commit }: ActionContext<CanvasState, unknown>, value: any) {
-      commit("saveItem", value);
-    },
-
     saveCanvas(
       { commit }: ActionContext<CanvasState, unknown>,
       value: HTMLCanvasElement
@@ -90,11 +78,16 @@ export const canvasModule: Module<CanvasState, RootState> = {
       commit("saveCanvas", value);
     },
 
-    clearCanvas(
+    saveSelectedItem(
       { commit }: ActionContext<CanvasState, unknown>,
-      value: HTMLCanvasElement
+      value: string
     ) {
-      commit("clearCanvas", value);
+      try {
+        commit("saveSelectedItem", value);
+      } catch (e) {
+        console.log(e);
+      }
+      router.push("/");
     },
   },
 

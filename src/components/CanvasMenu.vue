@@ -69,7 +69,7 @@
           </button>
           <button
             class="button button_regular button_normal"
-            @click="clearCanvas"
+            @click="clearCurrentCanvas"
           >
             Clear canvas
           </button>
@@ -83,19 +83,7 @@
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
 import { v4 as uuidv4 } from "uuid";
-
-interface Shape {
-  name: string;
-  link: string;
-  path: string;
-}
-
-interface GalleryItem {
-  id: string;
-  author: string;
-  date: Date;
-  link: string;
-}
+import { Shape, GalleryItem } from "../components/types/types";
 
 export default defineComponent({
   name: "CanvasMenu",
@@ -124,20 +112,15 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapGetters("canvas", ["lineWidth", "canvas", "savedItems"]),
+    ...mapGetters("canvas", ["lineWidth", "canvas"]),
 
     width: {
       get() {
         return 1;
       },
       set(value: number) {
-        console.log(value);
         this.setLineWidth(value);
       },
-    },
-
-    canvasState(): any {
-      return this.canvas;
     },
   },
 
@@ -146,18 +129,33 @@ export default defineComponent({
       "setColor",
       "setShape",
       "setLineWidth",
-      "saveItem",
-      "clearCanvas",
+      "saveSelectedItem",
     ]),
+
+    ...mapActions("database", ["addItemToDatabase"]),
 
     addItemToGallery() {
       const canvas: HTMLCanvasElement = this.canvas;
-      const value: any = {};
-      value.id = uuidv4();
-      value.author = "Mark Easton";
-      value.date = new Date();
-      value.link = canvas.toDataURL("image/png");
-      this.saveItem(value);
+      const newItem: GalleryItem = {
+        id: "",
+        author: "",
+        date: new Date(),
+        link: "",
+      };
+      newItem.id = uuidv4();
+      newItem.author = "George Nevill";
+      newItem.date = new Date();
+      newItem.link = canvas.toDataURL("image/png");
+      this.addItemToDatabase(newItem);
+    },
+
+    clearCurrentCanvas() {
+      const canvas: HTMLCanvasElement = this.canvas;
+      const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
+      if (ctx) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this.saveSelectedItem("");
+      }
     },
   },
 
