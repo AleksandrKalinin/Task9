@@ -1,5 +1,6 @@
 import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
 import { RootState, CanvasState } from "../types/types";
+import { SET_COLOR, SET_SHAPE, SET_LINE_WIDTH } from "@/constants";
 
 export const canvasModule: Module<CanvasState, RootState> = {
   state: () => ({
@@ -23,33 +24,33 @@ export const canvasModule: Module<CanvasState, RootState> = {
   },
 
   mutations: <MutationTree<CanvasState>>{
-    setColor(state: CanvasState, color: string): void {
+    [SET_COLOR](state: CanvasState, color: string): void {
       state.selectedColor = color;
     },
 
-    setShape(state: CanvasState, shape: string): void {
+    [SET_SHAPE](state: CanvasState, shape: string): void {
       state.selectedShape = shape;
     },
 
-    setLineWidth(state: CanvasState, width: number): void {
+    [SET_LINE_WIDTH](state: CanvasState, width: number): void {
       state.lineWidth = width;
     },
   },
 
   actions: {
     setColor({ commit }: ActionContext<CanvasState, unknown>, color: string) {
-      commit("setColor", color);
+      commit(SET_COLOR, color);
     },
 
     setShape({ commit }: ActionContext<CanvasState, unknown>, shape: string) {
-      commit("setShape", shape);
+      commit(SET_SHAPE, shape);
     },
 
     setLineWidth(
       { commit }: ActionContext<CanvasState, unknown>,
       width: number
     ) {
-      commit("setLineWidth", width);
+      commit(SET_LINE_WIDTH, width);
     },
   },
 
