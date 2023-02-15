@@ -4,12 +4,12 @@ import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDlrmK3jerG7IVHhQ9xxLyCvByU_BqKh2Q",
-  authDomain: "minipaint-11619.firebaseapp.com",
-  projectId: "minipaint-11619",
-  storageBucket: "minipaint-11619.appspot.com",
-  messagingSenderId: "990741758796",
-  appId: "1:990741758796:web:3c1d81ca2b648b02fcc5e9",
+  apiKey: process.env.VUE_APP_API_KEY,
+  authDomain: process.env.VUE_APP_AUTH_DOMAIN,
+  projectId: process.env.VUE_APP_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase

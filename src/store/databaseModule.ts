@@ -77,7 +77,6 @@ export const databaseModule: Module<DatabaseState, RootState> = {
         const querySnapshot: any = await getDocs(queryToDB);
         if (querySnapshot) {
           querySnapshot.forEach((doc: { [key: string]: any }) => {
-            console.log(doc);
             array.push(doc.data());
           });
           commit(UPDATE_ITEMS, array);
