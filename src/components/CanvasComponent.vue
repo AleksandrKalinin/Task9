@@ -14,6 +14,16 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapGetters, mapActions } from "vuex";
+import {
+  CIRCLE,
+  ELLIPSE,
+  TRIANGLE,
+  RECTANGLE,
+  HEXAGON,
+  OCTAGON,
+  STAR,
+  DIAMOND,
+} from "@/constants/shapes";
 
 export default defineComponent({
   name: "CanvasComponent",
@@ -365,21 +375,21 @@ export default defineComponent({
     },
 
     drawShape() {
-      if (this.selectedShape === "triangle") {
+      if (this.selectedShape === TRIANGLE) {
         this.drawTriangle();
-      } else if (this.selectedShape === "circle") {
+      } else if (this.selectedShape === CIRCLE) {
         this.drawCircle();
-      } else if (this.selectedShape === "rectangle") {
+      } else if (this.selectedShape === RECTANGLE) {
         this.drawRectangle();
-      } else if (this.selectedShape === "ellipse") {
+      } else if (this.selectedShape === ELLIPSE) {
         this.drawEllipse();
-      } else if (this.selectedShape === "octagon") {
+      } else if (this.selectedShape === OCTAGON) {
         this.drawOctagon();
-      } else if (this.selectedShape === "hexagon") {
+      } else if (this.selectedShape === HEXAGON) {
         this.drawHexagon();
-      } else if (this.selectedShape === "star") {
+      } else if (this.selectedShape === STAR) {
         this.drawStar();
-      } else if (this.selectedShape === "diamond") {
+      } else if (this.selectedShape === DIAMOND) {
         this.drawDiamond();
       }
     },

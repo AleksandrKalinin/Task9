@@ -1,6 +1,13 @@
 import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
 import { RootState, CanvasState } from "../components/types/types";
 import router from "@/router";
+import {
+  SET_COLOR,
+  SET_SHAPE,
+  SET_LINE_WIDTH,
+  SAVE_CANVAS,
+  SAVE_SELECTED_ITEM,
+} from "@/constants/canvas";
 
 export const canvasModule: Module<CanvasState, RootState> = {
   state: () => ({
@@ -34,48 +41,48 @@ export const canvasModule: Module<CanvasState, RootState> = {
   },
 
   mutations: <MutationTree<CanvasState>>{
-    setColor(state: CanvasState, value: string): void {
+    [SET_COLOR](state: CanvasState, value: string): void {
       state.selectedColor = value;
     },
 
-    setShape(state: CanvasState, value: string): void {
+    [SET_SHAPE](state: CanvasState, value: string): void {
       state.selectedShape = value;
     },
 
-    setLineWidth(state: CanvasState, value: number): void {
+    [SET_LINE_WIDTH](state: CanvasState, value: number): void {
       state.lineWidth = value;
     },
 
-    saveCanvas(state: CanvasState, value: HTMLCanvasElement): void {
+    [SAVE_CANVAS](state: CanvasState, value: HTMLCanvasElement): void {
       state.canvas = value;
     },
 
-    saveSelectedItem(state: CanvasState, value: string): void {
+    [SAVE_SELECTED_ITEM](state: CanvasState, value: string): void {
       state.selectedItem = value;
     },
   },
 
   actions: {
     setColor({ commit }: ActionContext<CanvasState, unknown>, value: string) {
-      commit("setColor", value);
+      commit(SET_COLOR, value);
     },
 
     setShape({ commit }: ActionContext<CanvasState, unknown>, value: string) {
-      commit("setShape", value);
+      commit(SET_SHAPE, value);
     },
 
     setLineWidth(
       { commit }: ActionContext<CanvasState, unknown>,
       value: number
     ) {
-      commit("setLineWidth", value);
+      commit(SET_LINE_WIDTH, value);
     },
 
     saveCanvas(
       { commit }: ActionContext<CanvasState, unknown>,
       value: HTMLCanvasElement
     ) {
-      commit("saveCanvas", value);
+      commit(SAVE_CANVAS, value);
     },
 
     saveSelectedItem(
@@ -83,7 +90,7 @@ export const canvasModule: Module<CanvasState, RootState> = {
       value: string
     ) {
       try {
-        commit("saveSelectedItem", value);
+        commit(SAVE_SELECTED_ITEM, value);
       } catch (e) {
         console.log(e);
       }

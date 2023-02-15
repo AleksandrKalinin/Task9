@@ -14,6 +14,11 @@ import {
   setDoc,
   Timestamp,
 } from "firebase/firestore";
+import {
+  UPDATE_ITEMS,
+  CHANGE_STATUS,
+  UPDATE_SEARCH_QUERY,
+} from "@/constants/database";
 
 export const databaseModule: Module<DatabaseState, RootState> = {
   state: () => ({
@@ -50,15 +55,15 @@ export const databaseModule: Module<DatabaseState, RootState> = {
   },
 
   mutations: <MutationTree<DatabaseState>>{
-    updateItems(state: DatabaseState, value: Array<DatabaseItem>): void {
+    [UPDATE_ITEMS](state: DatabaseState, value: Array<DatabaseItem>): void {
       state.items = value;
     },
 
-    changeStatus(state: DatabaseState): void {
+    [CHANGE_STATUS](state: DatabaseState): void {
       state.areItemsLoaded = true;
     },
 
-    updateSearchQuery(state: DatabaseState, value: string): void {
+    [UPDATE_SEARCH_QUERY](state: DatabaseState, value: string): void {
       state.searchQuery = value;
     },
   },
@@ -75,11 +80,11 @@ export const databaseModule: Module<DatabaseState, RootState> = {
             console.log(doc);
             array.push(doc.data());
           });
-          commit("updateItems", array);
+          commit(UPDATE_ITEMS, array);
         } else {
           console.log("No such document!");
         }
-        commit("changeStatus", true);
+        commit(CHANGE_STATUS, true);
       } catch (e) {
         console.log(e);
       }
@@ -109,7 +114,7 @@ export const databaseModule: Module<DatabaseState, RootState> = {
       { commit }: ActionContext<DatabaseState, unknown>,
       value: string
     ) {
-      commit("updateSearchQuery", value);
+      commit(UPDATE_SEARCH_QUERY, value);
     },
   },
 

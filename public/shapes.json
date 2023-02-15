@@ -1,42 +1,42 @@
 [
   {
     "name": "Circle",
-    "link": "circle",
+    "link": "CIRCLE",
     "path": "circle-regular.svg"
   },
   {
     "name": "Ellipse",
-    "link": "ellipse",
+    "link": "ELLIPSE",
     "path": "ellipse.svg"
   },
   {
     "name": "Triangle",
-    "link": "triangle",
+    "link": "TRIANGLE",
     "path": "triangle-solid.svg"
   },
   {
     "name": "Rectangle",
-    "link": "rectangle",
+    "link": "RECTANGLE",
     "path": "rectangle.svg"
   },
   {
     "name": "Diamond",
-    "link": "diamond",
+    "link": "DIAMOND",
     "path": "diamond.svg"
   },
   {
     "name": "Star",
-    "link": "star",
+    "link": "STAR",
     "path": "star.svg"
   },
   {
     "name": "Hexagon",
-    "link": "hexagon",
+    "link": "HEXAGON",
     "path": "hexagon.svg"
   },
   {
     "name": "Octagon",
-    "link": "octagon",
+    "link": "OCTAGON",
     "path": "octagon.svg"
   }
 ]
