@@ -23,33 +23,33 @@ export const canvasModule: Module<CanvasState, RootState> = {
   },
 
   mutations: <MutationTree<CanvasState>>{
-    setColor(state: CanvasState, value: string): void {
-      state.selectedColor = value;
+    setColor(state: CanvasState, color: string): void {
+      state.selectedColor = color;
     },
 
-    setShape(state: CanvasState, value: string): void {
-      state.selectedShape = value;
+    setShape(state: CanvasState, shape: string): void {
+      state.selectedShape = shape;
     },
 
-    setLineWidth(state: CanvasState, value: number): void {
-      state.lineWidth = value;
+    setLineWidth(state: CanvasState, width: number): void {
+      state.lineWidth = width;
     },
   },
 
   actions: {
-    setColor({ commit }: ActionContext<CanvasState, unknown>, value: string) {
-      commit("setColor", value);
+    setColor({ commit }: ActionContext<CanvasState, unknown>, color: string) {
+      commit("setColor", color);
     },
 
-    setShape({ commit }: ActionContext<CanvasState, unknown>, value: string) {
-      commit("setShape", value);
+    setShape({ commit }: ActionContext<CanvasState, unknown>, shape: string) {
+      commit("setShape", shape);
     },
 
     setLineWidth(
       { commit }: ActionContext<CanvasState, unknown>,
-      value: number
+      width: number
     ) {
-      commit("setLineWidth", value);
+      commit("setLineWidth", width);
     },
   },
 

@@ -37,32 +37,61 @@ export default defineComponent({
   },
 
   methods: {
+    /** method for initializing canvas */
     initializeCanvas() {
       const myCanvas: HTMLCanvasElement = this.$refs
         .myCanvas as HTMLCanvasElement;
       this.canvas = myCanvas;
     },
 
-    clearCanvas() {
+    /** Method for assigning parameters to canvas - lineWidth, strokeStyle, fillStyle */
+    setupCTX() {
       const canvas: HTMLCanvasElement = this.canvas;
-      const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
+      const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
       if (ctx) {
-        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.canvas = canvas;
+        ctx.fillStyle = this.selectedColor;
+        ctx.strokeStyle = this.selectedColor;
+        ctx.lineWidth = this.lineWidth;
+      }
+      return { canvas, ctx };
+    },
+
+    /** Method checking if shape is selected. If true calculates start coordinates, if false starts drawing a line */
+    checkIfShapeSelected(e: MouseEvent) {
+      if (this.selectedShape === "") {
+        this.startDrawing(e);
+      } else {
+        this.getStartCoords(e);
       }
     },
 
-    saveCanvas() {
-      const canvas: HTMLCanvasElement = this.canvas;
-      const imgPath: string = canvas.toDataURL("image/png");
-      this.saved.push(imgPath);
+    /** Method checking if shape is selected. If true calculates end coordinates, if false stops drawing a line */
+    checkIfShapeActive(e: MouseEvent) {
+      if (this.selectedShape === "") {
+        this.stopDrawing(e);
+      } else {
+        this.getEndCoords(e);
+      }
     },
 
-    draw(e: MouseEvent) {
-      if (this.isDrawing) {
-        this.drawOnCanvas(this.x, this.y, e.offsetX, e.offsetY);
-        this.x = e.offsetX;
-        this.y = e.offsetY;
+    /** Method for calling function depending on current selectedShape value  */
+    drawShape() {
+      if (this.selectedShape === "triangle") {
+        this.drawTriangle();
+      } else if (this.selectedShape === "circle") {
+        this.drawCircle();
+      } else if (this.selectedShape === "rectangle") {
+        this.drawRectangle();
+      } else if (this.selectedShape === "ellipse") {
+        this.drawEllipse();
+      } else if (this.selectedShape === "octagon") {
+        this.drawOctagon();
+      } else if (this.selectedShape === "hexagon") {
+        this.drawHexagon();
+      } else if (this.selectedShape === "star") {
+        this.drawStar();
+      } else if (this.selectedShape === "diamond") {
+        this.drawDiamond();
       }
     },
 
@@ -81,6 +110,14 @@ export default defineComponent({
       }
     },
 
+    draw(e: MouseEvent) {
+      if (this.isDrawing) {
+        this.drawOnCanvas(this.x, this.y, e.offsetX, e.offsetY);
+        this.x = e.offsetX;
+        this.y = e.offsetY;
+      }
+    },
+
     drawOnCanvas(x1: number, y1: number, x2: number, y2: number) {
       const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
       if (ctx) {
@@ -94,6 +131,7 @@ export default defineComponent({
       }
     },
 
+    /** Method setting initial coordinates on m */
     getStartCoords(e: MouseEvent) {
       const target = e.target as HTMLElement;
       const cX: number = target.getBoundingClientRect().left + window.scrollX;
@@ -121,17 +159,7 @@ export default defineComponent({
       }
     },
 
-    setupCTX() {
-      const canvas: HTMLCanvasElement = this.canvas;
-      const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
-      if (ctx) {
-        ctx.fillStyle = this.selectedColor;
-        ctx.strokeStyle = this.selectedColor;
-        ctx.lineWidth = this.lineWidth;
-      }
-      return { canvas, ctx };
-    },
-
+    /** Method for drawing ellipse */
     drawEllipse() {
       const { canvas, ctx } = this.setupCTX();
       let mainAxis: number = Math.sqrt(
@@ -168,6 +196,7 @@ export default defineComponent({
       this.canvas = canvas;
     },
 
+    /** Method for drawing circle */
     drawCircle() {
       const { canvas, ctx } = this.setupCTX();
       const diameter: number = Math.sqrt(
@@ -187,10 +216,12 @@ export default defineComponent({
         );
         ctx.stroke();
         ctx.closePath();
+        ctx.save();
       }
       this.canvas = canvas;
     },
 
+    /** Method for drawing star */
     drawStar() {
       const { canvas, ctx } = this.setupCTX();
       let diameter: number = Math.sqrt(
@@ -220,6 +251,7 @@ export default defineComponent({
       this.canvas = canvas;
     },
 
+    /** Method for drawing rectangle */
     drawRectangle() {
       const { canvas, ctx } = this.setupCTX();
       if (ctx) {
@@ -235,6 +267,7 @@ export default defineComponent({
       this.canvas = canvas;
     },
 
+    /** Method for drawing diamond */
     drawDiamond() {
       const { canvas, ctx } = this.setupCTX();
       if (ctx) {
@@ -249,6 +282,7 @@ export default defineComponent({
       this.canvas = canvas;
     },
 
+    /** Method for drawing hexagon */
     drawHexagon() {
       const { canvas, ctx } = this.setupCTX();
       if (ctx) {
@@ -271,6 +305,7 @@ export default defineComponent({
       this.canvas = canvas;
     },
 
+    /** Method for drawing octagon */
     drawOctagon() {
       const { canvas, ctx } = this.setupCTX();
       if (ctx) {
@@ -302,6 +337,7 @@ export default defineComponent({
       this.canvas = canvas;
     },
 
+    /** Method for drawing triangle */
     drawTriangle() {
       const { canvas, ctx } = this.setupCTX();
       if (ctx) {
@@ -316,40 +352,19 @@ export default defineComponent({
       this.canvas = canvas;
     },
 
-    checkIfShapeSelected(e: MouseEvent) {
-      if (this.selectedShape === "") {
-        this.startDrawing(e);
-      } else {
-        this.getStartCoords(e);
+    clearCanvas() {
+      const canvas: HTMLCanvasElement = this.canvas;
+      const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
+      if (ctx) {
+        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.canvas = canvas;
       }
     },
 
-    checkIfShapeActive(e: MouseEvent) {
-      if (this.selectedShape === "") {
-        this.stopDrawing(e);
-      } else {
-        this.getEndCoords(e);
-      }
-    },
-
-    drawShape() {
-      if (this.selectedShape === "triangle") {
-        this.drawTriangle();
-      } else if (this.selectedShape === "circle") {
-        this.drawCircle();
-      } else if (this.selectedShape === "rectangle") {
-        this.drawRectangle();
-      } else if (this.selectedShape === "ellipse") {
-        this.drawEllipse();
-      } else if (this.selectedShape === "octagon") {
-        this.drawOctagon();
-      } else if (this.selectedShape === "hexagon") {
-        this.drawHexagon();
-      } else if (this.selectedShape === "star") {
-        this.drawStar();
-      } else if (this.selectedShape === "diamond") {
-        this.drawDiamond();
-      }
+    saveCanvas() {
+      const canvas: HTMLCanvasElement = this.canvas;
+      const imgPath: string = canvas.toDataURL("image/png");
+      this.saved.push(imgPath);
     },
   },
 

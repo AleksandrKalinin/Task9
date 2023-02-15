@@ -7,3 +7,9 @@ export interface CanvasState {
   selectedShape: string;
   lineWidth: number;
 }
+
+export interface Shape {
+  name: string;
+  link: string;
+  path: string;
+}

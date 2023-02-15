@@ -69,12 +69,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
-
-interface Shape {
-  name: string;
-  link: string;
-  path: string;
-}
+import { Shape } from "../types/types";
 
 export default defineComponent({
   name: "CanvasMenu",
@@ -104,12 +99,13 @@ export default defineComponent({
 
   computed: {
     ...mapGetters("canvas", ["lineWidth"]),
+
     width: {
       get() {
         return this.lineWidth;
       },
-      set(value: number) {
-        this.setLineWidth(value);
+      set(width: number) {
+        this.setLineWidth(width);
       },
     },
   },
@@ -119,9 +115,10 @@ export default defineComponent({
   },
 
   mounted() {
+    //*Fetching all shapes for render list of options */
     fetch("./shapes.json")
       .then((response) => response.json())
-      .then((data) => {
+      .then((data: Array<Shape>) => {
         this.shapes = data;
       });
   },
