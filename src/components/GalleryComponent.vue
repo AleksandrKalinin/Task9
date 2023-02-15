@@ -29,7 +29,7 @@ export default defineComponent({
 
   data() {
     return {
-      formattedData: [],
+      formattedData: [] as Array<LocalItem>,
     };
   },
 
@@ -48,7 +48,7 @@ export default defineComponent({
     ...mapActions("canvas", ["saveCanvas", "saveSelectedItem"]),
 
     formatData(values: Array<DatabaseItem>) {
-      const data: LocalItem[] = [];
+      const data: Array<LocalItem> = [];
       for (let i = 0; i < values.length; i++) {
         const dataItem: LocalItem = { id: "", author: "", link: "", date: "" };
         const el = values[i];
