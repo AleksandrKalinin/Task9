@@ -1,9 +1,13 @@
 import { createStore } from "vuex";
+import { RootState } from "../types/types";
+import { canvasModule } from "@/store/canvasModule";
 
 export default createStore({
-  state: {},
+  state: <RootState>{},
   getters: {},
   mutations: {},
   actions: {},
-  modules: {},
+  modules: {
+    canvas: canvasModule,
+  },
 });
