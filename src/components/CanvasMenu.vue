@@ -4,7 +4,7 @@
       <div class="canvas-menu__block">
         <h6 class="canvas-menu__category">Instruments</h6>
         <div class="canvas-menu__wrapper canvas-wrapper_regular">
-          <div class="canvas-menu__item" title="Pen">
+          <div class="canvas-menu__item" title="Pen" @click="setShape('')">
             <img
               class="canvas-menu__icon"
               v-bind:src="require('@/assets/paintbrush-solid.svg')"
@@ -60,14 +60,7 @@
       <div class="canvas-menu__block">
         <div
           class="canvas-menu__wrapper canvas-wrapper_large canvas-wrapper_spaced"
-        >
-          <button class="button button_regular button_normal">
-            Save picture
-          </button>
-          <button class="button button_regular button_normal">
-            Clear canvas
-          </button>
-        </div>
+        ></div>
       </div>
     </div>
   </div>
