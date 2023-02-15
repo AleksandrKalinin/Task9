@@ -1,3 +1,11 @@
+import router from "@/router";
+import { auth } from "@/database/index";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+
 export const authModule = {
   state: () => ({}),
 
@@ -6,16 +14,62 @@ export const authModule = {
   mutations: {},
 
   actions: {
-    registerUser() {
-      console.log("register");
+    registerUser(
+      _: any,
+      { email, password }: { email: string; password: string }
+    ) {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((data) => {
+          const user = data.user;
+          console.log(user);
+          router.push("/");
+        })
+        .catch((error) => {
+          switch (error.code) {
+            case "auth/email-already-in-use":
+              //this.errorMessage = "Email already in use";
+              break;
+            default:
+              //this.errorMessage = "Email or password was incorrect";
+              break;
+          }
+        });
     },
 
-    signInUser() {
-      console.log("siginin");
+    signInUser(
+      _: any,
+      { email, password }: { email: string; password: string }
+    ) {
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          router.push("/");
+        })
+        .catch((error) => {
+          switch (error.code) {
+            case "auth/invalid-email":
+              //this.errorMessage = "Invalid email";
+              break;
+            case "auth/user-not-found":
+              //this.errorMessage = "No account with that email was found";
+              break;
+            case "auth/wrong-password":
+              //this.errorMessage = "Incorrect password";
+              break;
+            default:
+              //this.errorMessage = "Email or password was incorrect";
+              break;
+          }
+        });
     },
 
     logoutUser() {
-      console.log("logout");
+      signOut(auth)
+        .then(() => {
+          console.log("User log out!");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
 
