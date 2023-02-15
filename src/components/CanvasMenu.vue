@@ -134,6 +134,7 @@ export default defineComponent({
 
     ...mapActions("database", ["addItemToDatabase"]),
 
+    /** Adding item to gallery of recent items */
     addItemToGallery() {
       const canvas: HTMLCanvasElement = this.canvas;
       const newItem: GalleryItem = {
@@ -149,6 +150,7 @@ export default defineComponent({
       this.addItemToDatabase(newItem);
     },
 
+    /** Clearing canvas */
     clearCurrentCanvas() {
       const canvas: HTMLCanvasElement = this.canvas;
       const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");

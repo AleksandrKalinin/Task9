@@ -64,6 +64,7 @@ export default defineComponent({
   methods: {
     ...mapActions("canvas", ["saveCanvas"]),
 
+    /** Initializing canvas state */
     initializeCanvas(canvasLink: string) {
       const myCanvas: HTMLCanvasElement = this.$refs
         .myCanvas as HTMLCanvasElement;
@@ -80,14 +81,16 @@ export default defineComponent({
       this.canvas = myCanvas;
     },
 
-    clearCanvas() {
+    /** Method for setting up canvas with parameters fillStyle, strokeStyle, lineWidth */
+    setupCTX() {
       const canvas: HTMLCanvasElement = this.canvas;
-      const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
+      const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
       if (ctx) {
-        ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.canvas = canvas;
-        this.saveCanvas(canvas);
+        ctx.fillStyle = this.selectedColor;
+        ctx.strokeStyle = this.selectedColor;
+        ctx.lineWidth = this.lineWidth;
       }
+      return { canvas, ctx };
     },
 
     draw(e: MouseEvent) {
@@ -127,6 +130,7 @@ export default defineComponent({
       }
     },
 
+    /** Initial coords of shape */
     getStartCoords(e: MouseEvent) {
       const target = e.target as HTMLElement;
       const cX: number = target.getBoundingClientRect().left + window.scrollX;
@@ -135,6 +139,7 @@ export default defineComponent({
       this.startY = e.pageY - cY;
     },
 
+    /** Final coords of shape */
     getEndCoords(e: MouseEvent) {
       const target = e.target as HTMLElement;
       const cX: number = target.getBoundingClientRect().left + window.scrollX;
@@ -154,15 +159,43 @@ export default defineComponent({
       }
     },
 
-    setupCTX() {
-      const canvas: HTMLCanvasElement = this.canvas;
-      const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
-      if (ctx) {
-        ctx.fillStyle = this.selectedColor;
-        ctx.strokeStyle = this.selectedColor;
-        ctx.lineWidth = this.lineWidth;
+    /** If shape is selected get it's start coords, else start drawing a line */
+    checkIfShapeSelected(e: MouseEvent) {
+      if (this.selectedShape === "") {
+        this.startDrawing(e);
+      } else {
+        this.getStartCoords(e);
       }
-      return { canvas, ctx };
+    },
+
+    /** If shape is selected get it's end coords, else end drawing a line */
+    checkIfShapeActive(e: MouseEvent) {
+      if (this.selectedShape === "") {
+        this.stopDrawing(e);
+      } else {
+        this.getEndCoords(e);
+      }
+    },
+
+    /** Draw a shape depending on selected shape */
+    drawShape() {
+      if (this.selectedShape === TRIANGLE) {
+        this.drawTriangle();
+      } else if (this.selectedShape === CIRCLE) {
+        this.drawCircle();
+      } else if (this.selectedShape === RECTANGLE) {
+        this.drawRectangle();
+      } else if (this.selectedShape === ELLIPSE) {
+        this.drawEllipse();
+      } else if (this.selectedShape === OCTAGON) {
+        this.drawOctagon();
+      } else if (this.selectedShape === HEXAGON) {
+        this.drawHexagon();
+      } else if (this.selectedShape === STAR) {
+        this.drawStar();
+      } else if (this.selectedShape === DIAMOND) {
+        this.drawDiamond();
+      }
     },
 
     drawEllipse() {
@@ -356,42 +389,6 @@ export default defineComponent({
       }
       this.canvas = canvas;
       this.saveCanvas(canvas);
-    },
-
-    checkIfShapeSelected(e: MouseEvent) {
-      if (this.selectedShape === "") {
-        this.startDrawing(e);
-      } else {
-        this.getStartCoords(e);
-      }
-    },
-
-    checkIfShapeActive(e: MouseEvent) {
-      if (this.selectedShape === "") {
-        this.stopDrawing(e);
-      } else {
-        this.getEndCoords(e);
-      }
-    },
-
-    drawShape() {
-      if (this.selectedShape === TRIANGLE) {
-        this.drawTriangle();
-      } else if (this.selectedShape === CIRCLE) {
-        this.drawCircle();
-      } else if (this.selectedShape === RECTANGLE) {
-        this.drawRectangle();
-      } else if (this.selectedShape === ELLIPSE) {
-        this.drawEllipse();
-      } else if (this.selectedShape === OCTAGON) {
-        this.drawOctagon();
-      } else if (this.selectedShape === HEXAGON) {
-        this.drawHexagon();
-      } else if (this.selectedShape === STAR) {
-        this.drawStar();
-      } else if (this.selectedShape === DIAMOND) {
-        this.drawDiamond();
-      }
     },
   },
 
