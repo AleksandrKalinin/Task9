@@ -84,6 +84,8 @@ import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
 import { v4 as uuidv4 } from "uuid";
 import { Shape, GalleryItem } from "../components/types/types";
+import { auth } from "@/database/index";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default defineComponent({
   name: "CanvasMenu",
@@ -134,20 +136,34 @@ export default defineComponent({
 
     ...mapActions("database", ["addItemToDatabase"]),
 
+    checkIfLoggedIn() {
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          return false;
+        } else {
+          return true;
+        }
+      });
+    },
+
     /** Adding item to gallery of recent items */
     addItemToGallery() {
-      const canvas: HTMLCanvasElement = this.canvas;
-      const newItem: GalleryItem = {
-        id: "",
-        author: "",
-        date: new Date(),
-        link: "",
-      };
-      newItem.id = uuidv4();
-      newItem.author = "George Nevill";
-      newItem.date = new Date();
-      newItem.link = canvas.toDataURL("image/png");
-      this.addItemToDatabase(newItem);
+      if (auth.currentUser !== null) {
+        const canvas: HTMLCanvasElement = this.canvas;
+        const newItem: GalleryItem = {
+          id: "",
+          author: "",
+          date: new Date(),
+          link: "",
+        };
+        newItem.id = uuidv4();
+        newItem.author = "George Nevill";
+        newItem.date = new Date();
+        newItem.link = canvas.toDataURL("image/png");
+        this.addItemToDatabase(newItem);
+      } else {
+        console.log("Log in first!");
+      }
     },
 
     /** Clearing canvas */

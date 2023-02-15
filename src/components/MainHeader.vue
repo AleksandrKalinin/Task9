@@ -4,7 +4,11 @@
       <router-link class="menu__link" to="/">Home</router-link>
     </nav>
     <div class="header_auth">
-      <button v-if="!username" class="button button_small button_outline">
+      <button
+        v-if="!username"
+        class="button button_small button_outline"
+        @click="logIn"
+      >
         Log in
       </button>
       <div
@@ -22,6 +26,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapActions } from "vuex";
+import router from "@/router";
 
 export default defineComponent({
   name: "MainHeader",
@@ -30,6 +35,10 @@ export default defineComponent({
 
   methods: {
     ...mapActions("auth", ["logoutUser"]),
+
+    logIn() {
+      router.push("/signin");
+    },
   },
 });
 </script>

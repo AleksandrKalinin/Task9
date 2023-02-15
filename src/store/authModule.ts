@@ -28,9 +28,11 @@ export const authModule = {
           switch (error.code) {
             case "auth/email-already-in-use":
               //this.errorMessage = "Email already in use";
+              console.log("Email already in use");
               break;
             default:
               //this.errorMessage = "Email or password was incorrect";
+              console.log("Email or password was incorrect");
               break;
           }
         });
@@ -48,15 +50,19 @@ export const authModule = {
           switch (error.code) {
             case "auth/invalid-email":
               //this.errorMessage = "Invalid email";
+              console.log("Invalid Email");
               break;
             case "auth/user-not-found":
               //this.errorMessage = "No account with that email was found";
+              console.log("No account with that email was found");
               break;
             case "auth/wrong-password":
               //this.errorMessage = "Incorrect password";
+              console.log("Incorrect password");
               break;
             default:
               //this.errorMessage = "Email or password was incorrect";
+              console.log("Email or password was incorrect");
               break;
           }
         });
