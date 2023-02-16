@@ -2,6 +2,7 @@
   <header class="header">
     <nav class="menu">
       <router-link class="menu__link" to="/">Home</router-link>
+      <router-link class="menu__link" to="/recent">Gallery</router-link>
     </nav>
     <div class="header_auth">
       <button
@@ -27,18 +28,44 @@
 import { defineComponent } from "vue";
 import { mapActions } from "vuex";
 import router from "@/router";
+import { auth } from "@/database/index";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default defineComponent({
   name: "MainHeader",
 
-  props: ["username"],
+  data() {
+    return {
+      username: null as any,
+    };
+  },
 
   methods: {
     ...mapActions("auth", ["logoutUser"]),
 
+    ...mapActions(["showSuccessToast"]),
+
     logIn() {
       router.push("/signin");
     },
+  },
+
+  watch: {
+    username(newVal) {
+      if (newVal === null) {
+        this.showSuccessToast("You are logged out!");
+      }
+    },
+  },
+
+  mounted() {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.username = user.email;
+      } else {
+        this.username = null;
+      }
+    });
   },
 });
 </script>

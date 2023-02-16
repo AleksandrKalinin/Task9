@@ -19,13 +19,13 @@
 
 .canvas-wrapper
   display: flex
-  justify-content: center
-  align-items: center
+  justify-content: space-between
+  align-items: flex-start
   height: 100%
   width: 100%
+  min-height: calc(100vh - 140px)
 
 .canvas-inner
-  width: calc( 100% -  465px - 90px)
   display: flex
   justify-content: center
 </style>

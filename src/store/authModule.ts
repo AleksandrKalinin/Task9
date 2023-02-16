@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import store from "@/store";
 
 export const authModule = {
   state: () => ({}),
@@ -22,17 +23,26 @@ export const authModule = {
         .then((data) => {
           const user = data.user;
           console.log(user);
+          store.dispatch(
+            "showSuccessToast",
+            "You are registered succesfully!",
+            {
+              root: true,
+            }
+          );
           router.push("/");
         })
         .catch((error) => {
           switch (error.code) {
             case "auth/email-already-in-use":
-              //this.errorMessage = "Email already in use";
-              console.log("Email already in use");
+              store.dispatch("showErrorToast", "Email already in use!", {
+                root: true,
+              });
               break;
             default:
-              //this.errorMessage = "Email or password was incorrect";
-              console.log("Email or password was incorrect");
+              store.dispatch("showErrorToast", "Incorrect email or password!", {
+                root: true,
+              });
               break;
           }
         });
@@ -44,25 +54,36 @@ export const authModule = {
     ) {
       signInWithEmailAndPassword(auth, email, password)
         .then(() => {
+          store.dispatch("showSuccessToast", "You are logged in!", {
+            root: true,
+          });
           router.push("/");
         })
         .catch((error) => {
           switch (error.code) {
             case "auth/invalid-email":
-              //this.errorMessage = "Invalid email";
-              console.log("Invalid Email");
+              store.dispatch("showErrorToast", "Invalid Email!", {
+                root: true,
+              });
               break;
             case "auth/user-not-found":
-              //this.errorMessage = "No account with that email was found";
-              console.log("No account with that email was found");
+              store.dispatch(
+                "showErrorToast",
+                "No user with such email was found!",
+                {
+                  root: true,
+                }
+              );
               break;
             case "auth/wrong-password":
-              //this.errorMessage = "Incorrect password";
-              console.log("Incorrect password");
+              store.dispatch("showErrorToast", "Incorrect password!", {
+                root: true,
+              });
               break;
             default:
-              //this.errorMessage = "Email or password was incorrect";
-              console.log("Email or password was incorrect");
+              store.dispatch("showErrorToast", "Incorrect email or password!", {
+                root: true,
+              });
               break;
           }
         });

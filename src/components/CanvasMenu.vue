@@ -134,6 +134,8 @@ export default defineComponent({
       "saveSelectedItem",
     ]),
 
+    ...mapActions(["showWarningToast", "showSuccessToast"]),
+
     ...mapActions("database", ["addItemToDatabase"]),
 
     checkIfLoggedIn() {
@@ -157,12 +159,13 @@ export default defineComponent({
           link: "",
         };
         newItem.id = uuidv4();
-        newItem.author = "George Nevill";
+        newItem.author = auth.currentUser.email;
         newItem.date = new Date();
         newItem.link = canvas.toDataURL("image/png");
         this.addItemToDatabase(newItem);
+        this.showSuccessToast("Saved to gallery!");
       } else {
-        console.log("Log in first!");
+        this.showWarningToast("You are not authorized! Please log in.");
       }
     },
 

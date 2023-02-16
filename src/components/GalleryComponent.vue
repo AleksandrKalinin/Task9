@@ -11,9 +11,21 @@
           <img class="gallery-preview__image" :src="item.link" />
         </div>
         <div class="gallery-item__description">
-          <p class="gallery-item__author">by: {{ item.author }}</p>
-          <p class="gallery-item__date">Published: {{ item.date }}</p>
+          <p class="gallery-item__author">
+            Author: <span class="gallery-item__email">{{ item.author }}</span>
+          </p>
+          <p class="gallery-item__date">
+            <span class="gallery-item__icon">
+              <img src="@/assets/clock-regular.svg" />
+            </span>
+            {{ item.date }}
+          </p>
         </div>
+      </div>
+    </template>
+    <template v-else>
+      <div class="gallery-preloader">
+        <img src="@/assets/preloader.gif" />
       </div>
     </template>
   </div>
@@ -59,7 +71,13 @@ export default defineComponent({
         dataItem.id = el.id;
         dataItem.author = el.author;
         dataItem.link = el.link;
-        dataItem.date = `${day}/${month}/${year}`;
+        dataItem.date = `${day}.${month}.${year}`;
+        dataItem.date =
+          ("0" + day.toString()).slice(-2) +
+          "." +
+          ("0" + month.toString()).slice(-2) +
+          "." +
+          year.toString();
         data.push(dataItem);
       }
       this.formattedData = data;
@@ -93,20 +111,26 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="sass">
 @import "@/assets/styles/colorScheme.sass"
+.gallery-preloader
+  width: calc(100vw - 120px - 350px)
+  display: flex
+  justify-content: center
+  align-items: center
 .newCanvas
   border: 1px solid red
 .gallery
   display: flex
+  justify-content: center
   flex-wrap: wrap
   padding: 0 30px
   .gallery-item
-    width: 450px
-    max-height: 362px
-    margin: 0 10px 20px
+    width: 600px
+    margin: 0 20px 40px
     border: 1px solid #CCCCCC
+    overflow: hidden
     .gallery-item__preview
-      width: 450px
-      height: 300px
+      width: 600px
+      height: 400px
       overflow: hidden
       cursor: pointer
       .gallery-preview__image
@@ -116,9 +140,30 @@ export default defineComponent({
         transition: .2s all
     .gallery-item__preview:hover
       .gallery-preview__image
-        transform: scale(1.05)
+        transform: scale(1.02)
     .gallery-item__description
       display: flex
+      flex-wrap: wrap
       justify-content: space-between
       padding: 20px
+      .gallery-item__author
+        font-weight: 600
+        color: $main-color
+        margin-bottom: 6px
+      .gallery-item__email
+        color: $main-color
+      .gallery-item__date
+        color: #CCCCCC
+        display: flex
+        justify-content: flex-end
+        align-items: center
+      .gallery-item__icon
+        display: block
+        width: 18px
+        height: 18px
+        margin-right: 3px
+        img
+          height: 100%
+          width: auto
+          object-fit: cover
 </style>

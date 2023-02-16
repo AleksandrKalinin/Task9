@@ -1,5 +1,4 @@
 <template>
-  <MainHeader />
   <div class="register">
     <form
       class="auth-form"
@@ -31,15 +30,12 @@
 </template>
 
 <script>
-import MainHeader from "@/components/MainHeader.vue";
 import { mapActions } from "vuex";
 
 export default {
   name: "RegisterComponent",
 
-  components: {
-    MainHeader,
-  },
+  components: {},
 
   data() {
     return {

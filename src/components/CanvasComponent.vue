@@ -6,8 +6,6 @@
     ref="myCanvas"
     class="canvas"
     id="myCanvas"
-    width="900"
-    height="600"
   ></canvas>
 </template>
 
@@ -79,6 +77,14 @@ export default defineComponent({
         ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
       }
       this.canvas = myCanvas;
+    },
+
+    setCanvasProportions() {
+      const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
+      if (ctx) {
+        ctx.canvas.width = document.body.clientWidth - 465 - 90;
+        ctx.canvas.height = (ctx.canvas.width / 3) * 2;
+      }
     },
 
     /** Method for setting up canvas with parameters fillStyle, strokeStyle, lineWidth */
@@ -394,10 +400,7 @@ export default defineComponent({
 
   mounted() {
     this.initializeCanvas(this.selectedItem);
-  },
-
-  updated() {
-    console.log("updating");
+    this.setCanvasProportions();
   },
 });
 </script>
