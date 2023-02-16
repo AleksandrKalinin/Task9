@@ -48,13 +48,3 @@ export interface Shape {
   link: string;
   path: string;
 }
-
-/*
-export const firestore = getFirestore()
-
-const createCollection = <T = DocumentData>(collectionName: string) => {
-  return collection(firestore, collectionName) as CollectionReference<T>
-}
-
-export const usersCol = createCollection<DatabaseItem>('items')
-*/

@@ -36,7 +36,7 @@ export default defineComponent({
 
   data() {
     return {
-      username: null as any,
+      username: null as null | string,
     };
   },
 
