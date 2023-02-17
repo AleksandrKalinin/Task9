@@ -4,7 +4,7 @@
       <div class="canvas-menu__block">
         <h6 class="canvas-menu__category">Instruments</h6>
         <div class="canvas-menu__wrapper canvas-wrapper_regular">
-          <div class="canvas-menu__item" title="Pen">
+          <div class="canvas-menu__item" title="Pen" @click="setShape('')">
             <img
               class="canvas-menu__icon"
               v-bind:src="require('@/assets/paintbrush-solid.svg')"
@@ -154,11 +154,13 @@ export default defineComponent({
         const canvas: HTMLCanvasElement = this.canvas;
         const newItem: GalleryItem = {
           id: "",
+          authorId: "",
           author: "",
           date: new Date(),
           link: "",
         };
         newItem.id = uuidv4();
+        newItem.authorId = auth.currentUser.uid;
         newItem.author = auth.currentUser.email;
         newItem.date = new Date();
         newItem.link = canvas.toDataURL("image/png");

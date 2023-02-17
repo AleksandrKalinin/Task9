@@ -43,7 +43,7 @@ export default defineComponent({
   methods: {
     ...mapActions("auth", ["logoutUser"]),
 
-    ...mapActions(["showSuccessToast"]),
+    ...mapActions(["showSuccessToast", "showErrorToast"]),
 
     logIn() {
       router.push("/signin");

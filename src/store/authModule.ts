@@ -1,28 +1,53 @@
 import router from "@/router";
+import { UsersState, User } from "../components/types/types";
 import { auth } from "@/database/index";
+import { doc, setDoc } from "firebase/firestore";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import { db } from "@/database/index";
 import store from "@/store";
 
 export const authModule = {
-  state: () => ({}),
+  state: () => ({
+    usersArray: [] as Array<any>,
+  }),
 
-  getters: {},
+  getters: {
+    usersArray: (state: UsersState) => {
+      return state.usersArray;
+    },
+  },
 
-  mutations: {},
+  mutations: {
+    saveUser(state: UsersState, value: any): void {
+      state.usersArray.push(value);
+    },
+  },
 
   actions: {
+    async saveUser(
+      { commit }: any,
+      { id, email }: { id: string; email: string }
+    ) {
+      const user: User = { id, email };
+      commit("saveUser", user);
+      try {
+        await setDoc(doc(db, "users", user.id), user);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
     registerUser(
       _: any,
       { email, password }: { email: string; password: string }
     ) {
       createUserWithEmailAndPassword(auth, email, password)
         .then((data) => {
-          const user = data.user;
-          console.log(user);
+          const id = data.user.uid;
           store.dispatch(
             "showSuccessToast",
             "You are registered succesfully!",
@@ -30,6 +55,7 @@ export const authModule = {
               root: true,
             }
           );
+          store.dispatch("auth/saveUser", { id, email }, { root: true });
           router.push("/");
         })
         .catch((error) => {

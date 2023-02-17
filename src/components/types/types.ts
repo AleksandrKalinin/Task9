@@ -18,9 +18,10 @@ export interface DatabaseState {
 }
 
 export interface DatabaseItem {
+  id: string;
+  authorId: string;
   author: string;
   date: TimestampObject;
-  id: string;
   link: string;
 }
 
@@ -30,16 +31,17 @@ export interface TimestampObject {
 }
 
 export interface LocalItem {
+  id: string;
   author: string;
   date: string;
-  id: string;
   link: string;
 }
 
 export interface GalleryItem {
-  author: string;
-  date: Date;
   id: string;
+  author: string;
+  authorId: string;
+  date: Date;
   link: string;
 }
 
@@ -47,4 +49,13 @@ export interface Shape {
   name: string;
   link: string;
   path: string;
+}
+
+export interface User {
+  id: string;
+  email: string;
+}
+
+export interface UsersState {
+  usersArray: Array<User>;
 }

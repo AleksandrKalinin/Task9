@@ -1,11 +1,12 @@
 <template>
   <aside class="sidebar">
+    <!--
     <input
       type="text"
       class="sidebar-input"
       placeholder="Search for users"
       v-model="currentInput"
-    />
+    /> -->
   </aside>
 </template>
 

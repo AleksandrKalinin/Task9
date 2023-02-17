@@ -5,6 +5,7 @@ import {
   DatabaseItem,
   GalleryItem,
 } from "../components/types/types";
+import { auth } from "@/database/index";
 import { db } from "@/database/index";
 import {
   doc,
@@ -72,16 +73,22 @@ export const databaseModule: Module<DatabaseState, RootState> = {
     async fetchItems({ commit }: ActionContext<DatabaseState, unknown>) {
       const array: Array<DatabaseItem> = [];
       try {
-        const itemsRef = collection(db, "items");
+        const itemsRef = collection(
+          db,
+          "users",
+          auth.currentUser.uid,
+          "images"
+        );
         const queryToDB = query(itemsRef);
         const querySnapshot: any = await getDocs(queryToDB);
-        if (querySnapshot) {
+        if (querySnapshot.size > 0) {
           querySnapshot.forEach((doc: { [key: string]: any }) => {
             array.push(doc.data());
           });
           commit(UPDATE_ITEMS, array);
         } else {
-          console.log("No such document!");
+          console.log("no documents");
+          commit(UPDATE_ITEMS, []);
         }
         commit(CHANGE_STATUS, true);
       } catch (e) {
@@ -91,7 +98,10 @@ export const databaseModule: Module<DatabaseState, RootState> = {
 
     async addItemToDatabase(_, newItem: DatabaseItem) {
       try {
-        await setDoc(doc(db, "items", newItem.id), newItem);
+        await setDoc(
+          doc(db, "users", newItem.authorId, "images", newItem.id),
+          newItem
+        );
       } catch (e) {
         console.log(e);
       }

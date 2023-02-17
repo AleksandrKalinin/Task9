@@ -1,5 +1,17 @@
 <template>
   <div class="gallery">
+    <template v-if="!areItemsLoaded && formattedData.length === 0">
+      <div class="gallery-preloader">
+        <img src="@/assets/preloader.gif" />
+      </div>
+    </template>
+    <template v-if="areItemsLoaded && formattedData.length === 0">
+      <div class="gallery-preloader">
+        <span class="gallery-placeholder"
+          >You have no images for display yet</span
+        >
+      </div>
+    </template>
     <template v-if="formattedData.length > 0">
       <div
         class="gallery__item gallery-item"
@@ -11,9 +23,6 @@
           <img class="gallery-preview__image" :src="item.link" />
         </div>
         <div class="gallery-item__description">
-          <p class="gallery-item__author">
-            Author: <span class="gallery-item__email">{{ item.author }}</span>
-          </p>
           <p class="gallery-item__date">
             <span class="gallery-item__icon">
               <img src="@/assets/clock-regular.svg" />
@@ -23,11 +32,6 @@
         </div>
       </div>
     </template>
-    <template v-else>
-      <div class="gallery-preloader">
-        <img src="@/assets/preloader.gif" />
-      </div>
-    </template>
   </div>
 </template>
 
@@ -35,6 +39,9 @@
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
 import { DatabaseItem, LocalItem } from "../components/types/types";
+import { auth } from "@/database/index";
+import { onAuthStateChanged } from "firebase/auth";
+import router from "@/router";
 
 export default defineComponent({
   name: "MainHeader",
@@ -42,6 +49,7 @@ export default defineComponent({
   data() {
     return {
       formattedData: [] as Array<LocalItem>,
+      isShowed: false as boolean,
     };
   },
 
@@ -58,6 +66,7 @@ export default defineComponent({
   methods: {
     ...mapActions("database", ["pushIntoDatabase", "fetchItems"]),
     ...mapActions("canvas", ["saveCanvas", "saveSelectedItem"]),
+    ...mapActions(["showErrorToast"]),
 
     formatData(values: Array<DatabaseItem>) {
       const data: Array<LocalItem> = [];
@@ -103,7 +112,15 @@ export default defineComponent({
   },
 
   mounted() {
-    this.fetchItems();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.fetchItems();
+      } else {
+        this.showErrorToast("You are not authorized to see access this page!");
+        unsubscribe();
+        router.push("/signin");
+      }
+    });
   },
 });
 </script>
@@ -111,6 +128,8 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="sass">
 @import "@/assets/styles/colorScheme.sass"
+.gallery-preloader
+  font-size: 20px
 .gallery-preloader
   width: calc(100vw - 120px - 350px)
   display: flex
@@ -120,7 +139,6 @@ export default defineComponent({
   border: 1px solid red
 .gallery
   display: flex
-  justify-content: center
   flex-wrap: wrap
   padding: 0 30px
   .gallery-item
@@ -155,6 +173,7 @@ export default defineComponent({
       .gallery-item__date
         color: #CCCCCC
         display: flex
+        width: 100%
         justify-content: flex-end
         align-items: center
       .gallery-item__icon
