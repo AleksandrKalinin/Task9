@@ -2,6 +2,7 @@ import { createStore } from "vuex";
 import { RootState } from "../components/types/types";
 import { canvasModule } from "@/store/canvasModule";
 import { authModule } from "@/store/authModule";
+import { themeModule } from "@/store/themeModule";
 import { databaseModule } from "@/store/databaseModule";
 import { useToast } from "vue-toastification";
 
@@ -28,5 +29,6 @@ export default createStore({
     canvas: canvasModule,
     auth: authModule,
     database: databaseModule,
+    theme: themeModule,
   },
 });

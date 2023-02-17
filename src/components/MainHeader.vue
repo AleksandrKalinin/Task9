@@ -1,13 +1,24 @@
 <template>
-  <header class="header">
+  <header class="header" :style="{ backgroundColor: themeSelected }">
     <nav class="menu">
-      <router-link class="menu__link" to="/">Home</router-link>
-      <router-link class="menu__link" to="/recent">Gallery</router-link>
+      <router-link
+        class="menu__link"
+        :style="{ backgroundColor: themeSelected }"
+        to="/"
+        >Home</router-link
+      >
+      <router-link
+        class="menu__link"
+        :style="{ backgroundColor: themeSelected }"
+        to="/recent"
+        >Gallery</router-link
+      >
     </nav>
     <div class="header_auth">
       <button
         v-if="!username"
-        class="button button_small button_outline"
+        class="button button_light button_small"
+        :style="{ color: themeSelected }"
         @click="logIn"
       >
         Log in
@@ -26,7 +37,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import router from "@/router";
 import { auth } from "@/database/index";
 import { onAuthStateChanged } from "firebase/auth";
@@ -38,6 +49,10 @@ export default defineComponent({
     return {
       username: null as null | string,
     };
+  },
+
+  computed: {
+    ...mapGetters("theme", ["themeSelected"]),
   },
 
   methods: {
@@ -101,5 +116,5 @@ header
       transition: .1s all
 
     .menu__link:hover
-      background: #EF5C43
+      filter: brightness(90%)
 </style>

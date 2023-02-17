@@ -17,7 +17,10 @@
         class="auth-form__input auth-input"
         v-model="password"
       />
-      <button class="button button_regular button_large button_centered">
+      <button
+        class="button button_regular button_large button_centered"
+        :style="{ backgroundColor: themeSelected }"
+      >
         Submit
       </button>
       <p class="auth-form__text">
@@ -32,7 +35,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "SignInComponent",
@@ -43,6 +46,10 @@ export default {
       email: "",
       errorMessage: null,
     };
+  },
+
+  computed: {
+    ...mapGetters("theme", ["themeSelected"]),
   },
 
   methods: {

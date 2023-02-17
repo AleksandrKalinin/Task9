@@ -59,3 +59,8 @@ export interface User {
 export interface UsersState {
   usersArray: Array<User>;
 }
+
+export interface ThemeState {
+  themeSelected: string;
+  themeArray: Array<string>;
+}
