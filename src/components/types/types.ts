@@ -12,7 +12,6 @@ export interface CanvasState {
 
 export interface DatabaseState {
   items: Array<DatabaseItem>;
-  filteredItems: Array<DatabaseItem>;
   areItemsLoaded: boolean;
   searchQuery: string;
 }

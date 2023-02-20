@@ -23,6 +23,7 @@
           <img class="gallery-preview__image" :src="item.link" />
         </div>
         <div class="gallery-item__description">
+          <p>Published:</p>
           <p class="gallery-item__date">
             <span class="gallery-item__icon">
               <img src="@/assets/clock-regular.svg" />
@@ -54,12 +55,12 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapGetters("database", ["items", "areItemsLoaded", "filteredItems"]),
+    ...mapGetters("database", ["items", "areItemsLoaded"]),
 
     ...mapGetters("canvas", ["canvas"]),
 
     computedItems(): Array<DatabaseItem> {
-      return this.filteredItems;
+      return this.items;
     },
   },
 
@@ -103,7 +104,7 @@ export default defineComponent({
 
   watch: {
     areItemsLoaded: function () {
-      this.formatData(this.filteredItems);
+      this.formatData(this.items);
     },
 
     computedItems(newVal) {
@@ -161,9 +162,9 @@ export default defineComponent({
         transform: scale(1.02)
     .gallery-item__description
       display: flex
-      flex-wrap: wrap
       justify-content: space-between
       padding: 20px
+      font-size: 18px
       .gallery-item__author
         font-weight: 600
         color: $main-color

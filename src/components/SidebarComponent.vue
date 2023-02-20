@@ -42,7 +42,7 @@ export default defineComponent({
     },
 
     currentInput: {
-      get() {
+      get(): string {
         return this.searchQuery;
       },
       set(value: string) {
@@ -57,6 +57,8 @@ export default defineComponent({
     ...mapActions("theme", ["setTheme"]),
 
     onChange(event: any) {
+      console.log(event);
+      console.log(event.target);
       this.setTheme(event.target.value);
     },
   },

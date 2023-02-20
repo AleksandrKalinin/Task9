@@ -15,16 +15,11 @@ import {
   setDoc,
   Timestamp,
 } from "firebase/firestore";
-import {
-  UPDATE_ITEMS,
-  CHANGE_STATUS,
-  UPDATE_SEARCH_QUERY,
-} from "@/constants/database";
+import { UPDATE_ITEMS, CHANGE_STATUS } from "@/constants/database";
 
 export const databaseModule: Module<DatabaseState, RootState> = {
   state: () => ({
     items: [] as Array<DatabaseItem>,
-    filteredItems: [] as Array<DatabaseItem>,
     areItemsLoaded: false as boolean,
     searchQuery: "" as string,
   }),
@@ -37,22 +32,6 @@ export const databaseModule: Module<DatabaseState, RootState> = {
     areItemsLoaded: (state: DatabaseState) => {
       return state.areItemsLoaded;
     },
-
-    searchQuery: (state: DatabaseState) => {
-      return state.searchQuery;
-    },
-
-    filteredItems: (state: DatabaseState, getters) => {
-      if (state.searchQuery === "") {
-        return getters.items;
-      } else {
-        return [
-          ...getters.items.filter((item: DatabaseItem) =>
-            item.author.toLowerCase().includes(state.searchQuery.toLowerCase())
-          ),
-        ];
-      }
-    },
   },
 
   mutations: <MutationTree<DatabaseState>>{
@@ -62,10 +41,6 @@ export const databaseModule: Module<DatabaseState, RootState> = {
 
     [CHANGE_STATUS](state: DatabaseState): void {
       state.areItemsLoaded = true;
-    },
-
-    [UPDATE_SEARCH_QUERY](state: DatabaseState, value: string): void {
-      state.searchQuery = value;
     },
   },
 
@@ -117,13 +92,6 @@ export const databaseModule: Module<DatabaseState, RootState> = {
           console.log(e);
         }
       }
-    },
-
-    updateSearchQuery(
-      { commit }: ActionContext<DatabaseState, unknown>,
-      value: string
-    ) {
-      commit(UPDATE_SEARCH_QUERY, value);
     },
   },
 
