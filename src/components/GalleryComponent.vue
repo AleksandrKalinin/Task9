@@ -17,8 +17,6 @@
         class="gallery__item gallery-item"
         v-for="item in formattedData"
         :key="item.id"
-        @click="selectCanvas(item.id)"
-        title="Click to copy to canvas"
       >
         <div class="gallery-item__preview gallery-preview">
           <img class="gallery-preview__image" :src="item.link" />
@@ -32,6 +30,20 @@
             {{ item.date }}
           </p>
         </div>
+        <div class="gallery-item__footer">
+          <Button
+            class="button button_regular button_normal"
+            @click="selectCanvas(item)"
+            :style="{ backgroundColor: themeSelected }"
+            >Edit item</Button
+          >
+          <Button
+            class="button button_regular button_normal"
+            @click="deleteItemFromDatabase(item)"
+            :style="{ backgroundColor: themeSelected }"
+            >Delete item</Button
+          >
+        </div>
       </div>
     </template>
   </div>
@@ -44,9 +56,14 @@ import { DatabaseItem, LocalItem } from "@/types/types";
 import { auth } from "@/database/index";
 import { onAuthStateChanged } from "firebase/auth";
 import router from "@/router";
+import Button from "@/components/Button.vue";
 
 export default defineComponent({
   name: "MainHeader",
+
+  components: {
+    Button,
+  },
 
   data() {
     return {
@@ -60,20 +77,36 @@ export default defineComponent({
 
     ...mapGetters("canvas", ["canvas"]),
 
+    ...mapGetters("theme", ["themeSelected"]),
+
     computedItems(): Array<DatabaseItem> {
       return this.items;
     },
   },
 
   methods: {
-    ...mapActions("database", ["pushIntoDatabase", "fetchItems"]),
+    ...mapActions("database", [
+      "pushIntoDatabase",
+      "fetchItems",
+      "deleteItemFromDatabase",
+    ]),
     ...mapActions("canvas", ["saveCanvas", "saveSelectedItem"]),
     ...mapActions(["showErrorToast"]),
+
+    deleteItem() {
+      console.log("delete");
+    },
 
     formatData(values: Array<DatabaseItem>) {
       const data: Array<LocalItem> = [];
       for (let i = 0; i < values.length; i++) {
-        const dataItem: LocalItem = { id: "", author: "", link: "", date: "" };
+        const dataItem: LocalItem = {
+          id: "",
+          author: "",
+          authorId: "",
+          link: "",
+          date: "",
+        };
         const el = values[i];
         const date = new Date(el.date.seconds * 1000);
         const day = date.getDate();
@@ -81,6 +114,7 @@ export default defineComponent({
         const year = date.getFullYear();
         dataItem.id = el.id;
         dataItem.author = el.author;
+        dataItem.authorId = el.authorId;
         dataItem.link = el.link;
         dataItem.date = `${day}.${month}.${year}`;
         dataItem.date =
@@ -161,10 +195,14 @@ export default defineComponent({
     .gallery-item__preview:hover
       .gallery-preview__image
         transform: scale(1.02)
+    .gallery-item__footer
+      padding: 20px 0
+      display: flex
+      justify-content: space-around
     .gallery-item__description
       display: flex
       justify-content: space-between
-      padding: 20px
+      padding: 0 20px
       font-size: 18px
       .gallery-item__author
         font-weight: 600

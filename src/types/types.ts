@@ -32,6 +32,7 @@ export interface TimestampObject {
 export interface LocalItem {
   id: string;
   author: string;
+  authorId: string;
   date: string;
   link: string;
 }

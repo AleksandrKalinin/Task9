@@ -13,6 +13,8 @@ import {
   query,
   getDocs,
   setDoc,
+  deleteDoc,
+  getDoc,
   Timestamp,
 } from "firebase/firestore";
 import { UPDATE_ITEMS, CHANGE_STATUS } from "@/constants/database";
@@ -77,6 +79,15 @@ export const databaseModule: Module<DatabaseState, RootState> = {
           doc(db, "users", newItem.authorId, "images", newItem.id),
           newItem
         );
+      } catch (e) {
+        console.log(e);
+      }
+    },
+
+    async deleteItemFromDatabase(_, item) {
+      try {
+        await deleteDoc(doc(db, "users", item.authorId, "images", item.id));
+        //commit("deleteItem", id);
       } catch (e) {
         console.log(e);
       }
