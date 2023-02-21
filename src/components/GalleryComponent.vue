@@ -18,6 +18,7 @@
         v-for="item in formattedData"
         :key="item.id"
         @click="selectCanvas(item.id)"
+        title="Click to copy to canvas"
       >
         <div class="gallery-item__preview gallery-preview">
           <img class="gallery-preview__image" :src="item.link" />
