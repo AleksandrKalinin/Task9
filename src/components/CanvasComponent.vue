@@ -200,31 +200,25 @@ export default defineComponent({
         endY: this.endY,
       };
       const shapeArgs = { canvas, ctx, ...coords };
+      let result: HTMLCanvasElement | null = null;
       if (this.selectedShape === TRIANGLE) {
-        const result: HTMLCanvasElement = drawTriangle(shapeArgs);
-        this.saveCanvas(result);
+        result = drawTriangle(shapeArgs);
       } else if (this.selectedShape === CIRCLE) {
-        const result: HTMLCanvasElement = drawCircle(shapeArgs);
-        this.saveCanvas(result);
+        result = drawCircle(shapeArgs);
       } else if (this.selectedShape === RECTANGLE) {
-        const result: HTMLCanvasElement = drawRectangle(shapeArgs);
-        this.saveCanvas(result);
+        result = drawRectangle(shapeArgs);
       } else if (this.selectedShape === ELLIPSE) {
-        const result: HTMLCanvasElement = drawEllipse(shapeArgs);
-        this.saveCanvas(result);
+        result = drawEllipse(shapeArgs);
       } else if (this.selectedShape === OCTAGON) {
-        const result: HTMLCanvasElement = drawOctagon(shapeArgs);
-        this.saveCanvas(result);
+        result = drawOctagon(shapeArgs);
       } else if (this.selectedShape === HEXAGON) {
-        const result: HTMLCanvasElement = drawHexagon(shapeArgs);
-        this.saveCanvas(result);
+        result = drawHexagon(shapeArgs);
       } else if (this.selectedShape === STAR) {
-        const result: HTMLCanvasElement = drawStar(shapeArgs);
-        this.saveCanvas(result);
+        result = drawStar(shapeArgs);
       } else if (this.selectedShape === DIAMOND) {
-        const result: HTMLCanvasElement = drawDiamond(shapeArgs);
-        this.saveCanvas(result);
+        result = drawDiamond(shapeArgs);
       }
+      this.saveCanvas(result);
     },
   },
 

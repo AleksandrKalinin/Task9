@@ -61,18 +61,18 @@
         <div
           class="canvas-menu__wrapper canvas-wrapper_large canvas-wrapper_spaced"
         >
-          <button
+          <Button
             class="button button_regular button_normal"
             @click="addItemToGallery"
+            :style="{ backgroundColor: themeSelected }"
+            >Save picture</Button
           >
-            Save picture
-          </button>
-          <button
+          <Button
             class="button button_regular button_normal"
             @click="clearCurrentCanvas"
+            :style="{ backgroundColor: themeSelected }"
+            >Clear canvas</Button
           >
-            Clear canvas
-          </button>
         </div>
       </div>
     </div>
@@ -86,9 +86,11 @@ import { v4 as uuidv4 } from "uuid";
 import { Shape, GalleryItem } from "../components/types/types";
 import { auth } from "@/database/index";
 import { onAuthStateChanged } from "firebase/auth";
+import Button from "@/components/Button.vue";
 
 export default defineComponent({
   name: "CanvasMenu",
+
   data() {
     return {
       shapes: [] as Array<Shape>,
@@ -113,8 +115,14 @@ export default defineComponent({
     };
   },
 
+  components: {
+    Button,
+  },
+
   computed: {
     ...mapGetters("canvas", ["lineWidth", "canvas"]),
+
+    ...mapGetters("theme", ["themeSelected"]),
 
     width: {
       get() {

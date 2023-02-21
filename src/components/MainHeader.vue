@@ -15,14 +15,13 @@
       >
     </nav>
     <div class="header_auth">
-      <button
+      <Button
         v-if="!username"
         class="button button_light button_small"
         :style="{ color: themeSelected }"
         @click="logIn"
+        >Log in</Button
       >
-        Log in
-      </button>
       <div
         title="Press to log out"
         v-else
@@ -41,9 +40,14 @@ import { mapActions, mapGetters } from "vuex";
 import router from "@/router";
 import { auth } from "@/database/index";
 import { onAuthStateChanged } from "firebase/auth";
+import Button from "@/components/Button.vue";
 
 export default defineComponent({
   name: "MainHeader",
+
+  components: {
+    Button,
+  },
 
   data() {
     return {

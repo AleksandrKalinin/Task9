@@ -1,44 +1,25 @@
 <template>
   <div class="register">
-    <form
-      class="auth-form"
-      v-on:submit.prevent="registerUser({ email, password })"
-    >
-      <h2 class="auth-form__title">Registration</h2>
-      <input
-        type="email"
-        name=""
-        class="auth-form__input auth-input"
-        v-model="email"
-      />
-      <input
-        type="text"
-        name=""
-        class="auth-form__input auth-input"
-        v-model="password"
-      />
-      <button
-        class="button button_regular button_large button_centered"
-        :style="{ backgroundColor: themeSelected }"
-      >
-        Submit
-      </button>
-      <p class="auth-form__text">
-        Already have an account?
-        <router-link class="auth-form__link" to="/signin">Sign in</router-link>
-      </p>
-      <p v-if="errorMessage" class="auth-form__error">{{ errorMessage }}</p>
-    </form>
+    <AuthForm
+      title="Registration"
+      text="Already have an account?"
+      routeText="Sign in"
+      routeLink="signin"
+      @submitUser="registerUser"
+    ></AuthForm>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import AuthForm from "@/components/AuthForm.vue";
 
 export default {
   name: "RegisterComponent",
 
-  components: {},
+  components: {
+    AuthForm,
+  },
 
   data() {
     return {
