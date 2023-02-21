@@ -22,6 +22,15 @@ import {
   STAR,
   DIAMOND,
 } from "@/constants/shapes";
+import { setupCTX } from "@/helpers/setupCTX";
+import { drawTriangle } from "@/helpers/drawTriangle";
+import { drawRectangle } from "@/helpers/drawRectangle";
+import { drawCircle } from "@/helpers/drawCircle";
+import { drawEllipse } from "@/helpers/drawEllipse";
+import { drawHexagon } from "@/helpers/drawHexagon";
+import { drawOctagon } from "@/helpers/drawOctagon";
+import { drawStar } from "@/helpers/drawStar";
+import { drawDiamond } from "@/helpers/drawDiamond";
 
 export default defineComponent({
   name: "CanvasComponent",
@@ -79,24 +88,13 @@ export default defineComponent({
       this.canvas = myCanvas;
     },
 
+    /** Setting canvas proportions */
     setCanvasProportions() {
       const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
       if (ctx) {
         ctx.canvas.width = document.body.clientWidth - 465 - 90;
         ctx.canvas.height = (ctx.canvas.width / 3) * 2;
       }
-    },
-
-    /** Method for setting up canvas with parameters fillStyle, strokeStyle, lineWidth */
-    setupCTX() {
-      const canvas: HTMLCanvasElement = this.canvas;
-      const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
-      if (ctx) {
-        ctx.fillStyle = this.selectedColor;
-        ctx.strokeStyle = this.selectedColor;
-        ctx.lineWidth = this.lineWidth;
-      }
-      return { canvas, ctx };
     },
 
     draw(e: MouseEvent) {
@@ -122,8 +120,13 @@ export default defineComponent({
       }
     },
 
+    /** Draw on canvas in pen is selected */
     drawOnCanvas(x1: number, y1: number, x2: number, y2: number) {
-      const { canvas, ctx } = this.setupCTX();
+      const { canvas, ctx } = setupCTX(
+        this.canvas,
+        this.selectedColor,
+        this.lineWidth
+      );
       if (ctx) {
         ctx.beginPath();
         ctx.strokeStyle = this.selectedColor;
@@ -136,7 +139,7 @@ export default defineComponent({
       }
     },
 
-    /** Initial coords of shape */
+    /** Starting coordinates of a shape */
     getStartCoords(e: MouseEvent) {
       const target = e.target as HTMLElement;
       const cX: number = target.getBoundingClientRect().left + window.scrollX;
@@ -145,7 +148,7 @@ export default defineComponent({
       this.startY = e.pageY - cY;
     },
 
-    /** Final coords of shape */
+    /** Final coordinates of a shape */
     getEndCoords(e: MouseEvent) {
       const target = e.target as HTMLElement;
       const cX: number = target.getBoundingClientRect().left + window.scrollX;
@@ -185,216 +188,43 @@ export default defineComponent({
 
     /** Draw a shape depending on selected shape */
     drawShape() {
+      const { canvas, ctx } = setupCTX(
+        this.canvas,
+        this.selectedColor,
+        this.lineWidth
+      );
+      const coords = {
+        startX: this.startX,
+        startY: this.startY,
+        endX: this.endX,
+        endY: this.endY,
+      };
+      const shapeArgs = { canvas, ctx, ...coords };
       if (this.selectedShape === TRIANGLE) {
-        this.drawTriangle();
+        const result: HTMLCanvasElement = drawTriangle(shapeArgs);
+        this.saveCanvas(result);
       } else if (this.selectedShape === CIRCLE) {
-        this.drawCircle();
+        const result: HTMLCanvasElement = drawCircle(shapeArgs);
+        this.saveCanvas(result);
       } else if (this.selectedShape === RECTANGLE) {
-        this.drawRectangle();
+        const result: HTMLCanvasElement = drawRectangle(shapeArgs);
+        this.saveCanvas(result);
       } else if (this.selectedShape === ELLIPSE) {
-        this.drawEllipse();
+        const result: HTMLCanvasElement = drawEllipse(shapeArgs);
+        this.saveCanvas(result);
       } else if (this.selectedShape === OCTAGON) {
-        this.drawOctagon();
+        const result: HTMLCanvasElement = drawOctagon(shapeArgs);
+        this.saveCanvas(result);
       } else if (this.selectedShape === HEXAGON) {
-        this.drawHexagon();
+        const result: HTMLCanvasElement = drawHexagon(shapeArgs);
+        this.saveCanvas(result);
       } else if (this.selectedShape === STAR) {
-        this.drawStar();
+        const result: HTMLCanvasElement = drawStar(shapeArgs);
+        this.saveCanvas(result);
       } else if (this.selectedShape === DIAMOND) {
-        this.drawDiamond();
+        const result: HTMLCanvasElement = drawDiamond(shapeArgs);
+        this.saveCanvas(result);
       }
-    },
-
-    drawEllipse() {
-      const { canvas, ctx } = this.setupCTX();
-      let mainAxis: number = Math.sqrt(
-        Math.abs(
-          Math.pow(Math.abs(this.endX - this.startX), 2) -
-            Math.pow(Math.abs(this.endY - this.startY), 2)
-        )
-      );
-      let angle: number = Math.atan(
-        (this.endY - this.startY) / (this.endX - this.startX)
-      );
-      let coordX: number =
-        this.endX > this.startX
-          ? this.startX + (this.endX - this.startX) / 2
-          : this.endX + (this.startX - this.endX) / 2;
-      let coordY: number =
-        this.endY > this.startY
-          ? this.startY + (this.endY - this.startY) / 2
-          : this.endY + (this.startY - this.endY) / 2;
-      if (ctx) {
-        ctx.beginPath();
-        ctx.ellipse(
-          coordX,
-          coordY,
-          mainAxis / 2,
-          mainAxis / 4,
-          angle,
-          0,
-          2 * Math.PI
-        );
-        ctx.stroke();
-        ctx.closePath();
-      }
-      this.canvas = canvas;
-      this.saveCanvas(canvas);
-    },
-
-    drawCircle() {
-      const { canvas, ctx } = this.setupCTX();
-      const diameter: number = Math.sqrt(
-        Math.abs(
-          Math.pow(Math.abs(this.endX - this.startX), 2) -
-            Math.pow(Math.abs(this.endY - this.startY), 2)
-        )
-      );
-      if (ctx) {
-        ctx.beginPath();
-        ctx.arc(
-          this.startX + (this.endX - this.startX) / 2,
-          this.startY + (this.endY - this.startY) / 2,
-          diameter / 2,
-          0,
-          2 * Math.PI
-        );
-        ctx.stroke();
-        ctx.closePath();
-        ctx.save();
-      }
-      this.canvas = canvas;
-      this.saveCanvas(canvas);
-    },
-
-    drawStar() {
-      const { canvas, ctx } = this.setupCTX();
-      let diameter: number = Math.sqrt(
-        Math.abs(
-          Math.pow(Math.abs(this.endX - this.startX), 2) -
-            Math.pow(Math.abs(this.endY - this.startY), 2)
-        )
-      );
-      if (ctx) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.translate(
-          this.startX + (this.endX - this.startX) / 2,
-          this.startY + (this.endY - this.startY) / 2
-        );
-        ctx.moveTo(0, 0 - diameter / 2);
-        for (let i = 0; i < 5; i++) {
-          ctx.rotate(Math.PI / 5);
-          ctx.lineTo(0, 0 - diameter / 4);
-          ctx.rotate(Math.PI / 5);
-          ctx.lineTo(0, 0 - diameter / 2);
-        }
-        ctx.closePath();
-        ctx.stroke();
-        ctx.restore();
-      }
-      this.canvas = canvas;
-      this.saveCanvas(canvas);
-    },
-
-    drawRectangle() {
-      const { canvas, ctx } = this.setupCTX();
-      if (ctx) {
-        ctx.beginPath();
-        ctx.moveTo(this.startX, this.startY);
-        ctx.lineTo(this.startX, this.endY);
-        ctx.lineTo(this.endX, this.endY);
-        ctx.lineTo(this.endX, this.startY);
-        ctx.lineTo(this.startX, this.startY);
-        ctx.closePath();
-        ctx.stroke();
-      }
-      this.canvas = canvas;
-      this.saveCanvas(canvas);
-    },
-
-    drawDiamond() {
-      const { canvas, ctx } = this.setupCTX();
-      if (ctx) {
-        ctx.beginPath();
-        ctx.moveTo(this.startX + (this.endX - this.startX) / 2, this.startY);
-        ctx.lineTo(this.endX, this.startY + (this.endY - this.startY) / 2);
-        ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.endY);
-        ctx.lineTo(this.startX, this.startY + (this.endY - this.startY) / 2);
-        ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.startY);
-        ctx.stroke();
-      }
-      this.canvas = canvas;
-      this.saveCanvas(canvas);
-    },
-
-    drawHexagon() {
-      const { canvas, ctx } = this.setupCTX();
-      if (ctx) {
-        ctx.beginPath();
-        ctx.moveTo(this.startX + (this.endX - this.startX) / 2, this.startY);
-        ctx.lineTo(this.endX, this.startY + (this.endY - this.startY) / 3);
-        ctx.lineTo(
-          this.endX,
-          this.startY + ((this.endY - this.startY) / 3) * 2
-        );
-        ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.endY);
-        ctx.lineTo(
-          this.startX,
-          this.startY + ((this.endY - this.startY) / 3) * 2
-        );
-        ctx.lineTo(this.startX, this.startY + (this.endY - this.startY) / 3);
-        ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.startY);
-        ctx.stroke();
-      }
-      this.canvas = canvas;
-      this.saveCanvas(canvas);
-    },
-
-    drawOctagon() {
-      const { canvas, ctx } = this.setupCTX();
-      if (ctx) {
-        ctx.beginPath();
-        ctx.moveTo(this.startX + (this.endX - this.startX) / 3, this.startY);
-        ctx.moveTo(
-          this.startX + ((this.endX - this.startX) / 3) * 2,
-          this.startY
-        );
-        ctx.lineTo(this.endX, this.startY + (this.endY - this.startY) / 3);
-        ctx.lineTo(
-          this.endX,
-          this.startY + ((this.endY - this.startY) / 3) * 2
-        );
-        ctx.lineTo(
-          this.startX + ((this.endX - this.startX) / 3) * 2,
-          this.endY
-        );
-        ctx.lineTo(this.startX + (this.endX - this.startX) / 3, this.endY);
-        ctx.lineTo(
-          this.startX,
-          this.startY + ((this.endY - this.startY) / 3) * 2
-        );
-        ctx.lineTo(this.startX, this.startY + (this.endY - this.startY) / 3);
-        ctx.lineTo(this.startX + (this.endX - this.startX) / 3, this.startY);
-        ctx.closePath();
-        ctx.stroke();
-      }
-      this.canvas = canvas;
-      this.saveCanvas(canvas);
-    },
-
-    drawTriangle() {
-      const { canvas, ctx } = this.setupCTX();
-      if (ctx) {
-        ctx.beginPath();
-        ctx.moveTo(this.startX + (this.endX - this.startX) / 2, this.startY);
-        ctx.lineTo(this.startX, this.endY);
-        ctx.lineTo(this.endX, this.endY);
-        ctx.lineTo(this.startX + (this.endX - this.startX) / 2, this.startY);
-        ctx.stroke();
-        ctx.closePath();
-      }
-      this.canvas = canvas;
-      this.saveCanvas(canvas);
     },
   },
 

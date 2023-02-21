@@ -63,3 +63,12 @@ export interface ThemeState {
   themeSelected: string;
   themeArray: Array<string>;
 }
+
+export interface ShapeArgs {
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D | null;
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+}
