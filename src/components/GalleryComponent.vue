@@ -40,7 +40,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
-import { DatabaseItem, LocalItem } from "../components/types/types";
+import { DatabaseItem, LocalItem } from "@/types/types";
 import { auth } from "@/database/index";
 import { onAuthStateChanged } from "firebase/auth";
 import router from "@/router";

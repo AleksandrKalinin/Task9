@@ -33,7 +33,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapGetters("database", ["items", "areItemsLoaded", "searchQuery"]),
+    ...mapGetters("database", ["items" , "areItemsLoaded" , "searchQuery"]),
 
     ...mapGetters("theme", ["themeArray", "themeSelected"]),
 
