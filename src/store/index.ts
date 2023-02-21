@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { RootState } from "../components/types/types";
+import { RootState } from "@/types/types";
 import { canvasModule } from "@/store/canvasModule";
 import { authModule } from "@/store/authModule";
 import { themeModule } from "@/store/themeModule";

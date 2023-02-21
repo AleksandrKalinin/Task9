@@ -1,5 +1,5 @@
 import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
-import { RootState, CanvasState } from "../components/types/types";
+import { RootState, CanvasState } from "@/types/types";
 import router from "@/router";
 import {
   SET_COLOR,

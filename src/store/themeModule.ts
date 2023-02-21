@@ -1,5 +1,5 @@
 import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
-import { RootState, ThemeState } from "../components/types/types";
+import { RootState, ThemeState } from "@/types/types";
 
 import { SET_THEME } from "@/constants/theme";
 

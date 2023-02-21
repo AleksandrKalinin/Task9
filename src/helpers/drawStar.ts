@@ -1,4 +1,4 @@
-import { ShapeArgs } from "../components/types/types";
+import { ShapeArgs } from "@/types/types";
 
 export function drawStar(shapeArgs: ShapeArgs) {
   const { canvas, ctx, startX, startY, endX, endY } = shapeArgs;

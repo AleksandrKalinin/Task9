@@ -83,7 +83,7 @@
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
 import { v4 as uuidv4 } from "uuid";
-import { Shape, GalleryItem } from "../components/types/types";
+import { Shape, GalleryItem } from "@/types/types";
 import { auth } from "@/database/index";
 import { onAuthStateChanged } from "firebase/auth";
 import Button from "@/components/Button.vue";

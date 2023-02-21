@@ -1,45 +1,45 @@
 <template>
-  <div class="register">
-    <form class="auth-form" @submit.prevent="onSubmit({ email, password })">
-      <h2 class="auth-form__title">{{ title }}</h2>
-      <input
-        type="email"
-        name=""
-        class="auth-form__input auth-input"
-        v-model="email"
-      />
-      <input
-        type="text"
-        name=""
-        class="auth-form__input auth-input"
-        v-model="password"
-      />
-      <button
-        class="button button_regular button_large button_centered"
-        :style="{ backgroundColor: themeSelected }"
-      >
-        Submit
-      </button>
-      <p class="auth-form__text">
-        {{ text }}
-        <router-link class="auth-form__link" :to="{ name: routeLink }">{{
-          routeText
-        }}</router-link>
-      </p>
-      <p v-if="errorMessage" class="auth-form__error">{{ errorMessage }}</p>
-    </form>
-  </div>
+  <form class="auth-form" @submit.prevent="onSubmit({ email, password })">
+    <h2 class="auth-form__title">{{ title }}</h2>
+    <input
+      type="email"
+      name=""
+      class="auth-form__input auth-input"
+      v-model="email"
+    />
+    <input
+      type="text"
+      name=""
+      class="auth-form__input auth-input"
+      v-model="password"
+    />
+    <Button
+      class="button button_regular button_large button_centered"
+      :style="{ backgroundColor: themeSelected }"
+      >Submit</Button
+    >
+    <p class="auth-form__text">
+      {{ text }}
+      <router-link class="auth-form__link" :to="{ name: routeLink }">{{
+        routeText
+      }}</router-link>
+    </p>
+    <p v-if="errorMessage" class="auth-form__error">{{ errorMessage }}</p>
+  </form>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import Button from "@/components/Button.vue";
 
 export default {
   name: "AuthForm",
 
   props: ["title", "submitUser", "routeLink", "routeText", "text"],
 
-  components: {},
+  components: {
+    Button,
+  },
 
   data() {
     return {

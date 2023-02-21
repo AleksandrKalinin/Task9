@@ -4,7 +4,7 @@ import {
   DatabaseState,
   DatabaseItem,
   GalleryItem,
-} from "../components/types/types";
+} from "@/types/types";
 import { auth } from "@/database/index";
 import { db } from "@/database/index";
 import {

@@ -1,5 +1,5 @@
 import router from "@/router";
-import { UsersState, User } from "../components/types/types";
+import { UsersState, User } from "@/types/types";
 import { auth } from "@/database/index";
 import { doc, setDoc } from "firebase/firestore";
 import {

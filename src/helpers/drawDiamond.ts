@@ -1,4 +1,4 @@
-import { ShapeArgs } from "../components/types/types";
+import { ShapeArgs } from "@/types/types";
 
 export function drawDiamond(shapeArgs: ShapeArgs) {
   const { canvas, ctx, startX, startY, endX, endY } = shapeArgs;

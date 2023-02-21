@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
 import AuthForm from "@/components/AuthForm.vue";
 
 export default {
@@ -22,16 +22,10 @@ export default {
   },
 
   data() {
-    return {
-      password: "",
-      email: "",
-      errorMessage: null,
-    };
+    return {};
   },
 
-  computed: {
-    ...mapGetters("theme", ["themeSelected"]),
-  },
+  computed: {},
 
   methods: {
     ...mapActions("auth", ["signInUser"]),
