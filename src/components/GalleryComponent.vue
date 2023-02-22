@@ -1,21 +1,21 @@
 <template>
   <div class="gallery">
-    <template v-if="!areItemsLoaded && formattedData.length === 0">
+    <template v-if="!areItemsLoaded && computedItems.length === 0">
       <div class="gallery-preloader">
         <img src="@/assets/preloader.gif" />
       </div>
     </template>
-    <template v-if="areItemsLoaded && formattedData.length === 0">
+    <template v-if="areItemsLoaded && computedItems.length === 0">
       <div class="gallery-preloader">
         <span class="gallery-placeholder"
           >You have no images for display yet</span
         >
       </div>
     </template>
-    <template v-if="formattedData.length > 0">
+    <template v-if="computedItems.length > 0">
       <div
         class="gallery__item gallery-item"
-        v-for="item in formattedData"
+        v-for="(item, index) in computedItems"
         :key="item.id"
       >
         <div class="gallery-item__preview gallery-preview">
@@ -27,7 +27,7 @@
             <span class="gallery-item__icon">
               <img src="@/assets/clock-regular.svg" />
             </span>
-            {{ item.date }}
+            {{ formattedDates[index] }}
           </p>
         </div>
         <div class="gallery-item__footer">
@@ -52,11 +52,12 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
-import { DatabaseItem, LocalItem } from "@/types/types";
+import { DatabaseItem } from "@/types/types";
 import { auth } from "@/database/index";
 import { onAuthStateChanged } from "firebase/auth";
 import router from "@/router";
 import Button from "@/components/Button.vue";
+import { Timestamp } from "firebase/firestore";
 
 export default defineComponent({
   name: "MainHeader",
@@ -66,10 +67,7 @@ export default defineComponent({
   },
 
   data() {
-    return {
-      formattedData: [] as Array<LocalItem>,
-      isShowed: false as boolean,
-    };
+    return {};
   },
 
   computed: {
@@ -82,6 +80,22 @@ export default defineComponent({
     computedItems(): Array<DatabaseItem> {
       return this.items;
     },
+
+    formattedDates(): Array<string> {
+      return this.computedItems.map((item: DatabaseItem) => {
+        const date = new Date(item.date.seconds * 1000);
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+        const newDate: string =
+          ("0" + day.toString()).slice(-2) +
+          "." +
+          ("0" + month.toString()).slice(-2) +
+          "." +
+          year.toString();
+        return newDate;
+      });
+    },
   },
 
   methods: {
@@ -93,41 +107,6 @@ export default defineComponent({
     ...mapActions("canvas", ["saveCanvas", "saveSelectedItem"]),
     ...mapActions(["showErrorToast"]),
 
-    deleteItem() {
-      console.log("delete");
-    },
-
-    formatData(values: Array<DatabaseItem>) {
-      const data: Array<LocalItem> = [];
-      for (let i = 0; i < values.length; i++) {
-        const dataItem: LocalItem = {
-          id: "",
-          author: "",
-          authorId: "",
-          link: "",
-          date: "",
-        };
-        const el = values[i];
-        const date = new Date(el.date.seconds * 1000);
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-        dataItem.id = el.id;
-        dataItem.author = el.author;
-        dataItem.authorId = el.authorId;
-        dataItem.link = el.link;
-        dataItem.date = `${day}.${month}.${year}`;
-        dataItem.date =
-          ("0" + day.toString()).slice(-2) +
-          "." +
-          ("0" + month.toString()).slice(-2) +
-          "." +
-          year.toString();
-        data.push(dataItem);
-      }
-      this.formattedData = data;
-    },
-
     selectCanvas(id: string) {
       const index: number = this.computedItems
         .map((item: DatabaseItem) => item.id)
@@ -137,15 +116,7 @@ export default defineComponent({
     },
   },
 
-  watch: {
-    areItemsLoaded: function () {
-      this.formatData(this.items);
-    },
-
-    computedItems(newVal) {
-      this.formatData(newVal);
-    },
-  },
+  watch: {},
 
   mounted() {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -196,9 +167,11 @@ export default defineComponent({
       .gallery-preview__image
         transform: scale(1.02)
     .gallery-item__footer
-      padding: 20px 0
+      padding: 20px
       display: flex
-      justify-content: space-around
+      justify-content: flex-end
+      button
+        margin: 0 5px
     .gallery-item__description
       display: flex
       justify-content: space-between

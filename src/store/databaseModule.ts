@@ -14,10 +14,9 @@ import {
   getDocs,
   setDoc,
   deleteDoc,
-  getDoc,
   Timestamp,
 } from "firebase/firestore";
-import { UPDATE_ITEMS, CHANGE_STATUS } from "@/constants/database";
+import { UPDATE_ITEMS, CHANGE_STATUS, DELETE_ITEM } from "@/constants/database";
 
 export const databaseModule: Module<DatabaseState, RootState> = {
   state: () => ({
@@ -28,7 +27,7 @@ export const databaseModule: Module<DatabaseState, RootState> = {
 
   getters: <GetterTree<DatabaseState, RootState>>{
     items: (state: DatabaseState) => {
-      return state.items;
+      return [...state.items];
     },
 
     areItemsLoaded: (state: DatabaseState) => {
@@ -43,6 +42,11 @@ export const databaseModule: Module<DatabaseState, RootState> = {
 
     [CHANGE_STATUS](state: DatabaseState): void {
       state.areItemsLoaded = true;
+    },
+
+    [DELETE_ITEM](state: DatabaseState, id: string): void {
+      const index = state.items.map((item: any) => item.id).indexOf(id);
+      state.items.splice(index, 1);
     },
   },
 
@@ -84,10 +88,10 @@ export const databaseModule: Module<DatabaseState, RootState> = {
       }
     },
 
-    async deleteItemFromDatabase(_, item) {
+    async deleteItemFromDatabase({ commit }, item) {
       try {
         await deleteDoc(doc(db, "users", item.authorId, "images", item.id));
-        //commit("deleteItem", id);
+        commit(DELETE_ITEM, item.id);
       } catch (e) {
         console.log(e);
       }
