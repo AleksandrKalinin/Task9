@@ -54,6 +54,7 @@ export default defineComponent({
       "selectedColor",
       "selectedShape",
       "lineWidth",
+      "fillStyle",
       "selectedItem",
     ]),
 
@@ -204,7 +205,8 @@ export default defineComponent({
         endX: this.endX,
         endY: this.endY,
       };
-      const shapeArgs = { canvas, ctx, ...coords };
+      let isFilled = this.fillStyle === "outline" ? false : true;
+      const shapeArgs = { canvas, ctx, ...coords, isFilled };
       let result: HTMLCanvasElement | null = null;
       if (this.selectedShape === TRIANGLE) {
         result = drawTriangle(shapeArgs);

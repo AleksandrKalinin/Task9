@@ -1,7 +1,7 @@
 import { ShapeArgs } from "@/types/types";
 
 export function drawStar(shapeArgs: ShapeArgs) {
-  const { canvas, ctx, startX, startY, endX, endY } = shapeArgs;
+  const { canvas, ctx, startX, startY, endX, endY, isFilled } = shapeArgs;
   const diameter: number = Math.sqrt(
     Math.abs(
       Math.pow(Math.abs(endX - startX), 2) -
@@ -21,6 +21,9 @@ export function drawStar(shapeArgs: ShapeArgs) {
     }
     ctx.closePath();
     ctx.stroke();
+    if (isFilled) {
+      ctx.fill();
+    }
     ctx.restore();
   }
   return canvas;

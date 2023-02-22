@@ -46,6 +46,37 @@
         </div>
       </div>
       <div class="canvas-menu__block">
+        <h6 class="canvas-menu__category">Fill style</h6>
+        <div class="canvas-menu__wrapper canvas-wrapper_spaced">
+          <div class="canvas-radio__item">
+            <label for="r1">
+              <input
+                v-model="fillStyle"
+                value="outline"
+                type="radio"
+                id="r1"
+                name="lineWidth"
+                class="canvas-menu__radio"
+              />
+              Outline</label
+            >
+          </div>
+          <div class="canvas-radio__item">
+            <label for="r2">
+              <input
+                v-model="fillStyle"
+                value="filled"
+                type="radio"
+                id="r2"
+                name="lineWidth"
+                class="canvas-menu__radio"
+              />
+              Filled
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="canvas-menu__block">
         <h6 class="canvas-menu__category">Colors</h6>
         <div class="canvas-menu__wrapper canvas-wrapper_spaced">
           <div
@@ -132,6 +163,15 @@ export default defineComponent({
         this.setLineWidth(value);
       },
     },
+
+    fillStyle: {
+      get() {
+        return "outline";
+      },
+      set(value: string) {
+        this.setFillStyle(value);
+      },
+    },
   },
 
   methods: {
@@ -140,6 +180,7 @@ export default defineComponent({
       "setShape",
       "setLineWidth",
       "saveSelectedItem",
+      "setFillStyle",
     ]),
 
     ...mapActions(["showWarningToast", "showSuccessToast"]),
@@ -252,4 +293,15 @@ export default defineComponent({
 
   .canvas-menu__input
     width: 100%
+  .canvas-menu__radio
+    width: 23px
+    height: 23px
+    margin-right: 5px
+
+  .canvas-radio__item
+    display: flex
+    align-items: center
+    label
+      display: flex
+      font-size: 18px
 </style>

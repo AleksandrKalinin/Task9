@@ -6,6 +6,7 @@ export interface CanvasState {
   selectedColor: string;
   selectedShape: string;
   lineWidth: number;
+  fillStyle: string;
   canvas: HTMLCanvasElement;
   selectedItem: string;
 }
@@ -72,4 +73,5 @@ export interface ShapeArgs {
   startY: number;
   endX: number;
   endY: number;
+  isFilled: boolean;
 }

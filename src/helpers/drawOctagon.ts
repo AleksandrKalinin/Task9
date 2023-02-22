@@ -1,7 +1,7 @@
 import { ShapeArgs } from "@/types/types";
 
 export function drawOctagon(shapeArgs: ShapeArgs) {
-  const { canvas, ctx, startX, startY, endX, endY } = shapeArgs;
+  const { canvas, ctx, startX, startY, endX, endY, isFilled } = shapeArgs;
   if (ctx) {
     ctx.beginPath();
     ctx.moveTo(startX + (endX - startX) / 3, startY);
@@ -15,6 +15,9 @@ export function drawOctagon(shapeArgs: ShapeArgs) {
     ctx.lineTo(startX + (endX - startX) / 3, startY);
     ctx.closePath();
     ctx.stroke();
+    if (isFilled) {
+      ctx.fill();
+    }
   }
   return canvas;
 }

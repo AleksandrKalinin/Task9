@@ -1,7 +1,7 @@
 import { ShapeArgs } from "@/types/types";
 
 export function drawHexagon(shapeArgs: ShapeArgs) {
-  const { canvas, ctx, startX, startY, endX, endY } = shapeArgs;
+  const { canvas, ctx, startX, startY, endX, endY, isFilled } = shapeArgs;
   if (ctx) {
     ctx.beginPath();
     ctx.moveTo(startX + (endX - startX) / 2, startY);
@@ -12,6 +12,9 @@ export function drawHexagon(shapeArgs: ShapeArgs) {
     ctx.lineTo(startX, startY + (endY - startY) / 3);
     ctx.lineTo(startX + (endX - startX) / 2, startY);
     ctx.stroke();
+    if (isFilled) {
+      ctx.fill();
+    }
   }
   return canvas;
 }

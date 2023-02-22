@@ -1,7 +1,7 @@
 import { ShapeArgs } from "@/types/types";
 
 export function drawCircle(shapeArgs: ShapeArgs) {
-  const { canvas, ctx, startX, startY, endX, endY } = shapeArgs;
+  const { canvas, ctx, startX, startY, endX, endY, isFilled } = shapeArgs;
   const diameter: number = Math.sqrt(
     Math.abs(
       Math.pow(Math.abs(endX - startX), 2) -
@@ -18,6 +18,9 @@ export function drawCircle(shapeArgs: ShapeArgs) {
       2 * Math.PI
     );
     ctx.stroke();
+    if (isFilled) {
+      ctx.fill();
+    }
     ctx.closePath();
     ctx.save();
   }

@@ -1,7 +1,7 @@
 import { ShapeArgs } from "@/types/types";
 
 export function drawRectangle(shapeArgs: ShapeArgs) {
-  const { canvas, ctx, startX, startY, endX, endY } = shapeArgs;
+  const { canvas, ctx, startX, startY, endX, endY, isFilled } = shapeArgs;
   if (ctx) {
     //ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
@@ -12,6 +12,9 @@ export function drawRectangle(shapeArgs: ShapeArgs) {
     ctx.lineTo(startX, startY);
     ctx.closePath();
     ctx.stroke();
+    if (isFilled) {
+      ctx.fill();
+    }
   }
   return canvas;
 }

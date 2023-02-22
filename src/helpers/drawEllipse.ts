@@ -1,7 +1,7 @@
 import { ShapeArgs } from "@/types/types";
 
 export function drawEllipse(shapeArgs: ShapeArgs) {
-  const { canvas, ctx, startX, startY, endX, endY } = shapeArgs;
+  const { canvas, ctx, startX, startY, endX, endY, isFilled } = shapeArgs;
   const mainAxis: number = Math.sqrt(
     Math.abs(
       Math.pow(Math.abs(endX - startX), 2) -
@@ -25,6 +25,9 @@ export function drawEllipse(shapeArgs: ShapeArgs) {
       2 * Math.PI
     );
     ctx.stroke();
+    if (isFilled) {
+      ctx.fill();
+    }
     ctx.closePath();
   }
   return canvas;

@@ -1,7 +1,7 @@
 import { ShapeArgs } from "@/types/types";
 
 export function drawTriangle(shapeArgs: ShapeArgs) {
-  const { canvas, ctx, startX, startY, endX, endY } = shapeArgs;
+  const { canvas, ctx, startX, startY, endX, endY, isFilled } = shapeArgs;
   if (ctx) {
     ctx.beginPath();
     ctx.moveTo(startX + (endX - startX) / 2, startY);
@@ -10,6 +10,9 @@ export function drawTriangle(shapeArgs: ShapeArgs) {
     ctx.lineTo(startX + (endX - startX) / 2, startY);
     ctx.stroke();
     ctx.closePath();
+    if (isFilled) {
+      ctx.fill();
+    }
   }
   return canvas;
 }

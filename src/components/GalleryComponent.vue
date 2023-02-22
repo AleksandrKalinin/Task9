@@ -57,7 +57,6 @@ import { auth } from "@/database/index";
 import { onAuthStateChanged } from "firebase/auth";
 import router from "@/router";
 import Button from "@/components/Button.vue";
-import { Timestamp } from "firebase/firestore";
 
 export default defineComponent({
   name: "MainHeader",

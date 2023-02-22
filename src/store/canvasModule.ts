@@ -5,6 +5,7 @@ import {
   SET_COLOR,
   SET_SHAPE,
   SET_LINE_WIDTH,
+  SET_FILL_STYLE,
   SAVE_CANVAS,
   SAVE_SELECTED_ITEM,
 } from "@/constants/canvas";
@@ -14,6 +15,7 @@ export const canvasModule: Module<CanvasState, RootState> = {
     selectedColor: "#000000" as string,
     selectedShape: "" as string,
     lineWidth: 1 as number,
+    fillStyle: "outline",
     canvas: document.createElement("canvas") as HTMLCanvasElement,
     selectedItem: "" as string,
   }),
@@ -29,6 +31,10 @@ export const canvasModule: Module<CanvasState, RootState> = {
 
     lineWidth: (state: CanvasState) => {
       return state.lineWidth;
+    },
+
+    fillStyle: (state: CanvasState) => {
+      return state.fillStyle;
     },
 
     canvas: (state: CanvasState) => {
@@ -51,6 +57,10 @@ export const canvasModule: Module<CanvasState, RootState> = {
 
     [SET_LINE_WIDTH](state: CanvasState, value: number): void {
       state.lineWidth = value;
+    },
+
+    [SET_FILL_STYLE](state: CanvasState, value: string): void {
+      state.fillStyle = value;
     },
 
     [SAVE_CANVAS](state: CanvasState, value: HTMLCanvasElement): void {
@@ -76,6 +86,14 @@ export const canvasModule: Module<CanvasState, RootState> = {
       value: number
     ) {
       commit(SET_LINE_WIDTH, value);
+    },
+
+    setFillStyle(
+      { commit }: ActionContext<CanvasState, unknown>,
+      fillStyle: string
+    ) {
+      console.log(fillStyle);
+      commit(SET_FILL_STYLE, fillStyle);
     },
 
     saveCanvas(
