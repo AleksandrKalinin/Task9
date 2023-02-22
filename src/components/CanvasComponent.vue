@@ -102,6 +102,11 @@ export default defineComponent({
         this.drawOnCanvas(this.x, this.y, e.offsetX, e.offsetY);
         this.x = e.offsetX;
         this.y = e.offsetY;
+      } else {
+        /*
+        if (e.buttons == 1) {
+          this.getEndCoords(e);
+        } */
       }
     },
 
@@ -164,7 +169,7 @@ export default defineComponent({
           this.endX = tempX;
           this.endY = tempY;
         }
-        this.drawShape();
+        this.drawShape(e);
       }
     },
 
@@ -187,7 +192,7 @@ export default defineComponent({
     },
 
     /** Draw a shape depending on selected shape */
-    drawShape() {
+    drawShape(e: MouseEvent) {
       const { canvas, ctx } = setupCTX(
         this.canvas,
         this.selectedColor,
