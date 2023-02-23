@@ -7,6 +7,7 @@
     class="canvas"
     id="myCanvas"
   ></canvas>
+  <canvas ref="overlayCanvas" class="canvas" id="overlayCanvas"></canvas>
 </template>
 
 <script lang="ts">
@@ -23,6 +24,7 @@ import {
   DIAMOND,
 } from "@/constants/shapes";
 import { setupCTX } from "@/helpers/setupCTX";
+import { setupOverlayCTX } from "@/helpers/setupOverlayCTX";
 import { drawTriangle } from "@/helpers/drawTriangle";
 import { drawRectangle } from "@/helpers/drawRectangle";
 import { drawCircle } from "@/helpers/drawCircle";
@@ -37,6 +39,7 @@ export default defineComponent({
   data() {
     return {
       canvas: document.createElement("canvas") as HTMLCanvasElement,
+      overlayCanvas: document.createElement("canvas") as HTMLCanvasElement,
       x: 0 as number,
       y: 0 as number,
       isDrawing: false as boolean,
@@ -66,13 +69,14 @@ export default defineComponent({
   watch: {
     canvasState(newVal) {
       this.initializeCanvas(newVal);
+      this.initializeOverlayCanvas(newVal);
     },
   },
 
   methods: {
     ...mapActions("canvas", ["saveCanvas"]),
 
-    /** Initializing canvas state */
+    /** Initializing main canvas state. Main canvas serves as primary canvas for drawing. After user stops drawing canvas state will be saved in to overlay canvas and cleared.*/
     initializeCanvas(canvasLink: string) {
       const myCanvas: HTMLCanvasElement = this.$refs
         .myCanvas as HTMLCanvasElement;
@@ -88,10 +92,36 @@ export default defineComponent({
       }
       this.canvas = myCanvas;
     },
+    /** Initializing overlay canvas with the same values as the main canvas. Main canvas state will be save in to overlay canvas after user stops drawing line or shape*/
+    initializeOverlayCanvas(canvasLink: string) {
+      const overlayCanvas: HTMLCanvasElement = this.$refs
+        .overlayCanvas as HTMLCanvasElement;
+      const ctxo: CanvasRenderingContext2D | null =
+        overlayCanvas.getContext("2d");
+      if (canvasLink !== "" && ctxo) {
+        const image: HTMLImageElement = new Image();
+        image.onload = function () {
+          ctxo.drawImage(image, 0, 0);
+        };
+        image.src = canvasLink;
+      } else if (canvasLink === "" && ctxo) {
+        ctxo.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+      }
+      this.overlayCanvas = overlayCanvas;
+    },
 
     /** Setting canvas proportions */
     setCanvasProportions() {
       const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
+      if (ctx) {
+        ctx.canvas.width = document.body.clientWidth - 465 - 90;
+        ctx.canvas.height = (ctx.canvas.width / 3) * 2;
+      }
+    },
+    /** Setting overlay canvas proportions */
+    setOverlayProportions() {
+      const ctx: CanvasRenderingContext2D | null =
+        this.overlayCanvas.getContext("2d");
       if (ctx) {
         ctx.canvas.width = document.body.clientWidth - 465 - 90;
         ctx.canvas.height = (ctx.canvas.width / 3) * 2;
@@ -104,19 +134,20 @@ export default defineComponent({
         this.x = e.offsetX;
         this.y = e.offsetY;
       } else {
-        /*
         if (e.buttons == 1) {
           this.getEndCoords(e);
-        } */
+        }
       }
     },
 
+    /** Start drawing if pen is selected */
     startDrawing(e: MouseEvent) {
       this.x = e.offsetX;
       this.y = e.offsetY;
       this.isDrawing = true;
     },
 
+    /** Stop drawing if pen is selected */
     stopDrawing(e: MouseEvent) {
       if (this.isDrawing) {
         this.drawOnCanvas(this.x, this.y, e.offsetX, e.offsetY);
@@ -126,7 +157,7 @@ export default defineComponent({
       }
     },
 
-    /** Draw on canvas in pen is selected */
+    /** Draw on canvas and save state to overlay */
     drawOnCanvas(x1: number, y1: number, x2: number, y2: number) {
       const { canvas, ctx } = setupCTX(
         this.canvas,
@@ -143,6 +174,15 @@ export default defineComponent({
         ctx.closePath();
         this.saveCanvas(canvas);
       }
+      const { overlayCanvas, ctxo } = setupOverlayCTX(
+        this.overlayCanvas,
+        this.selectedColor,
+        this.lineWidth
+      );
+      if (ctxo) {
+        ctxo.drawImage(canvas, 0, 0);
+      }
+      this.saveCanvas(overlayCanvas);
     },
 
     /** Starting coordinates of a shape */
@@ -192,10 +232,15 @@ export default defineComponent({
       }
     },
 
-    /** Draw a shape depending on selected shape */
+    /** Draw a shape depending on selected shape and save state in to overlay */
     drawShape(e: MouseEvent) {
       const { canvas, ctx } = setupCTX(
         this.canvas,
+        this.selectedColor,
+        this.lineWidth
+      );
+      const { overlayCanvas, ctxo } = setupOverlayCTX(
+        this.overlayCanvas,
         this.selectedColor,
         this.lineWidth
       );
@@ -225,13 +270,20 @@ export default defineComponent({
       } else if (this.selectedShape === DIAMOND) {
         result = drawDiamond(shapeArgs);
       }
-      this.saveCanvas(result);
+      if (e.buttons !== 1) {
+        if (result && ctxo) {
+          ctxo.drawImage(result, 0, 0);
+        }
+        this.saveCanvas(overlayCanvas);
+      }
     },
   },
 
   mounted() {
     this.initializeCanvas(this.selectedItem);
+    this.initializeOverlayCanvas(this.selectedItem);
     this.setCanvasProportions();
+    this.setOverlayProportions();
   },
 });
 </script>
@@ -240,4 +292,13 @@ export default defineComponent({
 <style scoped lang="sass">
 .canvas
   border: 1px solid #CCCCCC
+  position: absolute
+  top: 0
+  left: 0
+
+#overlayCanvas
+  z-index: 1
+
+#myCanvas
+  z-index: 2
 </style>

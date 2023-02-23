@@ -92,7 +92,6 @@ export const canvasModule: Module<CanvasState, RootState> = {
       { commit }: ActionContext<CanvasState, unknown>,
       fillStyle: string
     ) {
-      console.log(fillStyle);
       commit(SET_FILL_STYLE, fillStyle);
     },
 

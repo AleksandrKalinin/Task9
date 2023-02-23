@@ -28,4 +28,6 @@
 .canvas-inner
   display: flex
   justify-content: center
+  position: relative
+  width: calc( 100% - 495px)
 </style>

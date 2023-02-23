@@ -245,7 +245,6 @@ export default defineComponent({
 <style scoped lang="sass">
 .canvas-menu
   width: 465px
-  height: 600px
   border: 1px solid #CCCCCC
   margin-right: 30px
   .canvas-menu__block

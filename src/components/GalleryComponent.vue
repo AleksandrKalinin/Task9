@@ -22,11 +22,8 @@
           <img class="gallery-preview__image" :src="item.link" />
         </div>
         <div class="gallery-item__description">
-          <p>Published:</p>
           <p class="gallery-item__date">
-            <span class="gallery-item__icon">
-              <img src="@/assets/clock-regular.svg" />
-            </span>
+            Published:
             {{ formattedDates[index] }}
           </p>
         </div>

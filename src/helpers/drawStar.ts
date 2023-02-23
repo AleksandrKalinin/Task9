@@ -9,6 +9,7 @@ export function drawStar(shapeArgs: ShapeArgs) {
     )
   );
   if (ctx) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.save();
     ctx.beginPath();
     ctx.translate(startX + (endX - startX) / 2, startY + (endY - startY) / 2);

@@ -14,6 +14,7 @@ export function drawEllipse(shapeArgs: ShapeArgs) {
   const coordY: number =
     endY > startY ? startY + (endY - startY) / 2 : endY + (startY - endY) / 2;
   if (ctx) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
     ctx.ellipse(
       coordX,
