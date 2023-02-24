@@ -210,7 +210,8 @@ export default defineComponent({
         };
         newItem.id = uuidv4();
         newItem.authorId = auth.currentUser.uid;
-        newItem.author = auth.currentUser.email;
+        newItem.author =
+          auth.currentUser.email !== null ? auth.currentUser.email : "John Doe";
         newItem.date = new Date();
         newItem.link = canvas.toDataURL("image/png");
         this.addItemToDatabase(newItem);

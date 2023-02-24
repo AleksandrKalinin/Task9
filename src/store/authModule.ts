@@ -1,5 +1,6 @@
 import router from "@/router";
-import { UsersState, User } from "@/types/types";
+import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
+import { RootState, UsersState, User } from "@/types/types";
 import { auth } from "@/database/index";
 import { doc, setDoc } from "firebase/firestore";
 import {
@@ -10,26 +11,26 @@ import {
 import { db } from "@/database/index";
 import store from "@/store";
 
-export const authModule = {
+export const authModule: Module<UsersState, RootState> = {
   state: () => ({
-    usersArray: [] as Array<any>,
+    usersArray: [] as Array<User>,
   }),
 
-  getters: {
+  getters: <GetterTree<UsersState, RootState>>{
     usersArray: (state: UsersState) => {
       return state.usersArray;
     },
   },
 
-  mutations: {
-    saveUser(state: UsersState, value: any): void {
+  mutations: <MutationTree<UsersState>>{
+    saveUser(state: UsersState, value: User): void {
       state.usersArray.push(value);
     },
   },
 
   actions: {
     async saveUser(
-      { commit }: any,
+      { commit }: ActionContext<UsersState, unknown>,
       { id, email }: { id: string; email: string }
     ) {
       const user: User = { id, email };
@@ -42,7 +43,7 @@ export const authModule = {
     },
 
     registerUser(
-      _: any,
+      _: ActionContext<UsersState, unknown>,
       { email, password }: { email: string; password: string }
     ) {
       createUserWithEmailAndPassword(auth, email, password)
@@ -75,7 +76,7 @@ export const authModule = {
     },
 
     signInUser(
-      _: any,
+      _: ActionContext<UsersState, unknown>,
       { email, password }: { email: string; password: string }
     ) {
       signInWithEmailAndPassword(auth, email, password)

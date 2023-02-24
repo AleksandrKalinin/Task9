@@ -1,10 +1,5 @@
 import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
-import {
-  RootState,
-  DatabaseState,
-  DatabaseItem,
-  GalleryItem,
-} from "@/types/types";
+import { RootState, DatabaseState, DatabaseItem } from "@/types/types";
 import { auth } from "@/database/index";
 import { db } from "@/database/index";
 import {
@@ -14,7 +9,6 @@ import {
   getDocs,
   setDoc,
   deleteDoc,
-  Timestamp,
 } from "firebase/firestore";
 import { UPDATE_ITEMS, CHANGE_STATUS, DELETE_ITEM } from "@/constants/database";
 
@@ -45,7 +39,9 @@ export const databaseModule: Module<DatabaseState, RootState> = {
     },
 
     [DELETE_ITEM](state: DatabaseState, id: string): void {
-      const index = state.items.map((item: any) => item.id).indexOf(id);
+      const index = state.items
+        .map((item: DatabaseItem) => item.id)
+        .indexOf(id);
       state.items.splice(index, 1);
     },
   },
@@ -54,24 +50,25 @@ export const databaseModule: Module<DatabaseState, RootState> = {
     async fetchItems({ commit }: ActionContext<DatabaseState, unknown>) {
       const array: Array<DatabaseItem> = [];
       try {
-        const itemsRef = collection(
-          db,
-          "users",
-          auth.currentUser.uid,
-          "images"
-        );
-        const queryToDB = query(itemsRef);
-        const querySnapshot: any = await getDocs(queryToDB);
-        if (querySnapshot.size > 0) {
-          querySnapshot.forEach((doc: { [key: string]: any }) => {
-            array.push(doc.data());
-          });
-          commit(UPDATE_ITEMS, array);
-        } else {
-          console.log("no documents");
-          commit(UPDATE_ITEMS, []);
+        if (auth.currentUser) {
+          const itemsRef = collection(
+            db,
+            "users",
+            auth.currentUser.uid,
+            "images"
+          );
+          const queryToDB = query(itemsRef);
+          const querySnapshot = await getDocs(queryToDB);
+          if (querySnapshot.size > 0) {
+            querySnapshot.forEach((doc) => {
+              array.push(doc.data() as DatabaseItem);
+            });
+            commit(UPDATE_ITEMS, array);
+          } else {
+            commit(UPDATE_ITEMS, []);
+          }
+          commit(CHANGE_STATUS, true);
         }
-        commit(CHANGE_STATUS, true);
       } catch (e) {
         console.log(e);
       }
@@ -94,18 +91,6 @@ export const databaseModule: Module<DatabaseState, RootState> = {
         commit(DELETE_ITEM, item.id);
       } catch (e) {
         console.log(e);
-      }
-    },
-
-    async pushIntoDatabase(_, values: Array<GalleryItem>) {
-      for (let i = 0; i < values.length; i++) {
-        const newDate: any = Timestamp.fromDate(new Date(values[i].date));
-        values[i].date = newDate;
-        try {
-          await setDoc(doc(db, "items", values[i].id.toString()), values[i]);
-        } catch (e) {
-          console.log(e);
-        }
       }
     },
   },

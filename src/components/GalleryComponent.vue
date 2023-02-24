@@ -95,11 +95,7 @@ export default defineComponent({
   },
 
   methods: {
-    ...mapActions("database", [
-      "pushIntoDatabase",
-      "fetchItems",
-      "deleteItemFromDatabase",
-    ]),
+    ...mapActions("database", ["fetchItems", "deleteItemFromDatabase"]),
     ...mapActions("canvas", ["saveCanvas", "saveSelectedItem"]),
     ...mapActions(["showErrorToast"]),
 
