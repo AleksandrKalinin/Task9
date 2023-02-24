@@ -69,7 +69,7 @@ export default defineComponent({
 @import "@/assets/styles/colorScheme.sass"
 
 .sidebar
-  min-width: 350px
+  width: 350px
   height: 362px
   padding: 30px
   display: flex

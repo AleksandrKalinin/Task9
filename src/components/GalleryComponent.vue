@@ -1,48 +1,50 @@
 <template>
   <div class="gallery">
-    <template v-if="!areItemsLoaded && computedItems.length === 0">
-      <div class="gallery-preloader">
-        <img src="@/assets/preloader.gif" />
-      </div>
-    </template>
-    <template v-if="areItemsLoaded && computedItems.length === 0">
-      <div class="gallery-preloader">
-        <span class="gallery-placeholder"
-          >You have no images for display yet</span
+    <div class="gallery-wrapper">
+      <template v-if="!areItemsLoaded && computedItems.length === 0">
+        <div class="gallery-preloader">
+          <img src="@/assets/preloader.gif" />
+        </div>
+      </template>
+      <template v-if="areItemsLoaded && computedItems.length === 0">
+        <div class="gallery-preloader">
+          <span class="gallery-placeholder"
+            >You have no images for display yet</span
+          >
+        </div>
+      </template>
+      <template v-if="computedItems.length > 0">
+        <div
+          class="gallery__item gallery-item"
+          v-for="(item, index) in computedItems"
+          :key="item.id"
         >
-      </div>
-    </template>
-    <template v-if="computedItems.length > 0">
-      <div
-        class="gallery__item gallery-item"
-        v-for="(item, index) in computedItems"
-        :key="item.id"
-      >
-        <div class="gallery-item__preview gallery-preview">
-          <img class="gallery-preview__image" :src="item.link" />
+          <div class="gallery-item__preview gallery-preview">
+            <img class="gallery-preview__image" :src="item.link" />
+          </div>
+          <div class="gallery-item__description">
+            <p class="gallery-item__date">
+              Published:
+              {{ formattedDates[index] }}
+            </p>
+          </div>
+          <div class="gallery-item__footer">
+            <Button
+              class="button button_regular button_normal"
+              @click="selectCanvas(item)"
+              :style="{ backgroundColor: themeSelected }"
+              >Edit item</Button
+            >
+            <Button
+              class="button button_regular button_normal"
+              @click="deleteItemFromDatabase(item)"
+              :style="{ backgroundColor: themeSelected }"
+              >Delete item</Button
+            >
+          </div>
         </div>
-        <div class="gallery-item__description">
-          <p class="gallery-item__date">
-            Published:
-            {{ formattedDates[index] }}
-          </p>
-        </div>
-        <div class="gallery-item__footer">
-          <Button
-            class="button button_regular button_normal"
-            @click="selectCanvas(item)"
-            :style="{ backgroundColor: themeSelected }"
-            >Edit item</Button
-          >
-          <Button
-            class="button button_regular button_normal"
-            @click="deleteItemFromDatabase(item)"
-            :style="{ backgroundColor: themeSelected }"
-            >Delete item</Button
-          >
-        </div>
-      </div>
-    </template>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -137,14 +139,19 @@ export default defineComponent({
 .newCanvas
   border: 1px solid red
 .gallery
-  display: flex
-  flex-wrap: wrap
   padding: 0 30px
+  width: calc(100% - 350px)
+  display: flex
+  .gallery-wrapper
+    margin: 0 auto
+    display: flex
+    flex-wrap: wrap
   .gallery-item
     width: 600px
     margin: 0 20px 40px
     border: 1px solid #CCCCCC
     overflow: hidden
+    flex-grow: 1
     .gallery-item__preview
       width: 600px
       height: 400px
