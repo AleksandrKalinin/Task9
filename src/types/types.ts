@@ -86,3 +86,25 @@ export enum ShapeTypes {
   OCTAGON = "OCTAGON",
   STAR = "STAR",
 }
+
+export enum CanvasModuleMutations {
+  SET_COLOR = "SET_COLOR",
+  SET_SHAPE = "SET_SHAPE",
+  SET_LINE_WIDTH = "SET_LINE_WIDTH",
+  SET_FILL_STYLE = "SET_FILL_STYLE",
+  SAVE_CANVAS = "SAVE_CANVAS",
+  SAVE_SELECTED_ITEM = "SAVE_SELECTED_ITEM",
+}
+
+export enum DatabaseModuleMutations {
+  UPDATE_ITEMS = "UPDATE_ITEMS",
+  CHANGE_STATUS = "CHANGE_STATUS",
+  DELETE_ITEM = "DELETE_ITEM",
+}
+
+export enum ThemeModuleMutations {
+  SET_THEME = "SET_THEME",
+  COLOR_TOMATO = "#FF6347",
+  COLOR_BLUE = "#4169E1",
+  COLOR_GREEN = "#299617",
+}

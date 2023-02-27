@@ -5,6 +5,7 @@ import {
   DatabaseState,
   DatabaseItem,
   GalleryItem,
+  DatabaseModuleMutations,
 } from "@/types/types";
 import { auth } from "@/database/index";
 import { db } from "@/database/index";
@@ -16,7 +17,6 @@ import {
   setDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { UPDATE_ITEMS, CHANGE_STATUS, DELETE_ITEM } from "@/constants/database";
 import store from "@/store";
 
 export const databaseModule: Module<DatabaseState, RootState> = {
@@ -37,15 +37,21 @@ export const databaseModule: Module<DatabaseState, RootState> = {
   },
 
   mutations: <MutationTree<DatabaseState>>{
-    [UPDATE_ITEMS](state: DatabaseState, value: Array<DatabaseItem>): void {
+    [DatabaseModuleMutations.UPDATE_ITEMS](
+      state: DatabaseState,
+      value: Array<DatabaseItem>
+    ): void {
       state.items = value;
     },
 
-    [CHANGE_STATUS](state: DatabaseState): void {
+    [DatabaseModuleMutations.CHANGE_STATUS](state: DatabaseState): void {
       state.areItemsLoaded = true;
     },
 
-    [DELETE_ITEM](state: DatabaseState, id: string): void {
+    [DatabaseModuleMutations.DELETE_ITEM](
+      state: DatabaseState,
+      id: string
+    ): void {
       const index = state.items
         .map((item: DatabaseItem) => item.id)
         .indexOf(id);
@@ -70,11 +76,11 @@ export const databaseModule: Module<DatabaseState, RootState> = {
             querySnapshot.forEach((doc) => {
               array.push(doc.data() as DatabaseItem);
             });
-            commit(UPDATE_ITEMS, array);
+            commit(DatabaseModuleMutations.UPDATE_ITEMS, array);
           } else {
-            commit(UPDATE_ITEMS, []);
+            commit(DatabaseModuleMutations.UPDATE_ITEMS, []);
           }
-          commit(CHANGE_STATUS, true);
+          commit(DatabaseModuleMutations.CHANGE_STATUS, true);
         }
       } catch (e) {
         console.log(e);
@@ -115,7 +121,7 @@ export const databaseModule: Module<DatabaseState, RootState> = {
     async deleteItemFromDatabase({ commit }, item) {
       try {
         await deleteDoc(doc(db, "users", item.authorId, "images", item.id));
-        commit(DELETE_ITEM, item.id);
+        commit(DatabaseModuleMutations.DELETE_ITEM, item.id);
       } catch (e) {
         console.log(e);
       }

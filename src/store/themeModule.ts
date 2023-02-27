@@ -1,17 +1,14 @@
 import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
-import { RootState, ThemeState } from "@/types/types";
-
-import {
-  SET_THEME,
-  COLOR_TOMATO,
-  COLOR_BLUE,
-  COLOR_GREEN,
-} from "@/constants/theme";
+import { RootState, ThemeState, ThemeModuleMutations } from "@/types/types";
 
 export const themeModule: Module<ThemeState, RootState> = {
   state: () => ({
     themeSelected: "#FF6347" as string,
-    themeArray: [COLOR_TOMATO, COLOR_BLUE, COLOR_GREEN],
+    themeArray: [
+      ThemeModuleMutations.COLOR_TOMATO,
+      ThemeModuleMutations.COLOR_BLUE,
+      ThemeModuleMutations.COLOR_GREEN,
+    ],
   }),
 
   getters: <GetterTree<ThemeState, RootState>>{
@@ -25,14 +22,14 @@ export const themeModule: Module<ThemeState, RootState> = {
   },
 
   mutations: <MutationTree<ThemeState>>{
-    [SET_THEME](state: ThemeState, theme: string): void {
+    [ThemeModuleMutations.SET_THEME](state: ThemeState, theme: string): void {
       state.themeSelected = theme;
     },
   },
 
   actions: {
     setTheme({ commit }: ActionContext<ThemeState, unknown>, theme: string) {
-      commit(SET_THEME, theme);
+      commit(ThemeModuleMutations.SET_THEME, theme);
     },
   },
 

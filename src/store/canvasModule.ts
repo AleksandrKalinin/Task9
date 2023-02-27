@@ -1,14 +1,6 @@
 import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
-import { RootState, CanvasState } from "@/types/types";
+import { RootState, CanvasState, CanvasModuleMutations } from "@/types/types";
 import router from "@/router";
-import {
-  SET_COLOR,
-  SET_SHAPE,
-  SET_LINE_WIDTH,
-  SET_FILL_STYLE,
-  SAVE_CANVAS,
-  SAVE_SELECTED_ITEM,
-} from "@/constants/canvas";
 
 export const canvasModule: Module<CanvasState, RootState> = {
   state: () => ({
@@ -47,59 +39,71 @@ export const canvasModule: Module<CanvasState, RootState> = {
   },
 
   mutations: <MutationTree<CanvasState>>{
-    [SET_COLOR](state: CanvasState, value: string): void {
+    [CanvasModuleMutations.SET_COLOR](state: CanvasState, value: string): void {
       state.selectedColor = value;
     },
 
-    [SET_SHAPE](state: CanvasState, value: string): void {
+    [CanvasModuleMutations.SET_SHAPE](state: CanvasState, value: string): void {
       state.selectedShape = value;
     },
 
-    [SET_LINE_WIDTH](state: CanvasState, value: number): void {
+    [CanvasModuleMutations.SET_LINE_WIDTH](
+      state: CanvasState,
+      value: number
+    ): void {
       state.lineWidth = value;
     },
 
-    [SET_FILL_STYLE](state: CanvasState, value: string): void {
+    [CanvasModuleMutations.SET_FILL_STYLE](
+      state: CanvasState,
+      value: string
+    ): void {
       state.fillStyle = value;
     },
 
-    [SAVE_CANVAS](state: CanvasState, value: HTMLCanvasElement): void {
+    [CanvasModuleMutations.SAVE_CANVAS](
+      state: CanvasState,
+      value: HTMLCanvasElement
+    ): void {
       state.canvas = value;
     },
 
-    [SAVE_SELECTED_ITEM](state: CanvasState, value: string): void {
+    [CanvasModuleMutations.SAVE_SELECTED_ITEM](
+      state: CanvasState,
+      value: string
+    ): void {
       state.selectedItem = value;
     },
   },
 
   actions: {
     setColor({ commit }: ActionContext<CanvasState, unknown>, value: string) {
-      commit(SET_COLOR, value);
+      commit(CanvasModuleMutations.SET_COLOR, value);
     },
 
     setShape({ commit }: ActionContext<CanvasState, unknown>, value: string) {
-      commit(SET_SHAPE, value);
+      commit(CanvasModuleMutations.SET_SHAPE, value);
     },
 
     setLineWidth(
       { commit }: ActionContext<CanvasState, unknown>,
       value: number
     ) {
-      commit(SET_LINE_WIDTH, value);
+      commit(CanvasModuleMutations.SET_LINE_WIDTH, value);
     },
 
     setFillStyle(
       { commit }: ActionContext<CanvasState, unknown>,
       fillStyle: string
     ) {
-      commit(SET_FILL_STYLE, fillStyle);
+      commit(CanvasModuleMutations.SET_FILL_STYLE, fillStyle);
     },
 
     saveCanvas(
       { commit }: ActionContext<CanvasState, unknown>,
       value: HTMLCanvasElement
     ) {
-      commit(SAVE_CANVAS, value);
+      commit(CanvasModuleMutations.SAVE_CANVAS, value);
     },
 
     saveSelectedItem(
@@ -107,7 +111,7 @@ export const canvasModule: Module<CanvasState, RootState> = {
       value: string
     ) {
       try {
-        commit(SAVE_SELECTED_ITEM, value);
+        commit(CanvasModuleMutations.SAVE_SELECTED_ITEM, value);
       } catch (e) {
         console.log(e);
       }
