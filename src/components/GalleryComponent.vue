@@ -51,7 +51,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
-import { DatabaseItem } from "@/types/types";
+import { SingleItem } from "@/types/types";
 import Button from "@/components/Button.vue";
 
 export default defineComponent({
@@ -72,12 +72,12 @@ export default defineComponent({
 
     ...mapGetters("theme", ["themeSelected"]),
 
-    computedItems(): Array<DatabaseItem> {
+    computedItems(): Array<SingleItem> {
       return this.items;
     },
 
     formattedDates(): Array<string> {
-      return this.computedItems.map((item: DatabaseItem) => {
+      return this.computedItems.map((item: SingleItem) => {
         const date = new Date(item.date.seconds * 1000);
         const day = date.getDate();
         const month = date.getMonth() + 1;
@@ -100,7 +100,7 @@ export default defineComponent({
 
     selectCanvas(id: string) {
       const index: number = this.computedItems
-        .map((item: DatabaseItem) => item.id)
+        .map((item: SingleItem) => item.id)
         .indexOf(id);
       const curItem = this.computedItems[index];
       this.saveSelectedItem(curItem.link);

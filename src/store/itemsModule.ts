@@ -2,10 +2,10 @@ import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
 import { v4 as uuidv4 } from "uuid";
 import {
   RootState,
-  DatabaseState,
-  DatabaseItem,
+  ItemsState,
+  SingleItem,
   GalleryItem,
-  DatabaseModuleMutations,
+  ItemsModuleMutations,
 } from "@/types/types";
 import { auth } from "@/database/index";
 import { db } from "@/database/index";
@@ -19,49 +19,44 @@ import {
 } from "firebase/firestore";
 import store from "@/store";
 
-export const databaseModule: Module<DatabaseState, RootState> = {
+export const itemsModule: Module<ItemsState, RootState> = {
   state: () => ({
-    items: [] as Array<DatabaseItem>,
+    items: [] as Array<SingleItem>,
     areItemsLoaded: false as boolean,
     searchQuery: "" as string,
   }),
 
-  getters: <GetterTree<DatabaseState, RootState>>{
-    items: (state: DatabaseState) => {
+  getters: <GetterTree<ItemsState, RootState>>{
+    items: (state: ItemsState) => {
       return [...state.items];
     },
 
-    areItemsLoaded: (state: DatabaseState) => {
+    areItemsLoaded: (state: ItemsState) => {
       return state.areItemsLoaded;
     },
   },
 
-  mutations: <MutationTree<DatabaseState>>{
-    [DatabaseModuleMutations.UPDATE_ITEMS](
-      state: DatabaseState,
-      value: Array<DatabaseItem>
+  mutations: <MutationTree<ItemsState>>{
+    [ItemsModuleMutations.UPDATE_ITEMS](
+      state: ItemsState,
+      value: Array<SingleItem>
     ): void {
       state.items = value;
     },
 
-    [DatabaseModuleMutations.CHANGE_STATUS](state: DatabaseState): void {
+    [ItemsModuleMutations.CHANGE_STATUS](state: ItemsState): void {
       state.areItemsLoaded = true;
     },
 
-    [DatabaseModuleMutations.DELETE_ITEM](
-      state: DatabaseState,
-      id: string
-    ): void {
-      const index = state.items
-        .map((item: DatabaseItem) => item.id)
-        .indexOf(id);
+    [ItemsModuleMutations.DELETE_ITEM](state: ItemsState, id: string): void {
+      const index = state.items.map((item: SingleItem) => item.id).indexOf(id);
       state.items.splice(index, 1);
     },
   },
 
   actions: {
-    async fetchItems({ commit }: ActionContext<DatabaseState, unknown>) {
-      const array: Array<DatabaseItem> = [];
+    async fetchItems({ commit }: ActionContext<ItemsState, unknown>) {
+      const array: Array<SingleItem> = [];
       try {
         if (auth.currentUser) {
           const itemsRef = collection(
@@ -74,13 +69,13 @@ export const databaseModule: Module<DatabaseState, RootState> = {
           const querySnapshot = await getDocs(queryToDB);
           if (querySnapshot.size > 0) {
             querySnapshot.forEach((doc) => {
-              array.push(doc.data() as DatabaseItem);
+              array.push(doc.data() as SingleItem);
             });
-            commit(DatabaseModuleMutations.UPDATE_ITEMS, array);
+            commit(ItemsModuleMutations.UPDATE_ITEMS, array);
           } else {
-            commit(DatabaseModuleMutations.UPDATE_ITEMS, []);
+            commit(ItemsModuleMutations.UPDATE_ITEMS, []);
           }
-          commit(DatabaseModuleMutations.CHANGE_STATUS, true);
+          commit(ItemsModuleMutations.CHANGE_STATUS, true);
         }
       } catch (e) {
         console.log(e);
@@ -121,7 +116,7 @@ export const databaseModule: Module<DatabaseState, RootState> = {
     async deleteItemFromDatabase({ commit }, item) {
       try {
         await deleteDoc(doc(db, "users", item.authorId, "images", item.id));
-        commit(DatabaseModuleMutations.DELETE_ITEM, item.id);
+        commit(ItemsModuleMutations.DELETE_ITEM, item.id);
       } catch (e) {
         console.log(e);
       }

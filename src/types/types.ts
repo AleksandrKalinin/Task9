@@ -11,13 +11,13 @@ export interface CanvasState {
   selectedItem: string;
 }
 
-export interface DatabaseState {
-  items: Array<DatabaseItem>;
+export interface ItemsState {
+  items: Array<SingleItem>;
   areItemsLoaded: boolean;
   searchQuery: string;
 }
 
-export interface DatabaseItem {
+export interface SingleItem {
   id: string;
   authorId: string;
   author: string;
@@ -96,7 +96,7 @@ export enum CanvasModuleMutations {
   SAVE_SELECTED_ITEM = "SAVE_SELECTED_ITEM",
 }
 
-export enum DatabaseModuleMutations {
+export enum ItemsModuleMutations {
   UPDATE_ITEMS = "UPDATE_ITEMS",
   CHANGE_STATUS = "CHANGE_STATUS",
   DELETE_ITEM = "DELETE_ITEM",
