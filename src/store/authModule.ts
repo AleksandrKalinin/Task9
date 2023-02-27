@@ -119,7 +119,7 @@ export const authModule: Module<UsersState, RootState> = {
     logoutUser() {
       signOut(auth)
         .then(() => {
-          console.log("User log out!");
+          router.push("/signin");
         })
         .catch((error) => {
           console.log(error);

@@ -52,9 +52,6 @@
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
 import { DatabaseItem } from "@/types/types";
-import { auth } from "@/database/index";
-import { onAuthStateChanged } from "firebase/auth";
-import router from "@/router";
 import Button from "@/components/Button.vue";
 
 export default defineComponent({
@@ -113,15 +110,7 @@ export default defineComponent({
   watch: {},
 
   mounted() {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        this.fetchItems();
-      } else {
-        this.showErrorToast("You are not authorized to see access this page!");
-        unsubscribe();
-        router.push("/signin");
-      }
-    });
+    this.fetchItems();
   },
 });
 </script>
