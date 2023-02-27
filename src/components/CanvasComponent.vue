@@ -16,14 +16,14 @@ import { mapGetters, mapActions } from "vuex";
 import { ShapeTypes } from "@/types/types";
 import { setupCTX } from "@/helpers/setupCTX";
 import { setupOverlayCTX } from "@/helpers/setupOverlayCTX";
-import { drawTriangle } from "@/helpers/drawTriangle";
-import { drawRectangle } from "@/helpers/drawRectangle";
-import { drawCircle } from "@/helpers/drawCircle";
-import { drawEllipse } from "@/helpers/drawEllipse";
-import { drawHexagon } from "@/helpers/drawHexagon";
-import { drawOctagon } from "@/helpers/drawOctagon";
-import { drawStar } from "@/helpers/drawStar";
-import { drawDiamond } from "@/helpers/drawDiamond";
+import { drawTriangle } from "@/utils/drawTriangle";
+import { drawRectangle } from "@/utils/drawRectangle";
+import { drawCircle } from "@/utils/drawCircle";
+import { drawEllipse } from "@/utils/drawEllipse";
+import { drawHexagon } from "@/utils/drawHexagon";
+import { drawOctagon } from "@/utils/drawOctagon";
+import { drawStar } from "@/utils/drawStar";
+import { drawDiamond } from "@/utils/drawDiamond";
 
 export default defineComponent({
   name: "CanvasComponent",
