@@ -31,11 +31,18 @@
 <script>
 import { mapGetters } from "vuex";
 import Button from "@/components/Button.vue";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
   name: "AuthForm",
 
-  props: ["title", "submitUser", "routeLink", "routeText", "text"],
+  props: {
+    title: String,
+    submitUser: Function,
+    routeLink: String,
+    routeText: String,
+    text: String,
+  },
 
   components: {
     Button,
@@ -58,7 +65,7 @@ export default {
       this.$emit("submitUser", { email, password });
     },
   },
-};
+});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

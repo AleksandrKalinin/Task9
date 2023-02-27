@@ -108,3 +108,11 @@ export enum ThemeModuleMutations {
   COLOR_BLUE = "#4169E1",
   COLOR_GREEN = "#299617",
 }
+
+export interface AuthFormProps {
+  title: string;
+  submitUser: () => void;
+  routeLink: string;
+  routeText: string;
+  text: string;
+}
