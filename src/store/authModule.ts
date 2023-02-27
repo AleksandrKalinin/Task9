@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 import { db } from "@/database/index";
 import store from "@/store";
+import { authErrorHandler } from "../helpers/authErrorHandler";
 
 export const authModule: Module<UsersState, RootState> = {
   state: () => ({
@@ -60,18 +61,10 @@ export const authModule: Module<UsersState, RootState> = {
           router.push("/");
         })
         .catch((error) => {
-          switch (error.code) {
-            case "auth/email-already-in-use":
-              store.dispatch("showErrorToast", "Email already in use!", {
-                root: true,
-              });
-              break;
-            default:
-              store.dispatch("showErrorToast", "Incorrect email or password!", {
-                root: true,
-              });
-              break;
-          }
+          const { toast, message } = authErrorHandler(error.code);
+          store.dispatch(toast, message, {
+            root: true,
+          });
         });
     },
 
@@ -87,32 +80,10 @@ export const authModule: Module<UsersState, RootState> = {
           router.push("/");
         })
         .catch((error) => {
-          switch (error.code) {
-            case "auth/invalid-email":
-              store.dispatch("showErrorToast", "Invalid Email!", {
-                root: true,
-              });
-              break;
-            case "auth/user-not-found":
-              store.dispatch(
-                "showErrorToast",
-                "No user with such email was found!",
-                {
-                  root: true,
-                }
-              );
-              break;
-            case "auth/wrong-password":
-              store.dispatch("showErrorToast", "Incorrect password!", {
-                root: true,
-              });
-              break;
-            default:
-              store.dispatch("showErrorToast", "Incorrect email or password!", {
-                root: true,
-              });
-              break;
-          }
+          const { toast, message } = authErrorHandler(error.code);
+          store.dispatch(toast, message, {
+            root: true,
+          });
         });
     },
 
