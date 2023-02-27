@@ -36,8 +36,11 @@ export const authModule: Module<UsersState, RootState> = {
     ) {
       const user: User = { id, email };
       try {
-        await setDoc(doc(db, "users", user.id), user);
-        commit("saveUser", user);
+        await setDoc(doc(db, "users", user.id), user)
+          .then(() => commit("saveUser", user))
+          .catch((e) => {
+            console.log(e);
+          });
       } catch (e) {
         console.log(e);
       }
