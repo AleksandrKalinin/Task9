@@ -94,7 +94,7 @@
         >
           <Button
             class="button button_regular button_normal"
-            @click="addItemToGallery"
+            @click="addItemToDatabase(this.canvas)"
             :style="{ backgroundColor: themeSelected }"
             >Save picture</Button
           >
@@ -113,8 +113,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
-import { v4 as uuidv4 } from "uuid";
-import { Shape, GalleryItem } from "@/types/types";
+import { Shape } from "@/types/types";
 import { auth } from "@/database/index";
 import { onAuthStateChanged } from "firebase/auth";
 import Button from "@/components/Button.vue";
@@ -197,38 +196,14 @@ export default defineComponent({
       });
     },
 
-    /** Adding item to gallery of recent items */
-    addItemToGallery() {
-      if (auth.currentUser !== null) {
-        const canvas: HTMLCanvasElement = this.canvas;
-        const newItem: GalleryItem = {
-          id: "",
-          authorId: "",
-          author: "",
-          date: new Date(),
-          link: "",
-        };
-        newItem.id = uuidv4();
-        newItem.authorId = auth.currentUser.uid;
-        newItem.author =
-          auth.currentUser.email !== null ? auth.currentUser.email : "John Doe";
-        newItem.date = new Date();
-        newItem.link = canvas.toDataURL("image/png");
-        this.addItemToDatabase(newItem);
-        this.showSuccessToast("Saved to gallery!");
-      } else {
-        this.showWarningToast("You are not authorized! Please log in.");
-      }
-    },
-
     /** Clearing canvas */
     clearCurrentCanvas() {
       const canvas: HTMLCanvasElement = this.canvas;
-      const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
-      if (ctx) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        this.saveSelectedItem("");
-      }
+      const ctx: CanvasRenderingContext2D = canvas.getContext(
+        "2d"
+      ) as CanvasRenderingContext2D;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      this.saveSelectedItem("");
     },
   },
 

@@ -4,11 +4,11 @@ export function setupCTX(
   selectedColor: string,
   lineWidth: number
 ) {
-  const ctx: CanvasRenderingContext2D | null = canvas.getContext("2d");
-  if (ctx) {
-    ctx.fillStyle = selectedColor;
-    ctx.strokeStyle = selectedColor;
-    ctx.lineWidth = lineWidth;
-  }
+  const ctx: CanvasRenderingContext2D = canvas.getContext(
+    "2d"
+  ) as CanvasRenderingContext2D;
+  ctx.fillStyle = selectedColor;
+  ctx.strokeStyle = selectedColor;
+  ctx.lineWidth = lineWidth;
   return { canvas, ctx };
 }

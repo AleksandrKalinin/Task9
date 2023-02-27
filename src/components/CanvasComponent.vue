@@ -80,52 +80,53 @@ export default defineComponent({
     initializeCanvas(canvasLink: string) {
       const myCanvas: HTMLCanvasElement = this.$refs
         .myCanvas as HTMLCanvasElement;
-      const ctx: CanvasRenderingContext2D | null = myCanvas.getContext("2d");
-      if (canvasLink !== "" && ctx) {
+      const ctx: CanvasRenderingContext2D = myCanvas.getContext(
+        "2d"
+      ) as CanvasRenderingContext2D;
+      if (canvasLink !== "") {
         const image: HTMLImageElement = new Image();
         image.onload = function () {
           ctx.drawImage(image, 0, 0);
         };
         image.src = canvasLink;
-      } else if (canvasLink === "" && ctx) {
+      } else if (canvasLink === "") {
         ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
       }
       this.canvas = myCanvas;
     },
-    /** Initializing overlay canvas with the same values as the main canvas. Main canvas state will be save in to overlay canvas after user stops drawing line or shape*/
+    /** Initializing overlay canvas with the same values as the main canvas. Main canvas state will be saved in to overlay canvas after user stops drawing line or shape*/
     initializeOverlayCanvas(canvasLink: string) {
       const overlayCanvas: HTMLCanvasElement = this.$refs
         .overlayCanvas as HTMLCanvasElement;
-      const ctxo: CanvasRenderingContext2D | null =
-        overlayCanvas.getContext("2d");
-      if (canvasLink !== "" && ctxo) {
+      const ctxo: CanvasRenderingContext2D = overlayCanvas.getContext(
+        "2d"
+      ) as CanvasRenderingContext2D;
+      if (canvasLink !== "") {
         const image: HTMLImageElement = new Image();
         image.onload = function () {
           ctxo.drawImage(image, 0, 0);
         };
         image.src = canvasLink;
-      } else if (canvasLink === "" && ctxo) {
+      } else if (canvasLink === "") {
         ctxo.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
       }
       this.overlayCanvas = overlayCanvas;
     },
 
-    /** Setting canvas proportions */
-    setCanvasProportions() {
-      const ctx: CanvasRenderingContext2D | null = this.canvas.getContext("2d");
-      if (ctx) {
-        ctx.canvas.width = document.body.clientWidth - 465 - 90;
-        ctx.canvas.height = (ctx.canvas.width / 3) * 2;
-      }
-    },
-    /** Setting overlay canvas proportions */
-    setOverlayProportions() {
-      const ctx: CanvasRenderingContext2D | null =
-        this.overlayCanvas.getContext("2d");
-      if (ctx) {
-        ctx.canvas.width = document.body.clientWidth - 465 - 90;
-        ctx.canvas.height = (ctx.canvas.width / 3) * 2;
-      }
+    /** Setting proportions of main and overlay canvases*/
+    setProportions() {
+      const ctx: CanvasRenderingContext2D = this.canvas.getContext(
+        "2d"
+      ) as CanvasRenderingContext2D;
+      const ctxo: CanvasRenderingContext2D = this.overlayCanvas.getContext(
+        "2d"
+      ) as CanvasRenderingContext2D;
+      const width = document.body.clientWidth - 465 - 90;
+      const height = (width / 3) * 2;
+      ctx.canvas.width = width;
+      ctx.canvas.height = height;
+      ctxo.canvas.width = width;
+      ctxo.canvas.height = height;
     },
 
     draw(e: MouseEvent) {
@@ -282,8 +283,7 @@ export default defineComponent({
   mounted() {
     this.initializeCanvas(this.selectedItem);
     this.initializeOverlayCanvas(this.selectedItem);
-    this.setCanvasProportions();
-    this.setOverlayProportions();
+    this.setProportions();
   },
 });
 </script>

@@ -1,5 +1,11 @@
 import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
-import { RootState, DatabaseState, DatabaseItem } from "@/types/types";
+import { v4 as uuidv4 } from "uuid";
+import {
+  RootState,
+  DatabaseState,
+  DatabaseItem,
+  GalleryItem,
+} from "@/types/types";
 import { auth } from "@/database/index";
 import { db } from "@/database/index";
 import {
@@ -11,6 +17,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { UPDATE_ITEMS, CHANGE_STATUS, DELETE_ITEM } from "@/constants/database";
+import store from "@/store";
 
 export const databaseModule: Module<DatabaseState, RootState> = {
   state: () => ({
@@ -74,14 +81,34 @@ export const databaseModule: Module<DatabaseState, RootState> = {
       }
     },
 
-    async addItemToDatabase(_, newItem: DatabaseItem) {
-      try {
-        await setDoc(
-          doc(db, "users", newItem.authorId, "images", newItem.id),
-          newItem
+    async addItemToDatabase(_, canvas: HTMLCanvasElement) {
+      if (auth.currentUser !== null) {
+        const newItem: GalleryItem = {} as GalleryItem;
+        newItem.id = uuidv4();
+        newItem.authorId = auth.currentUser.uid;
+        newItem.author =
+          auth.currentUser.email !== null ? auth.currentUser.email : "John Doe";
+        newItem.date = new Date();
+        newItem.link = canvas.toDataURL("image/png");
+        try {
+          await setDoc(
+            doc(db, "users", newItem.authorId, "images", newItem.id),
+            newItem
+          );
+          store.dispatch("showSuccessToast", "Saved to gallery!", {
+            root: true,
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      } else {
+        store.dispatch(
+          "showWarningToast",
+          "You are not authorized! Please log in.",
+          {
+            root: true,
+          }
         );
-      } catch (e) {
-        console.log(e);
       }
     },
 

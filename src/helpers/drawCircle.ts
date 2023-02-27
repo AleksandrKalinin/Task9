@@ -8,22 +8,20 @@ export function drawCircle(shapeArgs: ShapeArgs) {
         Math.pow(Math.abs(endY - startY), 2)
     )
   );
-  if (ctx) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.beginPath();
-    ctx.arc(
-      startX + (endX - startX) / 2,
-      startY + (endY - startY) / 2,
-      diameter / 2,
-      0,
-      2 * Math.PI
-    );
-    ctx.stroke();
-    if (isFilled) {
-      ctx.fill();
-    }
-    ctx.closePath();
-    ctx.save();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.beginPath();
+  ctx.arc(
+    startX + (endX - startX) / 2,
+    startY + (endY - startY) / 2,
+    diameter / 2,
+    0,
+    2 * Math.PI
+  );
+  ctx.stroke();
+  if (isFilled) {
+    ctx.fill();
   }
+  ctx.closePath();
+  ctx.save();
   return canvas;
 }

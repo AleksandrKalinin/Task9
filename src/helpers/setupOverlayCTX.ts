@@ -4,11 +4,11 @@ export function setupOverlayCTX(
   selectedColor: string,
   lineWidth: number
 ) {
-  const ctxo: CanvasRenderingContext2D | null = overlayCanvas.getContext("2d");
-  if (ctxo) {
-    ctxo.fillStyle = selectedColor;
-    ctxo.strokeStyle = selectedColor;
-    ctxo.lineWidth = lineWidth;
-  }
+  const ctxo: CanvasRenderingContext2D = overlayCanvas.getContext(
+    "2d"
+  ) as CanvasRenderingContext2D;
+  ctxo.fillStyle = selectedColor;
+  ctxo.strokeStyle = selectedColor;
+  ctxo.lineWidth = lineWidth;
   return { overlayCanvas, ctxo };
 }

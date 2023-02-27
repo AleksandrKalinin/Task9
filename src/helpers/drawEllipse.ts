@@ -13,23 +13,21 @@ export function drawEllipse(shapeArgs: ShapeArgs) {
     endX > startX ? startX + (endX - startX) / 2 : endX + (startX - endX) / 2;
   const coordY: number =
     endY > startY ? startY + (endY - startY) / 2 : endY + (startY - endY) / 2;
-  if (ctx) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.beginPath();
-    ctx.ellipse(
-      coordX,
-      coordY,
-      mainAxis / 2,
-      mainAxis / 4,
-      angle,
-      0,
-      2 * Math.PI
-    );
-    ctx.stroke();
-    if (isFilled) {
-      ctx.fill();
-    }
-    ctx.closePath();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.beginPath();
+  ctx.ellipse(
+    coordX,
+    coordY,
+    mainAxis / 2,
+    mainAxis / 4,
+    angle,
+    0,
+    2 * Math.PI
+  );
+  ctx.stroke();
+  if (isFilled) {
+    ctx.fill();
   }
+  ctx.closePath();
   return canvas;
 }

@@ -68,7 +68,7 @@ export interface ThemeState {
 
 export interface ShapeArgs {
   canvas: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D | null;
+  ctx: CanvasRenderingContext2D;
   startX: number;
   startY: number;
   endX: number;
