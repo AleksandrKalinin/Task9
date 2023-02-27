@@ -114,8 +114,6 @@
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
 import { Shape } from "@/types/types";
-import { auth } from "@/database/index";
-import { onAuthStateChanged } from "firebase/auth";
 import Button from "@/components/Button.vue";
 
 export default defineComponent({
@@ -185,16 +183,6 @@ export default defineComponent({
     ...mapActions(["showWarningToast", "showSuccessToast"]),
 
     ...mapActions("database", ["addItemToDatabase"]),
-
-    checkIfLoggedIn() {
-      onAuthStateChanged(auth, (user) => {
-        if (!user) {
-          return false;
-        } else {
-          return true;
-        }
-      });
-    },
 
     /** Clearing canvas */
     clearCurrentCanvas() {
