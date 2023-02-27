@@ -151,7 +151,6 @@ export default defineComponent({
     margin: 0 20px 40px
     border: 1px solid #CCCCCC
     overflow: hidden
-    flex-grow: 1
     .gallery-item__preview
       width: 600px
       height: 400px
