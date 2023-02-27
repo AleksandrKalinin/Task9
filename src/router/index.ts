@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import { auth } from "@/database/index";
+import { onAuthStateChanged, User } from "firebase/auth";
 import store from "@/store";
 
 const routes: Array<RouteRecordRaw> = [
@@ -37,9 +38,23 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+async function getCurrentUser(): Promise<User | null> {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (user) => {
+        unsubscribe();
+        resolve(user);
+      },
+      reject
+    );
+  });
+}
+
+router.beforeEach(async (to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (auth.currentUser) {
+    const user = await getCurrentUser();
+    if (user) {
       next();
     } else {
       next({ name: "signin" });
