@@ -75,3 +75,14 @@ export interface ShapeArgs {
   endY: number;
   isFilled: boolean;
 }
+
+export enum ShapeTypes {
+  TRIANGLE = "TRIANGLE",
+  RECTANGLE = "RECTANGLE",
+  CIRCLE = "CIRCLE",
+  ELLIPSE = "ELLIPSE",
+  DIAMOND = "DIAMOND",
+  HEXAGON = "HEXAGON",
+  OCTAGON = "OCTAGON",
+  STAR = "STAR",
+}

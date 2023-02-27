@@ -13,16 +13,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapGetters, mapActions } from "vuex";
-import {
-  CIRCLE,
-  ELLIPSE,
-  TRIANGLE,
-  RECTANGLE,
-  HEXAGON,
-  OCTAGON,
-  STAR,
-  DIAMOND,
-} from "@/constants/shapes";
+import { ShapeTypes } from "@/types/types";
 import { setupCTX } from "@/helpers/setupCTX";
 import { setupOverlayCTX } from "@/helpers/setupOverlayCTX";
 import { drawTriangle } from "@/helpers/drawTriangle";
@@ -94,6 +85,7 @@ export default defineComponent({
       }
       this.canvas = myCanvas;
     },
+
     /** Initializing overlay canvas with the same values as the main canvas. Main canvas state will be saved in to overlay canvas after user stops drawing line or shape*/
     initializeOverlayCanvas(canvasLink: string) {
       const overlayCanvas: HTMLCanvasElement = this.$refs
@@ -254,21 +246,21 @@ export default defineComponent({
       let isFilled = this.fillStyle === "outline" ? false : true;
       const shapeArgs = { canvas, ctx, ...coords, isFilled };
       let result: HTMLCanvasElement | null = null;
-      if (this.selectedShape === TRIANGLE) {
+      if (this.selectedShape === ShapeTypes.TRIANGLE) {
         result = drawTriangle(shapeArgs);
-      } else if (this.selectedShape === CIRCLE) {
+      } else if (this.selectedShape === ShapeTypes.CIRCLE) {
         result = drawCircle(shapeArgs);
-      } else if (this.selectedShape === RECTANGLE) {
+      } else if (this.selectedShape === ShapeTypes.RECTANGLE) {
         result = drawRectangle(shapeArgs);
-      } else if (this.selectedShape === ELLIPSE) {
+      } else if (this.selectedShape === ShapeTypes.ELLIPSE) {
         result = drawEllipse(shapeArgs);
-      } else if (this.selectedShape === OCTAGON) {
+      } else if (this.selectedShape === ShapeTypes.OCTAGON) {
         result = drawOctagon(shapeArgs);
-      } else if (this.selectedShape === HEXAGON) {
+      } else if (this.selectedShape === ShapeTypes.HEXAGON) {
         result = drawHexagon(shapeArgs);
-      } else if (this.selectedShape === STAR) {
+      } else if (this.selectedShape === ShapeTypes.STAR) {
         result = drawStar(shapeArgs);
-      } else if (this.selectedShape === DIAMOND) {
+      } else if (this.selectedShape === ShapeTypes.DIAMOND) {
         result = drawDiamond(shapeArgs);
       }
       if (e.buttons !== 1) {
