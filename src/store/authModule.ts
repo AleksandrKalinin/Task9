@@ -1,14 +1,15 @@
 import router from "@/router";
 import { ActionContext, MutationTree, GetterTree, Module } from "vuex";
 import { RootState, UsersState, User } from "@/types/types";
-import { auth } from "@/database/index";
+import { auth, db } from "@/database/index";
 import { doc, setDoc } from "firebase/firestore";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
+  User as IUser,
 } from "firebase/auth";
-import { db } from "@/database/index";
 import store from "@/store";
 import { authErrorHandler } from "../helpers/authErrorHandler";
 
@@ -89,6 +90,19 @@ export const authModule: Module<UsersState, RootState> = {
         .catch((error) => {
           console.log(error);
         });
+    },
+
+    async getCurrentUser(): Promise<IUser | null> {
+      return new Promise((resolve, reject) => {
+        const unsubscribe = onAuthStateChanged(
+          auth,
+          (user) => {
+            unsubscribe();
+            resolve(user);
+          },
+          reject
+        );
+      });
     },
   },
 
