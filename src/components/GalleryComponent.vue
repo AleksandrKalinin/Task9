@@ -1,22 +1,22 @@
 <template>
   <div class="gallery">
     <div class="gallery-wrapper">
-      <template v-if="!areItemsLoaded && computedItems.length === 0">
+      <template v-if="!areItemsLoaded && items.length === 0">
         <div class="gallery-preloader">
           <img src="@/assets/preloader.gif" />
         </div>
       </template>
-      <template v-if="areItemsLoaded && computedItems.length === 0">
+      <template v-if="areItemsLoaded && items.length === 0">
         <div class="gallery-preloader">
           <span class="gallery-placeholder"
             >You have no images for display yet</span
           >
         </div>
       </template>
-      <template v-if="computedItems.length > 0">
+      <template v-if="items.length > 0">
         <div
           class="gallery__item gallery-item"
-          v-for="(item, index) in computedItems"
+          v-for="(item, index) in items"
           :key="item.id"
         >
           <div class="gallery-item__preview gallery-preview">
@@ -47,7 +47,7 @@
     </div>
   </div>
 </template>
-
+<!--
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
@@ -114,7 +114,91 @@ export default defineComponent({
   },
 });
 </script>
-
+-->
+<script lang="ts">
+import { defineComponent } from "vue";
+import { SingleItem } from "@/types/types";
+import { auth } from "@/database/index";
+import { onAuthStateChanged } from "firebase/auth";
+import router from "@/router";
+import Button from "@/components/Button.vue";
+import { computed, onMounted } from "vue";
+import { useStore } from "vuex";
+export default defineComponent({
+  name: "MainHeader",
+  components: {
+    Button,
+  },
+  data() {
+    return {};
+  },
+  setup() {
+    const store = useStore();
+    const themeSelected = computed(() => store.getters["theme/themeSelected"]);
+    const items = computed(() => store.getters["items/items"]);
+    const areItemsLoaded = computed(
+      () => store.getters["items/areItemsLoaded"]
+    );
+    const canvas = computed(() => store.getters["canvas/canvas"]);
+    const formattedDates = computed(() => {
+      return items.value.map((item: SingleItem) => {
+        const date = new Date(item.date.seconds * 1000);
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+        const newDate: string =
+          ("0" + day.toString()).slice(-2) +
+          "." +
+          ("0" + month.toString()).slice(-2) +
+          "." +
+          year.toString();
+        return newDate;
+      });
+    });
+    function selectCanvas(id: string): void {
+      const index: number = items.value
+        .map((item: SingleItem) => item.id)
+        .indexOf(id);
+      const curItem: SingleItem = items.value[index];
+      store.dispatch("canvas/saveSelectedItem", curItem.link);
+    }
+    function fetchItems() {
+      store.dispatch("items/fetchItems");
+    }
+    function deleteItemFromDatabase(item: SingleItem) {
+      store.dispatch("items/deleteItemFromDatabase", item);
+    }
+    function showErrorToast(message: string) {
+      store.dispatch("showErrorToast", message);
+    }
+    onMounted(() => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          fetchItems();
+        } else {
+          showErrorToast("You are not authorized to see access this page!");
+          unsubscribe();
+          router.push("/signin");
+        }
+      });
+    });
+    return {
+      themeSelected,
+      items,
+      areItemsLoaded,
+      canvas,
+      formattedDates,
+      selectCanvas,
+      fetchItems,
+      deleteItemFromDatabase,
+      showErrorToast,
+    };
+  },
+  computed: {},
+  methods: {},
+  watch: {},
+});
+</script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="sass">
 @import "@/assets/styles/colorScheme.sass"

@@ -94,7 +94,7 @@
         >
           <Button
             class="button button_regular button_normal"
-            @click="addItemToDatabase(this.canvas)"
+            @click="addItemToDatabase(canvas)"
             :style="{ backgroundColor: themeSelected }"
             >Save picture</Button
           >
@@ -110,10 +110,91 @@
   </div>
 </template>
 
+<script setup lang="ts">
+import Button from "@/components/Button.vue";
+import { computed, onMounted, watch, ref } from "vue";
+import { Shape } from "@/types/types";
+import { useStore } from "vuex";
+
+let shapes = ref([]);
+const colors = [
+  "#000000",
+  "#FFFFFF",
+  "#037949",
+  "#318CE7",
+  "#993300",
+  "#CC338B",
+  "#BFFF00",
+  "#D40000",
+  "#F07427",
+  "#D470A2",
+  "#0F4D92",
+  "#18880D",
+  "#727472",
+  "#D73B3E",
+  "#CC397B",
+  "#665D1E",
+] as Array<string>;
+const store = useStore();
+const canvas = computed(() => store.getters["canvas/canvas"]);
+const themeSelected = computed(() => store.getters["theme/themeSelected"]);
+
+const width = computed({
+  get() {
+    return 1;
+  },
+  set(val: number) {
+    store.dispatch("canvas/setLineWidth", val);
+  },
+});
+
+const fillStyle = computed({
+  get() {
+    return "outline";
+  },
+  set(style: string) {
+    store.dispatch("canvas/setFillStyle", style);
+  },
+});
+
+function setColor(color: string) {
+  store.dispatch("canvas/setColor", color);
+}
+
+function setShape(shape: string) {
+  store.dispatch("canvas/setShape", shape);
+}
+
+function saveSelectedItem(state: string) {
+  store.dispatch("canvas/saveSelectedItem", state);
+}
+
+function addItemToDatabase(canvas: HTMLCanvasElement) {
+  console.log(canvas);
+  store.dispatch("items/addItemToDatabase", canvas);
+}
+
+function clearCurrentCanvas() {
+  const ctx: CanvasRenderingContext2D = canvas.value.getContext(
+    "2d"
+  ) as CanvasRenderingContext2D;
+  ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+  saveSelectedItem("");
+}
+
+onMounted(() => {
+  fetch("./shapes.json")
+    .then((response) => response.json())
+    .then((data) => {
+      shapes.value = data;
+    });
+});
+</script>
+<!--
 <script lang="ts">
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
-import { Shape } from "@/types/types";
+//import { Shape } from "@/types/types";
 import Button from "@/components/Button.vue";
 
 export default defineComponent({
@@ -182,7 +263,7 @@ export default defineComponent({
 
     ...mapActions(["showWarningToast", "showSuccessToast"]),
 
-    ...mapActions("items", ["addItemToDatabase"]),
+    //...mapActions("items", ["addItemToDatabase"]),
 
     /** Clearing canvas */
     clearCurrentCanvas() {
@@ -204,7 +285,7 @@ export default defineComponent({
   },
 });
 </script>
-
+-->
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="sass">
 .canvas-menu
