@@ -61,7 +61,7 @@ export default defineComponent({
   },
 
   methods: {
-    onSubmit: function ({ email, password }) {
+    onSubmit: async function ({ email, password }) {
       this.$emit("submitUser", { email, password });
     },
   },

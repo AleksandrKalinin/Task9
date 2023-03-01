@@ -33,7 +33,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapGetters("database", ["items", "areItemsLoaded", "searchQuery"]),
+    ...mapGetters("items", ["items", "areItemsLoaded", "searchQuery"]),
 
     ...mapGetters("theme", ["themeArray", "themeSelected"]),
 
@@ -52,7 +52,7 @@ export default defineComponent({
   },
 
   methods: {
-    ...mapActions("database", ["updateSearchQuery"]),
+    ...mapActions("items", ["updateSearchQuery"]),
 
     ...mapActions("theme", ["setTheme"]),
 

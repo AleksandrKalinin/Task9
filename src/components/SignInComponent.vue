@@ -5,12 +5,13 @@
       text="Don't have an account yet?"
       routeText="Register now"
       routeLink="register"
-      @submitUser="signInUser"
+      @submitUser="signInExistingUser"
     ></AuthForm>
   </div>
 </template>
 
 <script>
+import router from "@/router";
 import { mapActions } from "vuex";
 import AuthForm from "@/components/AuthForm.vue";
 
@@ -29,6 +30,16 @@ export default {
 
   methods: {
     ...mapActions("auth", ["signInUser"]),
+    ...mapActions(["showSuccessToast"]),
+
+    redirectToPage() {
+      router.push("/");
+      this.showSuccessToast("You are logged in!");
+    },
+
+    signInExistingUser({ email, password }) {
+      this.signInUser({ email, password }).then(() => this.redirectToPage());
+    },
   },
 };
 </script>

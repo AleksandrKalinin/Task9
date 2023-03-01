@@ -182,7 +182,7 @@ export default defineComponent({
 
     ...mapActions(["showWarningToast", "showSuccessToast"]),
 
-    ...mapActions("database", ["addItemToDatabase"]),
+    ...mapActions("items", ["addItemToDatabase"]),
 
     /** Clearing canvas */
     clearCurrentCanvas() {

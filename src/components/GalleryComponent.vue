@@ -31,7 +31,7 @@
           <div class="gallery-item__footer">
             <Button
               class="button button_regular button_normal"
-              @click="selectCanvas(item)"
+              @click="selectCanvas(item.id)"
               :style="{ backgroundColor: themeSelected }"
               >Edit item</Button
             >
@@ -66,7 +66,7 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapGetters("database", ["items", "areItemsLoaded"]),
+    ...mapGetters("items", ["items", "areItemsLoaded"]),
 
     ...mapGetters("canvas", ["canvas"]),
 
@@ -94,7 +94,7 @@ export default defineComponent({
   },
 
   methods: {
-    ...mapActions("database", ["fetchItems", "deleteItemFromDatabase"]),
+    ...mapActions("items", ["fetchItems", "deleteItemFromDatabase"]),
     ...mapActions("canvas", ["saveCanvas", "saveSelectedItem"]),
     ...mapActions(["showErrorToast"]),
 

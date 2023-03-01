@@ -26,6 +26,7 @@ export const authModule: Module<UsersState, RootState> = {
   mutations: <MutationTree<UsersState>>{
     saveUser(state: UsersState, value: User): void {
       state.usersArray.push(value);
+      console.log(state.usersArray);
     },
   },
 
@@ -46,22 +47,15 @@ export const authModule: Module<UsersState, RootState> = {
       }
     },
 
-    registerUser(
+    async registerUser(
       _: ActionContext<UsersState, unknown>,
       { email, password }: { email: string; password: string }
     ) {
-      createUserWithEmailAndPassword(auth, email, password)
+      await createUserWithEmailAndPassword(auth, email, password)
         .then((data) => {
           const id = data.user.uid;
-          store.dispatch(
-            "showSuccessToast",
-            "You are registered succesfully!",
-            {
-              root: true,
-            }
-          );
           store.dispatch("auth/saveUser", { id, email }, { root: true });
-          router.push("/");
+          console.log("Registered!");
         })
         .catch((error) => {
           const { toast, message } = authErrorHandler(error.code);
@@ -71,16 +65,13 @@ export const authModule: Module<UsersState, RootState> = {
         });
     },
 
-    signInUser(
+    async signInUser(
       _: ActionContext<UsersState, unknown>,
       { email, password }: { email: string; password: string }
     ) {
-      signInWithEmailAndPassword(auth, email, password)
+      await signInWithEmailAndPassword(auth, email, password)
         .then(() => {
-          store.dispatch("showSuccessToast", "You are logged in!", {
-            root: true,
-          });
-          router.push("/");
+          console.log("Success!");
         })
         .catch((error) => {
           const { toast, message } = authErrorHandler(error.code);
