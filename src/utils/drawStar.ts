@@ -8,8 +8,7 @@ export function drawStar(shapeArgs: ShapeArgs) {
         Math.pow(Math.abs(endY - startY), 2)
     )
   );
-  const canvasValue = canvas as any;
-  ctx.clearRect(0, 0, canvasValue.value.width, canvasValue.value.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.save();
   ctx.beginPath();
   ctx.translate(startX + (endX - startX) / 2, startY + (endY - startY) / 2);

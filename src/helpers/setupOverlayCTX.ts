@@ -4,8 +4,7 @@ export function setupOverlayCTX(
   selectedColor: string,
   lineWidth: number
 ) {
-  const overlay = overlayCanvas as any;
-  const ctxo: CanvasRenderingContext2D = overlay.value.getContext(
+  const ctxo: CanvasRenderingContext2D = overlayCanvas.getContext(
     "2d"
   ) as CanvasRenderingContext2D;
   ctxo.fillStyle = selectedColor;

@@ -4,8 +4,7 @@ export function setupCTX(
   selectedColor: string,
   lineWidth: number
 ) {
-  const canvas = myCanvas as any;
-  const ctx: CanvasRenderingContext2D = canvas.value.getContext(
+  const ctx: CanvasRenderingContext2D = myCanvas.getContext(
     "2d"
   ) as CanvasRenderingContext2D;
   ctx.fillStyle = selectedColor;

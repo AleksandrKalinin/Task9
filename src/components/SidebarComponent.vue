@@ -27,19 +27,10 @@ import { computed } from "vue";
 const store = useStore();
 //const items = computed(() => store.getters["items/items"]);
 //const areItemsLoaded = computed(() => store.getters["items/areItemsLoaded"]);
-const searchQuery = computed(() => store.getters["items/searchQuery"]);
 const themeArray = computed(() => store.getters["theme/themeArray"]);
 const themeSelected = computed(() => store.getters["theme/themeSelected"]);
 const isSelected = computed(() => {
   return themeArray.value.map((item: string) => item === themeSelected.value);
-});
-const currentInput = computed({
-  get(): string {
-    return searchQuery.value;
-  },
-  set(value: string) {
-    store.dispatch("items/updateSearchQuery", value);
-  },
 });
 
 function onChange(event: Event) {

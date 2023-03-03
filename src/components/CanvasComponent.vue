@@ -26,8 +26,8 @@ import { drawDiamond } from "@/utils/drawDiamond";
 
 const store = useStore();
 
-let myCanvas: any = ref(null);
-let overlayCanvas: any = ref(null);
+let myCanvas = ref<HTMLCanvasElement | null>(null);
+let overlayCanvas = ref<HTMLCanvasElement | null>(null);
 let x = 0 as number;
 let y = 0 as number;
 let isDrawing = false as boolean;
@@ -68,7 +68,6 @@ function initializeCanvas(canvasLink: string) {
 }
 
 function initializeOverlayCanvas(canvasLink: string) {
-  const overlayCanvas: HTMLCanvasElement = ref<any>(null);
   if (overlayCanvas.value !== null) {
     const ctxo: CanvasRenderingContext2D = overlayCanvas.value.getContext(
       "2d"
@@ -134,7 +133,7 @@ function stopDrawing(e: MouseEvent) {
     y = 0;
     isDrawing = false;
     const { overlayCanvasSetup } = setupOverlayCTX(
-      overlayCanvas,
+      overlayCanvas.value,
       selectedColor.value,
       lineWidth.value
     );
@@ -144,7 +143,11 @@ function stopDrawing(e: MouseEvent) {
 
 /** Draw on canvas and save state to overlay */
 function drawOnCanvas(x1: number, y1: number, x2: number, y2: number) {
-  const { ctx } = setupCTX(overlayCanvas, selectedColor.value, lineWidth.value);
+  const { ctx } = setupCTX(
+    overlayCanvas.value,
+    selectedColor.value,
+    lineWidth.value
+  );
   if (ctx) {
     ctx.beginPath();
     ctx.strokeStyle = selectedColor;
@@ -206,12 +209,12 @@ function checkIfShapeActive(e: MouseEvent) {
 /** Draw a shape depending on selected shape and save state in to overlay */
 function drawShape(e: MouseEvent) {
   const { myCanvasSetup, ctx } = setupCTX(
-    myCanvas,
+    myCanvas.value,
     selectedColor.value,
     lineWidth.value
   );
   const { overlayCanvasSetup, ctxo } = setupOverlayCTX(
-    overlayCanvas,
+    overlayCanvas.value,
     selectedColor.value,
     lineWidth.value
   );
@@ -222,9 +225,9 @@ function drawShape(e: MouseEvent) {
     endY,
   };
   let isFilled = fillStyle.value === "outline" ? false : true;
-  const canvas = myCanvasSetup;
+  const canvas = myCanvasSetup.value;
   const shapeArgs = { canvas, ctx, ...coords, isFilled };
-  let result: HTMLCanvasElement | null = null;
+  let result = null as unknown as HTMLCanvasElement;
   if (selectedShape.value === ShapeTypes.TRIANGLE) {
     result = drawTriangle(shapeArgs);
   } else if (selectedShape.value === ShapeTypes.CIRCLE) {
@@ -244,14 +247,12 @@ function drawShape(e: MouseEvent) {
   }
   if (e.buttons !== 1) {
     if (result && ctxo) {
-      ctxo.drawImage(result.value, 0, 0);
-      ctx.drawImage(result.value, 0, 0);
+      ctxo.drawImage(result, 0, 0);
+      ctx.drawImage(result, 0, 0);
     }
     store.dispatch("canvas/saveCanvas", overlayCanvasSetup);
-    ctx.clearRect(0, 0, myCanvas.value.width, myCanvas.value.height);
+    ctx.clearRect(0, 0, myCanvas.value?.width, myCanvas.value?.height);
   }
-  //ctx.clearRect(0, 0, myCanvas.value.width, myCanvas.value.height);
-  //store.dispatch("canvas/saveCanvas", overlayCanvasSetup);
 }
 
 onMounted(() => {
