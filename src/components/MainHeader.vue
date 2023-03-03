@@ -33,56 +33,40 @@
     </div>
   </header>
 </template>
+<script setup lang="ts">
+import { ref, computed, onMounted, watch } from "vue";
+import store from "@/store";
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { mapActions, mapGetters } from "vuex";
 import router from "@/router";
 import Button from "@/components/Button.vue";
+const username = ref<null | string>(null);
+const themeSelected = computed(() => store.getters["theme/themeSelected"]);
 
-export default defineComponent({
-  name: "MainHeader",
+function logIn() {
+  router.push("/signin");
+}
 
-  components: {
-    Button,
-  },
+function logoutUser(): void {
+  store.dispatch("auth/logoutUser");
+}
 
-  data() {
-    return {
-      username: null as null | string,
-    };
-  },
+async function getCurrentUser() {
+  const user = await store.dispatch("auth/getCurrentUser");
+  if (user) {
+    username.value = user.email;
+  } else {
+    username.value = null;
+  }
+}
 
-  computed: {
-    ...mapGetters("theme", ["themeSelected"]),
-  },
+watch(username, (newValue) => {
+  if (newValue === null) {
+    store.dispatch("showSuccessToast", "You are logged out!");
+  }
+});
 
-  methods: {
-    ...mapActions("auth", ["logoutUser", "getCurrentUser"]),
-
-    ...mapActions(["showSuccessToast", "showErrorToast"]),
-
-    logIn() {
-      router.push("/signin");
-    },
-  },
-
-  watch: {
-    username(newVal) {
-      if (newVal === null) {
-        this.showSuccessToast("You are logged out!");
-      }
-    },
-  },
-
-  async mounted() {
-    const user = await this.getCurrentUser();
-    if (user) {
-      this.username = user.email;
-    } else {
-      this.username = null;
-    }
-  },
+onMounted(() => {
+  getCurrentUser();
 });
 </script>
 
