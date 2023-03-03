@@ -12,17 +12,9 @@
 <script setup lang="ts">
 import { useStore } from "vuex";
 import { ref, computed, onMounted, watch } from "vue";
-import { ShapeTypes } from "@/types/types";
 import { setupCTX } from "@/helpers/setupCTX";
 import { setupOverlayCTX } from "@/helpers/setupOverlayCTX";
-import { drawTriangle } from "@/utils/drawTriangle";
-import { drawRectangle } from "@/utils/drawRectangle";
-import { drawCircle } from "@/utils/drawCircle";
-import { drawEllipse } from "@/utils/drawEllipse";
-import { drawHexagon } from "@/utils/drawHexagon";
-import { drawOctagon } from "@/utils/drawOctagon";
-import { drawStar } from "@/utils/drawStar";
-import { drawDiamond } from "@/utils/drawDiamond";
+import { drawSelectedShape } from "@/utils/drawSelectedShape";
 
 const store = useStore();
 
@@ -227,24 +219,10 @@ function drawShape(e: MouseEvent) {
   let isFilled = fillStyle.value === "outline" ? false : true;
   const canvas = myCanvasSetup;
   const shapeArgs = { canvas, ctx, ...coords, isFilled };
-  let result = null as unknown as HTMLCanvasElement;
-  if (selectedShape.value === ShapeTypes.TRIANGLE) {
-    result = drawTriangle(shapeArgs);
-  } else if (selectedShape.value === ShapeTypes.CIRCLE) {
-    result = drawCircle(shapeArgs);
-  } else if (selectedShape.value === ShapeTypes.RECTANGLE) {
-    result = drawRectangle(shapeArgs);
-  } else if (selectedShape.value === ShapeTypes.ELLIPSE) {
-    result = drawEllipse(shapeArgs);
-  } else if (selectedShape.value === ShapeTypes.OCTAGON) {
-    result = drawOctagon(shapeArgs);
-  } else if (selectedShape.value === ShapeTypes.HEXAGON) {
-    result = drawHexagon(shapeArgs);
-  } else if (selectedShape.value === ShapeTypes.STAR) {
-    result = drawStar(shapeArgs);
-  } else if (selectedShape.value === ShapeTypes.DIAMOND) {
-    result = drawDiamond(shapeArgs);
-  }
+  const result = drawSelectedShape(
+    shapeArgs,
+    selectedShape.value
+  ) as unknown as HTMLCanvasElement;
   if (e.buttons !== 1) {
     if (result && ctxo) {
       ctxo.drawImage(result, 0, 0);
