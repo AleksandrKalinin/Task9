@@ -7,6 +7,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
+  User as IUser,
 } from "firebase/auth";
 import { db } from "@/database/index";
 import store from "@/store";
@@ -89,6 +91,19 @@ export const authModule: Module<UsersState, RootState> = {
         .catch((error) => {
           console.log(error);
         });
+    },
+
+    async getCurrentUser(): Promise<IUser | null> {
+      return new Promise((resolve, reject) => {
+        const unsubscribe = onAuthStateChanged(
+          auth,
+          (user) => {
+            unsubscribe();
+            resolve(user);
+          },
+          reject
+        );
+      });
     },
   },
 

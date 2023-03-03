@@ -25,8 +25,6 @@
 import { useStore } from "vuex";
 import { computed } from "vue";
 const store = useStore();
-//const items = computed(() => store.getters["items/items"]);
-//const areItemsLoaded = computed(() => store.getters["items/areItemsLoaded"]);
 const themeArray = computed(() => store.getters["theme/themeArray"]);
 const themeSelected = computed(() => store.getters["theme/themeSelected"]);
 const isSelected = computed(() => {

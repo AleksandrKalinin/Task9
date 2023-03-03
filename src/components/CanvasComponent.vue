@@ -97,7 +97,7 @@ function setProportions() {
     const ctxo: CanvasRenderingContext2D = overlayCanvas.value.getContext(
       "2d"
     ) as CanvasRenderingContext2D;
-    const width = document.body.clientWidth - 465 - 90;
+    const width = document.body.clientWidth - 465 - 90 - 17;
     const height = (width / 3) * 2;
     ctx.canvas.width = width;
     ctx.canvas.height = height;

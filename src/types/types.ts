@@ -14,7 +14,6 @@ export interface CanvasState {
 export interface ItemsState {
   items: Array<SingleItem>;
   areItemsLoaded: boolean;
-  searchQuery: string;
 }
 
 export interface SingleItem {

@@ -38,8 +38,6 @@
 import { defineComponent } from "vue";
 import { mapActions, mapGetters } from "vuex";
 import router from "@/router";
-import { auth } from "@/database/index";
-import { onAuthStateChanged } from "firebase/auth";
 import Button from "@/components/Button.vue";
 
 export default defineComponent({
@@ -60,7 +58,7 @@ export default defineComponent({
   },
 
   methods: {
-    ...mapActions("auth", ["logoutUser"]),
+    ...mapActions("auth", ["logoutUser", "getCurrentUser"]),
 
     ...mapActions(["showSuccessToast", "showErrorToast"]),
 
@@ -77,14 +75,13 @@ export default defineComponent({
     },
   },
 
-  mounted() {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        this.username = user.email;
-      } else {
-        this.username = null;
-      }
-    });
+  async mounted() {
+    const user = await this.getCurrentUser();
+    if (user) {
+      this.username = user.email;
+    } else {
+      this.username = null;
+    }
   },
 });
 </script>
