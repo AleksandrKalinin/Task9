@@ -225,7 +225,7 @@ function drawShape(e: MouseEvent) {
     endY,
   };
   let isFilled = fillStyle.value === "outline" ? false : true;
-  const canvas = myCanvasSetup.value;
+  const canvas = myCanvasSetup;
   const shapeArgs = { canvas, ctx, ...coords, isFilled };
   let result = null as unknown as HTMLCanvasElement;
   if (selectedShape.value === ShapeTypes.TRIANGLE) {

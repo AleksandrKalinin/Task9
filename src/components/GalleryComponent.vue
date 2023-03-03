@@ -156,6 +156,7 @@ export default defineComponent({
     margin: 0 20px 40px
     border: 1px solid #CCCCCC
     overflow: hidden
+    max-height: 515px
     .gallery-item__preview
       width: 600px
       height: 400px
