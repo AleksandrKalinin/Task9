@@ -5,7 +5,7 @@
       text="Already have an account?"
       routeText="Sign in"
       routeLink="signin"
-      @submitUser="registerNewUser"
+      @submit-user="registerNewUser"
     ></AuthForm>
   </div>
 </template>

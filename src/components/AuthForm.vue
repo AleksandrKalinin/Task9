@@ -28,44 +28,30 @@
   </form>
 </template>
 
-<script>
-import { mapGetters } from "vuex";
+<script setup lang="ts">
+import { ref, computed, defineProps, defineEmits, toRefs } from "vue";
+import store from "@/store";
 import Button from "@/components/Button.vue";
-import { defineComponent } from "vue";
 
-export default defineComponent({
-  name: "AuthForm",
+const password = ref<string>("");
+const email = ref<string>("");
+const errorMessage = ref<null | string>(null);
 
-  props: {
-    title: String,
-    submitUser: Function,
-    routeLink: String,
-    routeText: String,
-    text: String,
-  },
+const themeSelected = computed(() => store.getters["theme/themeSelected"]);
+const emit = defineEmits(["submit-user"]);
 
-  components: {
-    Button,
-  },
-
-  data() {
-    return {
-      password: "",
-      email: "",
-      errorMessage: null,
-    };
-  },
-
-  computed: {
-    ...mapGetters("theme", ["themeSelected"]),
-  },
-
-  methods: {
-    onSubmit: async function ({ email, password }) {
-      this.$emit("submitUser", { email, password });
-    },
-  },
+const props = defineProps({
+  title: String,
+  routeLink: String,
+  routeText: String,
+  text: String,
 });
+
+const { title, routeLink, routeText, text } = toRefs(props);
+
+async function onSubmit({ email, password }) {
+  emit("submit-user", { email, password });
+}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
