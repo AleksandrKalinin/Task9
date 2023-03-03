@@ -112,11 +112,11 @@
 
 <script setup lang="ts">
 import Button from "@/components/Button.vue";
-import { computed, onMounted, watch, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { Shape } from "@/types/types";
 import { useStore } from "vuex";
 
-let shapes = ref([]);
+let shapes: Array<Shape> = ref<Shape>([]);
 const colors = [
   "#000000",
   "#FFFFFF",
@@ -170,7 +170,6 @@ function saveSelectedItem(state: string) {
 }
 
 function addItemToDatabase(canvas: HTMLCanvasElement) {
-  console.log(canvas);
   store.dispatch("items/addItemToDatabase", canvas);
 }
 
@@ -185,7 +184,7 @@ function clearCurrentCanvas() {
 onMounted(() => {
   fetch("./shapes.json")
     .then((response) => response.json())
-    .then((data) => {
+    .then((data: Array<Shape>) => {
       shapes.value = data;
     });
 });

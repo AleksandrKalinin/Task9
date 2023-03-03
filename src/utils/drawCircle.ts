@@ -8,7 +8,8 @@ export function drawCircle(shapeArgs: ShapeArgs) {
         Math.pow(Math.abs(endY - startY), 2)
     )
   );
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const canvasValue = canvas as any;
+  ctx.clearRect(0, 0, canvasValue.value.width, canvasValue.value.height);
   ctx.beginPath();
   ctx.arc(
     startX + (endX - startX) / 2,

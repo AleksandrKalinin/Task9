@@ -1,14 +1,16 @@
 /** Method for setting up canvas with parameters fillStyle, strokeStyle, lineWidth */
 export function setupCTX(
-  canvas: HTMLCanvasElement,
+  myCanvas: HTMLCanvasElement,
   selectedColor: string,
   lineWidth: number
 ) {
-  const ctx: CanvasRenderingContext2D = canvas.getContext(
+  const canvas = myCanvas as any;
+  const ctx: CanvasRenderingContext2D = canvas.value.getContext(
     "2d"
   ) as CanvasRenderingContext2D;
   ctx.fillStyle = selectedColor;
   ctx.strokeStyle = selectedColor;
   ctx.lineWidth = lineWidth;
-  return { canvas, ctx };
+  const myCanvasSetup = myCanvas;
+  return { myCanvasSetup, ctx };
 }
