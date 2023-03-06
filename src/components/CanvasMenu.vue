@@ -1,0 +1,270 @@
+<template>
+  <div class="canvas-menu">
+    <div class="canvas-menu__section">
+      <div class="canvas-menu__block">
+        <h6 class="canvas-menu__category">Instruments</h6>
+        <div class="canvas-menu__wrapper canvas-wrapper_regular">
+          <div class="canvas-menu__item" title="Pen" @click="setShape('')">
+            <img
+              class="canvas-menu__icon"
+              v-bind:src="require('@/assets/paintbrush-solid.svg')"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="canvas-menu__block">
+        <h6 class="canvas-menu__category">Line width</h6>
+        <div class="canvas-menu__wrapper canvas-wrapper_spaced">
+          <input
+            v-model="width"
+            min="1"
+            max="10"
+            type="range"
+            id="lineWidth"
+            name="lineWidth"
+            class="canvas-menu__input"
+          />
+        </div>
+      </div>
+      <div class="canvas-menu__block">
+        <h6 class="canvas-menu__category">Shapes</h6>
+        <div class="canvas-menu__wrapper canvas-wrapper_spaced">
+          <template v-if="shapes.length">
+            <div
+              v-for="(shape, index) in shapes"
+              :key="index"
+              class="canvas-menu__item canvas-option"
+              @click="setShape(shape.link)"
+              :title="shape.name"
+            >
+              <img
+                class="canvas-menu__icon"
+                :src="require(`@/assets/${shape.path}`)"
+              />
+            </div>
+          </template>
+        </div>
+      </div>
+      <div class="canvas-menu__block">
+        <h6 class="canvas-menu__category">Fill style</h6>
+        <div class="canvas-menu__wrapper canvas-wrapper_spaced">
+          <div class="canvas-radio__item">
+            <label for="r1">
+              <input
+                v-model="fillStyle"
+                value="outline"
+                type="radio"
+                id="r1"
+                name="lineWidth"
+                class="canvas-menu__radio"
+              />
+              Outline</label
+            >
+          </div>
+          <div class="canvas-radio__item">
+            <label for="r2">
+              <input
+                v-model="fillStyle"
+                value="filled"
+                type="radio"
+                id="r2"
+                name="lineWidth"
+                class="canvas-menu__radio"
+              />
+              Filled
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="canvas-menu__block">
+        <h6 class="canvas-menu__category">Colors</h6>
+        <div class="canvas-menu__wrapper canvas-wrapper_spaced">
+          <div
+            class="canvas-menu__item"
+            v-bind:key="index"
+            @click="setColor(item)"
+            v-for="(item, index) in colors"
+            :style="{ 'background-color': item }"
+          ></div>
+        </div>
+      </div>
+      <div class="canvas-menu__block">
+        <div
+          class="canvas-menu__wrapper canvas-wrapper_large canvas-wrapper_spaced"
+        >
+          <Button
+            class="button button_regular button_normal"
+            @click="addItemToDatabase(this.canvas)"
+            :style="{ backgroundColor: themeSelected }"
+            >Save picture</Button
+          >
+          <Button
+            class="button button_regular button_normal"
+            @click="clearCurrentCanvas"
+            :style="{ backgroundColor: themeSelected }"
+            >Clear canvas</Button
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from "vue";
+import { mapActions, mapGetters } from "vuex";
+import { Shape } from "@/types/types";
+import Button from "@/components/Button.vue";
+
+export default defineComponent({
+  name: "CanvasMenu",
+
+  data() {
+    return {
+      shapes: [] as Array<Shape>,
+      colors: [
+        "#000000",
+        "#FFFFFF",
+        "#037949",
+        "#318CE7",
+        "#993300",
+        "#CC338B",
+        "#BFFF00",
+        "#D40000",
+        "#F07427",
+        "#D470A2",
+        "#0F4D92",
+        "#18880D",
+        "#727472",
+        "#D73B3E",
+        "#CC397B",
+        "#665D1E",
+      ] as Array<string>,
+    };
+  },
+
+  components: {
+    Button,
+  },
+
+  computed: {
+    ...mapGetters("canvas", ["lineWidth", "canvas"]),
+
+    ...mapGetters("theme", ["themeSelected"]),
+
+    width: {
+      get() {
+        return 1;
+      },
+      set(value: number) {
+        this.setLineWidth(value);
+      },
+    },
+
+    fillStyle: {
+      get() {
+        return "outline";
+      },
+      set(value: string) {
+        this.setFillStyle(value);
+      },
+    },
+  },
+
+  methods: {
+    ...mapActions("canvas", [
+      "setColor",
+      "setShape",
+      "setLineWidth",
+      "saveSelectedItem",
+      "setFillStyle",
+    ]),
+
+    ...mapActions(["showWarningToast", "showSuccessToast"]),
+
+    ...mapActions("items", ["addItemToDatabase"]),
+
+    /** Clearing canvas */
+    clearCurrentCanvas() {
+      const canvas: HTMLCanvasElement = this.canvas;
+      const ctx: CanvasRenderingContext2D = canvas.getContext(
+        "2d"
+      ) as CanvasRenderingContext2D;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      this.saveSelectedItem("");
+    },
+  },
+
+  mounted() {
+    fetch("./shapes.json")
+      .then((response) => response.json())
+      .then((data) => {
+        this.shapes = data;
+      });
+  },
+});
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="sass">
+.canvas-menu
+  width: 465px
+  border: 1px solid #CCCCCC
+  margin-right: 30px
+  .canvas-menu__block
+    margin: 0 10px 20px 10px
+
+  .canvas-menu__category
+    font-size: 18px
+    text-transform: uppercase
+    letter-spacing: 1px
+    padding: 10px 5px
+  .canvas-menu__wrapper
+    display: flex
+    flex-wrap: wrap
+  .canvas-wrapper_regular
+    justify-content: flex-start
+  .canvas-wrapper_spaced
+    justify-content: space-around
+  .canvas-wrapper_centered
+    justify-content: center
+  .canvas-wrapper_large
+    padding: 20px 0
+    align-items: center
+
+  .canvas-menu__item
+    width: 50px
+    height: 50px
+    cursor: pointer
+    display: flex
+    justify-content: center
+    align-items: center
+    margin-bottom: 5px
+    overflow: hidden
+    border: 1px solid #333333
+
+  .canvas-menu__item.canvas-option_active
+    box-shadow: inset 0 0 3px #4169E1
+    border: 1px solid #4169E1
+
+  .canvas-menu__icon
+    width: 30px
+    height: 30px
+    object-fit: cover
+    -webkit-filter: invert(100%)
+    filter: invert(100%)
+
+  .canvas-menu__input
+    width: 100%
+  .canvas-menu__radio
+    width: 23px
+    height: 23px
+    margin-right: 5px
+
+  .canvas-radio__item
+    display: flex
+    align-items: center
+    label
+      display: flex
+      font-size: 18px
+</style>
