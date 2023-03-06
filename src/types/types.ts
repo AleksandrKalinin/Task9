@@ -107,3 +107,10 @@ export enum ThemeModuleMutations {
   COLOR_BLUE = "#4169E1",
   COLOR_GREEN = "#299617",
 }
+
+export interface Coordinates {
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+}

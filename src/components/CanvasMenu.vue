@@ -112,11 +112,11 @@
 
 <script setup lang="ts">
 import Button from "@/components/Button.vue";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, Ref } from "vue";
 import { Shape } from "@/types/types";
 import { useStore } from "vuex";
 
-let shapes: Array<Shape> = ref<Shape>([]);
+let shapes: Ref<Shape> = ref([]);
 const colors = [
   "#000000",
   "#FFFFFF",

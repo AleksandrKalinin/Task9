@@ -11,15 +11,17 @@
 </template>
 <script setup lang="ts">
 import { useStore } from "vuex";
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, watch, Ref } from "vue";
 import { setupCTX } from "@/helpers/setupCTX";
 import { setupOverlayCTX } from "@/helpers/setupOverlayCTX";
 import { drawSelectedShape } from "@/utils/drawSelectedShape";
+import { Coordinates } from "@/types";
 
 const store = useStore();
 
-let myCanvas = ref<HTMLCanvasElement | null>(null);
-let overlayCanvas = ref<HTMLCanvasElement | null>(null);
+let myCanvas: Ref<HTMLCanvasElement | null> = ref(null);
+let overlayCanvas: Ref<HTMLCanvasElement | null> = ref(null);
+/*
 let x = 0 as number;
 let y = 0 as number;
 let isDrawing = false as boolean;
@@ -27,6 +29,14 @@ let startX = 0 as number;
 let startY = 0 as number;
 let endX = 0 as number;
 let endY = 0 as number;
+*/
+let x: Ref<number> = ref(0);
+let y: Ref<number> = ref(0);
+let isDrawing: Ref<boolean> = ref(false);
+let startX: Ref<number> = ref(0);
+let startY: Ref<number> = ref(0);
+let endX: Ref<number> = ref(0);
+let endY: Ref<number> = ref(0);
 
 const selectedColor = computed(() => store.getters["canvas/selectedColor"]);
 const selectedShape = computed(() => store.getters["canvas/selectedShape"]);
@@ -99,10 +109,10 @@ function setProportions() {
 }
 
 function draw(e: MouseEvent) {
-  if (isDrawing) {
-    drawOnCanvas(x, y, e.offsetX, e.offsetY);
-    x = e.offsetX;
-    y = e.offsetY;
+  if (isDrawing.value) {
+    drawOnCanvas(x.value, y.value, e.offsetX, e.offsetY);
+    x.value = e.offsetX;
+    y.value = e.offsetY;
   } else {
     if (e.buttons == 1) {
       getEndCoords(e);
@@ -112,18 +122,18 @@ function draw(e: MouseEvent) {
 
 /** Start drawing if pen is selected */
 function startDrawing(e: MouseEvent) {
-  x = e.offsetX;
-  y = e.offsetY;
-  isDrawing = true;
+  x.value = e.offsetX;
+  y.value = e.offsetY;
+  isDrawing.value = true;
 }
 
 /** Stop drawing if pen is selected */
 function stopDrawing(e: MouseEvent) {
-  if (isDrawing) {
-    drawOnCanvas(x, y, e.offsetX, e.offsetY);
-    x = 0;
-    y = 0;
-    isDrawing = false;
+  if (isDrawing.value) {
+    drawOnCanvas(x.value, y.value, e.offsetX, e.offsetY);
+    x.value = 0;
+    y.value = 0;
+    isDrawing.value = false;
     const { overlayCanvasSetup } = setupOverlayCTX(
       overlayCanvas.value,
       selectedColor.value,
@@ -156,8 +166,8 @@ function getStartCoords(e: MouseEvent) {
   const target = e.target as HTMLElement;
   const cX: number = target.getBoundingClientRect().left + window.scrollX;
   const cY: number = target.getBoundingClientRect().top + window.scrollY;
-  startX = e.pageX - cX;
-  startY = e.pageY - cY;
+  startX.value = e.pageX - cX;
+  startY.value = e.pageY - cY;
 }
 
 /** Final coordinates of a shape */
@@ -165,16 +175,16 @@ function getEndCoords(e: MouseEvent) {
   const target = e.target as HTMLElement;
   const cX: number = target.getBoundingClientRect().left + window.scrollX;
   const cY: number = target.getBoundingClientRect().top + window.scrollY;
-  endX = e.pageX - cX;
-  endY = e.pageY - cY;
-  if (startX !== endX) {
-    if (startY > endY) {
-      let tempX: number = startX;
-      let tempY: number = startY;
-      startX = endX;
-      startY = endY;
-      endX = tempX;
-      endY = tempY;
+  endX.value = e.pageX - cX;
+  endY.value = e.pageY - cY;
+  if (startX.value !== endX.value) {
+    if (startY.value > endY.value) {
+      let tempX: number = startX.value;
+      let tempY: number = startY.value;
+      startX.value = endX.value;
+      startY.value = endY.value;
+      endX.value = tempX;
+      endY.value = tempY;
     }
     drawShape(e);
   }
@@ -210,12 +220,11 @@ function drawShape(e: MouseEvent) {
     selectedColor.value,
     lineWidth.value
   );
-  const coords = {
-    startX,
-    startY,
-    endX,
-    endY,
-  };
+  const coords: Coordinates = {};
+  coords.startX = startX.value;
+  coords.startY = startY.value;
+  coords.endX = endX.value;
+  coords.endY = endY.value;
   let isFilled = fillStyle.value === "outline" ? false : true;
   const canvas = myCanvasSetup;
   const shapeArgs = { canvas, ctx, ...coords, isFilled };

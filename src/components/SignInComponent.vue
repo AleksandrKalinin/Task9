@@ -10,10 +10,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import router from "@/router";
 import AuthForm from "@/components/AuthForm.vue";
-import store from "@/store";
+import { useStore } from "vuex";
+const store = useStore();
 
 function redirectToPage() {
   router.push("/");

@@ -29,13 +29,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineProps, defineEmits, toRefs } from "vue";
-import store from "@/store";
+import { ref, computed, defineProps, defineEmits, toRefs, Ref } from "vue";
+import { useStore } from "vuex";
 import Button from "@/components/Button.vue";
 
-const password = ref<string>("");
-const email = ref<string>("");
-const errorMessage = ref<null | string>(null);
+const store = useStore();
+const password: Ref<string> = ref("");
+const email: Ref<string> = ref<string>("");
+const errorMessage: Ref<null | string> = ref(null);
 
 const themeSelected = computed(() => store.getters["theme/themeSelected"]);
 const emit = defineEmits(["submit-user"]);

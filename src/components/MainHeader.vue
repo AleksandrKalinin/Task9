@@ -34,12 +34,13 @@
   </header>
 </template>
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
-import store from "@/store";
-
+import { ref, computed, onMounted, watch, Ref } from "vue";
+import { useStore } from "vuex";
 import router from "@/router";
 import Button from "@/components/Button.vue";
-const username = ref<null | string>(null);
+const store = useStore();
+
+const username: Ref<null | string> = ref(null);
 const themeSelected = computed(() => store.getters["theme/themeSelected"]);
 
 function logIn() {
