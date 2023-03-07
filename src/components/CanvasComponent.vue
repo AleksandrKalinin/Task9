@@ -16,6 +16,7 @@ import { setupCTX } from "@/helpers/setupCTX";
 import { setupOverlayCTX } from "@/helpers/setupOverlayCTX";
 import { drawSelectedShape } from "@/utils/drawSelectedShape";
 import { Coordinates } from "@/types";
+import { useProportions } from "@/composables/useProportions";
 
 const store = useStore();
 
@@ -83,20 +84,8 @@ function initializeOverlayCanvas(canvasLink: string) {
 }
 
 function setProportions() {
-  if (myCanvas.value !== null && overlayCanvas.value !== null) {
-    const ctx: CanvasRenderingContext2D = myCanvas.value.getContext(
-      "2d"
-    ) as CanvasRenderingContext2D;
-    const ctxo: CanvasRenderingContext2D = overlayCanvas.value.getContext(
-      "2d"
-    ) as CanvasRenderingContext2D;
-    const width = document.body.clientWidth - 465 - 90 - 17;
-    const height = (width / 3) * 2;
-    ctx.canvas.width = width;
-    ctx.canvas.height = height;
-    ctxo.canvas.width = width;
-    ctxo.canvas.height = height;
-  }
+  myCanvas.value = useProportions(myCanvas);
+  overlayCanvas.value = useProportions(overlayCanvas);
 }
 
 function draw(e: MouseEvent) {
