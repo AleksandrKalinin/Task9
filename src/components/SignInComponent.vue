@@ -10,40 +10,23 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import router from "@/router";
-import { mapActions } from "vuex";
 import AuthForm from "@/components/AuthForm.vue";
+import { useStore } from "vuex";
+const store = useStore();
 
-export default {
-  name: "SignInComponent",
+function redirectToPage() {
+  router.push("/");
+  store.dispatch("showSuccessToast", "You are logged in!");
+}
 
-  components: {
-    AuthForm,
-  },
-
-  data() {
-    return {};
-  },
-
-  computed: {},
-
-  methods: {
-    ...mapActions("auth", ["signInUser"]),
-    ...mapActions(["showSuccessToast"]),
-
-    redirectToPage() {
-      router.push("/");
-      this.showSuccessToast("You are logged in!");
-    },
-
-    signInExistingUser({ email, password }) {
-      this.signInUser({ email, password }).then(() => this.redirectToPage());
-    },
-  },
-};
+function signInExistingUser({ email, password }) {
+  store
+    .dispatch("auth/signInUser", { email, password })
+    .then(() => redirectToPage());
+}
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="sass">
 @import "@/assets/styles/colorScheme.sass"

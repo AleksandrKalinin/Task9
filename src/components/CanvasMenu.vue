@@ -94,7 +94,7 @@
         >
           <Button
             class="button button_regular button_normal"
-            @click="addItemToDatabase(this.canvas)"
+            @click="addItemToDatabase(canvas)"
             :style="{ backgroundColor: themeSelected }"
             >Save picture</Button
           >
@@ -110,101 +110,85 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { mapActions, mapGetters } from "vuex";
-import { Shape } from "@/types/types";
+<script setup lang="ts">
 import Button from "@/components/Button.vue";
+import { computed, onMounted, ref, Ref } from "vue";
+import { Shape } from "@/types/types";
+import { useStore } from "vuex";
 
-export default defineComponent({
-  name: "CanvasMenu",
+let shapes: Ref<Shape> = ref([]);
+const colors = [
+  "#000000",
+  "#FFFFFF",
+  "#037949",
+  "#318CE7",
+  "#993300",
+  "#CC338B",
+  "#BFFF00",
+  "#D40000",
+  "#F07427",
+  "#D470A2",
+  "#0F4D92",
+  "#18880D",
+  "#727472",
+  "#D73B3E",
+  "#CC397B",
+  "#665D1E",
+] as Array<string>;
+const store = useStore();
+const canvas = computed(() => store.getters["canvas/canvas"]);
+const themeSelected = computed(() => store.getters["theme/themeSelected"]);
 
-  data() {
-    return {
-      shapes: [] as Array<Shape>,
-      colors: [
-        "#000000",
-        "#FFFFFF",
-        "#037949",
-        "#318CE7",
-        "#993300",
-        "#CC338B",
-        "#BFFF00",
-        "#D40000",
-        "#F07427",
-        "#D470A2",
-        "#0F4D92",
-        "#18880D",
-        "#727472",
-        "#D73B3E",
-        "#CC397B",
-        "#665D1E",
-      ] as Array<string>,
-    };
+const width = computed({
+  get() {
+    return 1;
   },
-
-  components: {
-    Button,
-  },
-
-  computed: {
-    ...mapGetters("canvas", ["lineWidth", "canvas"]),
-
-    ...mapGetters("theme", ["themeSelected"]),
-
-    width: {
-      get() {
-        return 1;
-      },
-      set(value: number) {
-        this.setLineWidth(value);
-      },
-    },
-
-    fillStyle: {
-      get() {
-        return "outline";
-      },
-      set(value: string) {
-        this.setFillStyle(value);
-      },
-    },
-  },
-
-  methods: {
-    ...mapActions("canvas", [
-      "setColor",
-      "setShape",
-      "setLineWidth",
-      "saveSelectedItem",
-      "setFillStyle",
-    ]),
-
-    ...mapActions(["showWarningToast", "showSuccessToast"]),
-
-    ...mapActions("items", ["addItemToDatabase"]),
-
-    /** Clearing canvas */
-    clearCurrentCanvas() {
-      const canvas: HTMLCanvasElement = this.canvas;
-      const ctx: CanvasRenderingContext2D = canvas.getContext(
-        "2d"
-      ) as CanvasRenderingContext2D;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      this.saveSelectedItem("");
-    },
-  },
-
-  mounted() {
-    fetch("./shapes.json")
-      .then((response) => response.json())
-      .then((data) => {
-        this.shapes = data;
-      });
+  set(val: number) {
+    store.dispatch("canvas/setLineWidth", val);
   },
 });
-</script>
 
+const fillStyle = computed({
+  get() {
+    return "outline";
+  },
+  set(style: string) {
+    store.dispatch("canvas/setFillStyle", style);
+  },
+});
+
+function setColor(color: string) {
+  store.dispatch("canvas/setColor", color);
+}
+
+function setShape(shape: string) {
+  store.dispatch("canvas/setShape", shape);
+}
+
+function saveSelectedItem(state: string) {
+  store.dispatch("canvas/saveSelectedItem", state);
+}
+
+function addItemToDatabase(canvas: HTMLCanvasElement) {
+  store.dispatch("items/addItemToDatabase", canvas);
+}
+
+function clearCurrentCanvas() {
+  const ctx: CanvasRenderingContext2D = canvas.value.getContext(
+    "2d"
+  ) as CanvasRenderingContext2D;
+  ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+  saveSelectedItem("");
+}
+
+onMounted(() => {
+  fetch("./shapes.json")
+    .then((response) => response.json())
+    .then((data: Array<Shape>) => {
+      shapes.value = data;
+    });
+});
+</script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="sass">
 .canvas-menu

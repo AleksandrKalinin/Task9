@@ -14,7 +14,6 @@ export interface CanvasState {
 export interface ItemsState {
   items: Array<SingleItem>;
   areItemsLoaded: boolean;
-  searchQuery: string;
 }
 
 export interface SingleItem {
@@ -107,4 +106,11 @@ export enum ThemeModuleMutations {
   COLOR_TOMATO = "#FF6347",
   COLOR_BLUE = "#4169E1",
   COLOR_GREEN = "#299617",
+}
+
+export interface Coordinates {
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
 }

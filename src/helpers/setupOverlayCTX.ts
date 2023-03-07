@@ -10,5 +10,6 @@ export function setupOverlayCTX(
   ctxo.fillStyle = selectedColor;
   ctxo.strokeStyle = selectedColor;
   ctxo.lineWidth = lineWidth;
-  return { overlayCanvas, ctxo };
+  const overlayCanvasSetup = overlayCanvas;
+  return { overlayCanvasSetup, ctxo };
 }

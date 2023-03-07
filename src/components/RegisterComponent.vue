@@ -5,45 +5,28 @@
       text="Already have an account?"
       routeText="Sign in"
       routeLink="signin"
-      @submitUser="registerNewUser"
+      @submit-user="registerNewUser"
     ></AuthForm>
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import router from "@/router";
-import { mapActions } from "vuex";
 import AuthForm from "@/components/AuthForm.vue";
+import { useStore } from "vuex";
+const store = useStore();
 
-export default {
-  name: "RegisterComponent",
+function redirectToPage() {
+  router.push("/");
+  store.dispatch("showSuccessToast", "You are registered succesfully!");
+}
 
-  components: {
-    AuthForm,
-  },
-
-  data() {
-    return {};
-  },
-
-  computed: {},
-
-  methods: {
-    ...mapActions("auth", ["registerUser"]),
-    ...mapActions(["showSuccessToast"]),
-
-    redirectToPage() {
-      router.push("/");
-      this.showSuccessToast("You are registered succesfully!");
-    },
-
-    registerNewUser({ email, password }) {
-      this.registerUser({ email, password }).then(() => this.redirectToPage());
-    },
-  },
-};
+function registerNewUser({ email, password }) {
+  store
+    .dispatch("auth/registerUser", { email, password })
+    .then(() => redirectToPage());
+}
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="sass">
 @import "@/assets/styles/colorScheme.sass"

@@ -23,7 +23,6 @@ export const itemsModule: Module<ItemsState, RootState> = {
   state: () => ({
     items: [] as Array<SingleItem>,
     areItemsLoaded: false as boolean,
-    searchQuery: "" as string,
   }),
 
   getters: <GetterTree<ItemsState, RootState>>{

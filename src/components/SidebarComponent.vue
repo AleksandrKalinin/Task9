@@ -21,49 +21,21 @@
   </aside>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { mapGetters, mapActions } from "vuex";
-
-export default defineComponent({
-  name: "SidebarComponent",
-
-  data() {
-    return {};
-  },
-
-  computed: {
-    ...mapGetters("items", ["items", "areItemsLoaded", "searchQuery"]),
-
-    ...mapGetters("theme", ["themeArray", "themeSelected"]),
-
-    isSelected(): boolean {
-      return this.themeArray.map((item: string) => item === this.themeSelected);
-    },
-
-    currentInput: {
-      get(): string {
-        return this.searchQuery;
-      },
-      set(value: string) {
-        this.updateSearchQuery(value);
-      },
-    },
-  },
-
-  methods: {
-    ...mapActions("items", ["updateSearchQuery"]),
-
-    ...mapActions("theme", ["setTheme"]),
-
-    onChange(event: Event) {
-      const target = event.target as HTMLSelectElement;
-      this.setTheme(target.value);
-    },
-  },
+<script setup lang="ts">
+import { useStore } from "vuex";
+import { computed } from "vue";
+const store = useStore();
+const themeArray = computed(() => store.getters["theme/themeArray"]);
+const themeSelected = computed(() => store.getters["theme/themeSelected"]);
+const isSelected = computed(() => {
+  return themeArray.value.map((item: string) => item === themeSelected.value);
 });
-</script>
 
+function onChange(event: Event) {
+  const target = event.target as HTMLSelectElement;
+  store.dispatch("theme/setTheme", target.value);
+}
+</script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="sass">
 @import "@/assets/styles/colorScheme.sass"
