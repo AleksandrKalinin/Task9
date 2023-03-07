@@ -14,11 +14,12 @@
 import router from "@/router";
 import AuthForm from "@/components/AuthForm.vue";
 import { useStore } from "vuex";
+import { useToast } from "../composables/useToast";
 const store = useStore();
 
 function redirectToPage() {
   router.push("/");
-  store.dispatch("showSuccessToast", "You are logged in!");
+  useToast("showSuccessToast", "You are logged in!");
 }
 
 function signInExistingUser({ email, password }) {

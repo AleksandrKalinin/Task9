@@ -115,6 +115,7 @@ import Button from "@/components/Button.vue";
 import { computed, onMounted, ref, Ref } from "vue";
 import { Shape } from "@/types/types";
 import { useStore } from "vuex";
+import { useThemeSelected } from "../composables/useThemeSelected";
 
 let shapes: Ref<Shape> = ref([]);
 const colors = [
@@ -137,7 +138,7 @@ const colors = [
 ] as Array<string>;
 const store = useStore();
 const canvas = computed(() => store.getters["canvas/canvas"]);
-const themeSelected = computed(() => store.getters["theme/themeSelected"]);
+const { themeSelected } = useThemeSelected();
 
 const width = computed({
   get() {

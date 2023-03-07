@@ -24,9 +24,10 @@
 <script setup lang="ts">
 import { useStore } from "vuex";
 import { computed } from "vue";
+import { useThemeSelected } from "../composables/useThemeSelected";
 const store = useStore();
 const themeArray = computed(() => store.getters["theme/themeArray"]);
-const themeSelected = computed(() => store.getters["theme/themeSelected"]);
+const { themeSelected } = useThemeSelected();
 const isSelected = computed(() => {
   return themeArray.value.map((item: string) => item === themeSelected.value);
 });

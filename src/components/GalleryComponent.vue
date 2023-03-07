@@ -56,6 +56,9 @@ import router from "@/router";
 import Button from "@/components/Button.vue";
 import { computed, onMounted } from "vue";
 import { useStore } from "vuex";
+import { useThemeSelected } from "../composables/useThemeSelected";
+import { useToast } from "../composables/useToast";
+
 export default defineComponent({
   name: "MainHeader",
   components: {
@@ -66,7 +69,7 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
-    const themeSelected = computed(() => store.getters["theme/themeSelected"]);
+    const { themeSelected } = useThemeSelected();
     const items = computed(() => store.getters["items/items"]);
     const areItemsLoaded = computed(
       () => store.getters["items/areItemsLoaded"]
@@ -87,6 +90,7 @@ export default defineComponent({
         return newDate;
       });
     });
+
     function selectCanvas(id: string): void {
       const index: number = items.value
         .map((item: SingleItem) => item.id)
@@ -94,15 +98,19 @@ export default defineComponent({
       const curItem: SingleItem = items.value[index];
       store.dispatch("canvas/saveSelectedItem", curItem.link);
     }
+
     function fetchItems() {
       store.dispatch("items/fetchItems");
     }
+
     function deleteItemFromDatabase(item: SingleItem) {
       store.dispatch("items/deleteItemFromDatabase", item);
     }
+
     function showErrorToast(message: string) {
-      store.dispatch("showErrorToast", message);
+      useToast("showErrorToast", message);
     }
+
     onMounted(() => {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
         if (user) {

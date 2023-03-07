@@ -19,24 +19,15 @@ import { Coordinates } from "@/types";
 
 const store = useStore();
 
-let myCanvas: Ref<HTMLCanvasElement | null> = ref(null);
-let overlayCanvas: Ref<HTMLCanvasElement | null> = ref(null);
-/*
-let x = 0 as number;
-let y = 0 as number;
-let isDrawing = false as boolean;
-let startX = 0 as number;
-let startY = 0 as number;
-let endX = 0 as number;
-let endY = 0 as number;
-*/
-let x: Ref<number> = ref(0);
-let y: Ref<number> = ref(0);
-let isDrawing: Ref<boolean> = ref(false);
-let startX: Ref<number> = ref(0);
-let startY: Ref<number> = ref(0);
-let endX: Ref<number> = ref(0);
-let endY: Ref<number> = ref(0);
+const myCanvas: Ref<HTMLCanvasElement | null> = ref(null);
+const overlayCanvas: Ref<HTMLCanvasElement | null> = ref(null);
+const x: Ref<number> = ref(0);
+const y: Ref<number> = ref(0);
+const isDrawing: Ref<boolean> = ref(false);
+const startX: Ref<number> = ref(0);
+const startY: Ref<number> = ref(0);
+const endX: Ref<number> = ref(0);
+const endY: Ref<number> = ref(0);
 
 const selectedColor = computed(() => store.getters["canvas/selectedColor"]);
 const selectedShape = computed(() => store.getters["canvas/selectedShape"]);
