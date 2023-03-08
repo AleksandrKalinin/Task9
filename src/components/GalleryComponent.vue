@@ -50,17 +50,17 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { SingleItem } from "@/types/types";
-import { auth } from "@/database/index";
 import { onAuthStateChanged } from "firebase/auth";
-import router from "@/router";
 import Button from "@/components/Button.vue";
+import router from "@/router/index";
+import { auth } from "@/database/index";
 import { computed, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useThemeSelected } from "../composables/useThemeSelected";
 import { useToast } from "../composables/useToast";
 
 export default defineComponent({
-  name: "MainHeader",
+  name: "GalleryComponent",
   components: {
     Button,
   },

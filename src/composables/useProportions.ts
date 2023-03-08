@@ -1,7 +1,9 @@
 import { Ref } from "vue";
 
-export function useProportions(canvas: Ref<HTMLCanvasElement>) {
-  if (canvas.value !== null) {
+export function useProportions(
+  canvas: Ref<HTMLCanvasElement | null>
+): HTMLCanvasElement | null {
+  if (canvas !== null && canvas.value !== null) {
     const ctx: CanvasRenderingContext2D = canvas.value.getContext(
       "2d"
     ) as CanvasRenderingContext2D;
@@ -9,7 +11,8 @@ export function useProportions(canvas: Ref<HTMLCanvasElement>) {
     const height = (width / 3) * 2;
     ctx.canvas.width = width;
     ctx.canvas.height = height;
-    const value = canvas.value;
-    return { value };
+    return canvas.value;
+  } else {
+    return null;
   }
 }
