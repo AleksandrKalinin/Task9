@@ -1,10 +1,11 @@
 module.exports = {
-  moduleFileExtensions: ["js", "json", "vue", "ts"],
+  moduleFileExtensions: ["ts", "js", "json", "vue"],
   transform: {
-    "^.+\\.jsx?$": "babel-jest",
+    "^.+\\.(t|j)sx?$": "ts-jest",
     "^.+\\.vue$": [
       "<rootDir>/node_modules/@vue/vue3-jest",
       "<rootDir>/node_modules/vue-router",
+      "<rootDir>/node_modules/vuex",
     ],
   },
   testEnvironment: "jsdom",
@@ -12,6 +13,7 @@ module.exports = {
     customExportConditions: ["node", "node-addons"],
   },
   moduleNameMapper: {
-    "/^@/(.*)$/": "<rootDir>/$1",
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
+  transformIgnorePatterns: ["<rootDir>/node_modules/"],
 };
