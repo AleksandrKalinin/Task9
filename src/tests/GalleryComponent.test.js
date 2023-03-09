@@ -2,6 +2,7 @@
 import { mount } from "@vue/test-utils";
 import GalleryComponent from "../components/GalleryComponent.vue";
 import { createStore } from "vuex";
+require("dotenv").config();
 
 const store = createStore({
   state() {
