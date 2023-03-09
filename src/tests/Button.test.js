@@ -1,9 +1,9 @@
-import { mount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import Button from "../components/Button.vue";
 
 describe("Testing button component", () => {
   test("Testing button slot value", () => {
-    const wrapper = mount(Button, {
+    const wrapper = shallowMount(Button, {
       slots: {
         default: "Submit",
       },

@@ -1,7 +1,7 @@
 require("dotenv").config();
 import { defineComponent } from "vue";
 import store from "@/store";
-import { mount } from "@vue/test-utils";
+import { shallowMount } from "@vue/test-utils";
 import { useThemeSelected } from "@/composables/useThemeSelected";
 
 test("Testing value that composable should return", () => {
@@ -15,7 +15,7 @@ test("Testing value that composable should return", () => {
     },
   });
 
-  const wrapper = mount(TestComponent, {});
+  const wrapper = shallowMount(TestComponent, {});
 
   expect(wrapper.vm.themeSelected).toEqual(
     store.getters["theme/themeSelected"]
