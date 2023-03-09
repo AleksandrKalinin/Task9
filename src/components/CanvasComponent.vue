@@ -30,6 +30,13 @@ const startY: Ref<number> = ref(0);
 const endX: Ref<number> = ref(0);
 const endY: Ref<number> = ref(0);
 
+const newCanvas: Ref<HTMLCanvasElement | null> = ref(
+  document.createElement("canvas")
+);
+console.log("new", newCanvas.value);
+const newCTX = newCanvas.value?.getContext("2d");
+console.log(newCTX?.canvas);
+
 const selectedColor = computed(() => store.getters["canvas/selectedColor"]);
 const selectedShape = computed(() => store.getters["canvas/selectedShape"]);
 const lineWidth = computed(() => store.getters["canvas/lineWidth"]);
@@ -86,6 +93,7 @@ function initializeOverlayCanvas(canvasLink: string) {
 function setProportions() {
   myCanvas.value = useProportions(myCanvas);
   overlayCanvas.value = useProportions(overlayCanvas);
+  newCanvas.value = useProportions(newCanvas);
 }
 
 function draw(e: MouseEvent) {
@@ -223,6 +231,7 @@ function drawShape(e: MouseEvent) {
 }
 
 onMounted(() => {
+  console.log(newCanvas.value);
   initializeCanvas(selectedItem.value);
   initializeOverlayCanvas(selectedItem.value);
   setProportions();

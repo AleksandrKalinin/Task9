@@ -38,6 +38,6 @@ describe("Testing gallery component", () => {
   });
 });
 */
-test("vuex", () => {
+test("vuex", async () => {
   expect(2).toEqual(2);
 });

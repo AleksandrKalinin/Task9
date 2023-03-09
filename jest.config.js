@@ -1,4 +1,5 @@
 module.exports = {
+  setupFiles: ["jest-canvas-mock"],
   moduleFileExtensions: ["ts", "js", "json", "vue"],
   transform: {
     "^.+\\.(t|j)sx?$": "ts-jest",

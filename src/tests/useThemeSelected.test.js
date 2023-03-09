@@ -1,6 +1,7 @@
 import { defineComponent, computed } from "vue";
 import { createStore } from "vuex";
 import { mount } from "@vue/test-utils";
+require("dotenv").config();
 
 const store = createStore({
   state() {
@@ -31,7 +32,7 @@ function useThemeSelected() {
 test("Testing value that composable should return", () => {
   const TestComponent = defineComponent({
     props: {},
-    setup(props) {
+    setup() {
       return {
         ...useThemeSelected(),
       };
