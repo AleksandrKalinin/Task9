@@ -3,6 +3,9 @@ module.exports = {
   moduleFileExtensions: ["ts", "js", "json", "vue"],
   transform: {
     "^.+\\.(t|j)sx?$": "ts-jest",
+    "\\.svg$": "svg-jest",
+    ".+\\.(css|styl|less|sass|scss|png|jpg|gif|ttf|woff|woff2)$":
+      "jest-transform-stub",
     "^.+\\.vue$": [
       "<rootDir>/node_modules/@vue/vue3-jest",
       "<rootDir>/node_modules/vue-router",

@@ -6,6 +6,7 @@ import { useThemeSelected } from "@/composables/useThemeSelected";
 
 test("Testing value that composable should return", () => {
   const TestComponent = defineComponent({
+    template: "<div></div>",
     props: {},
     setup() {
       return {
