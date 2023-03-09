@@ -1,5 +1,5 @@
 module.exports = {
-  setupFiles: ["jest-canvas-mock"],
+  setupFiles: ["jest-canvas-mock", "dotenv/config"],
   moduleFileExtensions: ["ts", "js", "json", "vue"],
   transform: {
     "^.+\\.(t|j)sx?$": "ts-jest",

@@ -1,11 +1,11 @@
-import { drawTriangle } from "@/utils/drawTriangle";
-import { drawRectangle } from "@/utils/drawRectangle";
-import { drawCircle } from "@/utils/drawCircle";
-import { drawEllipse } from "@/utils/drawEllipse";
-import { drawHexagon } from "@/utils/drawHexagon";
-import { drawOctagon } from "@/utils/drawOctagon";
-import { drawStar } from "@/utils/drawStar";
-import { drawDiamond } from "@/utils/drawDiamond";
+import { drawTriangle } from "@/core/drawTriangle";
+import { drawRectangle } from "@/core/drawRectangle";
+import { drawCircle } from "@/core/drawCircle";
+import { drawEllipse } from "@/core/drawEllipse";
+import { drawHexagon } from "@/core/drawHexagon";
+import { drawOctagon } from "@/core/drawOctagon";
+import { drawStar } from "@/core/drawStar";
+import { drawDiamond } from "@/core/drawDiamond";
 import { ShapeTypes, ShapeArgs } from "@/types/types";
 
 export function drawSelectedShape(shapeArgs: ShapeArgs, selectedShape: string) {
@@ -27,5 +27,6 @@ export function drawSelectedShape(shapeArgs: ShapeArgs, selectedShape: string) {
   } else if (selectedShape === ShapeTypes.DIAMOND) {
     result = drawDiamond(shapeArgs);
   }
+  console.log(result);
   return result;
 }

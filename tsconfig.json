@@ -38,7 +38,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/tests/useProportions.test.js", "src/tests/useProportions.test.js"  ],
   "exclude": [
     "node_modules"
   ]
