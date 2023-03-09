@@ -16,7 +16,6 @@ const shapeArgs = { canvas, ctx, ...coords, isFilled };
 describe("Testing drawSelectedShape function", () => {
   test("Should return canvas", () => {
     const returnCanvas = drawSelectedShape(shapeArgs, selectedShape);
-    console.log(returnCanvas);
     expect(returnCanvas.value.nodeName.toLowerCase()).toBe("canvas");
   });
 });

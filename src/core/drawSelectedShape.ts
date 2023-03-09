@@ -27,6 +27,5 @@ export function drawSelectedShape(shapeArgs: ShapeArgs, selectedShape: string) {
   } else if (selectedShape === ShapeTypes.DIAMOND) {
     result = drawDiamond(shapeArgs);
   }
-  console.log(result);
   return result;
 }
