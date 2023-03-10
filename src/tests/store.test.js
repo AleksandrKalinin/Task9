@@ -6,6 +6,21 @@ describe("Testing actions in store", () => {
     expect(store.state.theme.themeSelected).toBe("#222222");
   });
 
+  test("Testing setFillStyle action in canvasModule", () => {
+    store.dispatch("canvas/setFillStyle", "outline");
+    expect(store.state.canvas.fillStyle).toBe("outline");
+  });
+
+  test("Testing setLineWidth action in canvasModule", () => {
+    store.dispatch("canvas/setLineWidth", 5);
+    expect(store.state.canvas.lineWidth).toBe(5);
+  });
+
+  test("Testing setColor action in canvasModule", () => {
+    store.dispatch("canvas/setColor", "#222222");
+    expect(store.state.canvas.selectedColor).toBe("#222222");
+  });
+
   test("Testing saveSelectedItem action in canvasModule", () => {
     store.dispatch("canvas/saveSelectedItem", "New item");
     expect(store.state.canvas.selectedItem).toBe("New item");
