@@ -14,29 +14,21 @@ import { useStore } from "vuex";
 import { ref, computed, onMounted, watch, Ref } from "vue";
 import { setupCTX } from "@/helpers/setupCTX";
 import { setupOverlayCTX } from "@/helpers/setupOverlayCTX";
-import { drawSelectedShape } from "@/utils/drawSelectedShape";
+import { drawSelectedShape } from "@/core/drawSelectedShape";
 import { Coordinates } from "@/types";
+import { useProportions } from "@/composables/useProportions";
 
 const store = useStore();
 
-let myCanvas: Ref<HTMLCanvasElement | null> = ref(null);
-let overlayCanvas: Ref<HTMLCanvasElement | null> = ref(null);
-/*
-let x = 0 as number;
-let y = 0 as number;
-let isDrawing = false as boolean;
-let startX = 0 as number;
-let startY = 0 as number;
-let endX = 0 as number;
-let endY = 0 as number;
-*/
-let x: Ref<number> = ref(0);
-let y: Ref<number> = ref(0);
-let isDrawing: Ref<boolean> = ref(false);
-let startX: Ref<number> = ref(0);
-let startY: Ref<number> = ref(0);
-let endX: Ref<number> = ref(0);
-let endY: Ref<number> = ref(0);
+const myCanvas: Ref<HTMLCanvasElement | null> = ref(null);
+const overlayCanvas: Ref<HTMLCanvasElement | null> = ref(null);
+const x: Ref<number> = ref(0);
+const y: Ref<number> = ref(0);
+const isDrawing: Ref<boolean> = ref(false);
+const startX: Ref<number> = ref(0);
+const startY: Ref<number> = ref(0);
+const endX: Ref<number> = ref(0);
+const endY: Ref<number> = ref(0);
 
 const selectedColor = computed(() => store.getters["canvas/selectedColor"]);
 const selectedShape = computed(() => store.getters["canvas/selectedShape"]);
@@ -92,20 +84,8 @@ function initializeOverlayCanvas(canvasLink: string) {
 }
 
 function setProportions() {
-  if (myCanvas.value !== null && overlayCanvas.value !== null) {
-    const ctx: CanvasRenderingContext2D = myCanvas.value.getContext(
-      "2d"
-    ) as CanvasRenderingContext2D;
-    const ctxo: CanvasRenderingContext2D = overlayCanvas.value.getContext(
-      "2d"
-    ) as CanvasRenderingContext2D;
-    const width = document.body.clientWidth - 465 - 90 - 17;
-    const height = (width / 3) * 2;
-    ctx.canvas.width = width;
-    ctx.canvas.height = height;
-    ctxo.canvas.width = width;
-    ctxo.canvas.height = height;
-  }
+  myCanvas.value = useProportions(myCanvas);
+  overlayCanvas.value = useProportions(overlayCanvas);
 }
 
 function draw(e: MouseEvent) {
@@ -152,8 +132,8 @@ function drawOnCanvas(x1: number, y1: number, x2: number, y2: number) {
   );
   if (ctx) {
     ctx.beginPath();
-    ctx.strokeStyle = selectedColor;
-    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = selectedColor.value;
+    ctx.lineWidth = lineWidth.value;
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
     ctx.stroke();

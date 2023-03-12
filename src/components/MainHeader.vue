@@ -34,14 +34,17 @@
   </header>
 </template>
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, Ref } from "vue";
+import { ref, onMounted, watch, Ref } from "vue";
 import { useStore } from "vuex";
+import { useToast } from "../composables/useToast";
 import router from "@/router";
+import { useThemeSelected } from "../composables/useThemeSelected";
 import Button from "@/components/Button.vue";
+
 const store = useStore();
 
 const username: Ref<null | string> = ref(null);
-const themeSelected = computed(() => store.getters["theme/themeSelected"]);
+const { themeSelected } = useThemeSelected();
 
 function logIn() {
   router.push("/signin");
@@ -62,7 +65,7 @@ async function getCurrentUser() {
 
 watch(username, (newValue) => {
   if (newValue === null) {
-    store.dispatch("showSuccessToast", "You are logged out!");
+    useToast("showSuccessToast", "You are logged out!");
   }
 });
 
